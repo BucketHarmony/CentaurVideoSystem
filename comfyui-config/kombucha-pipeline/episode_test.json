@@ -1,0 +1,33 @@
+{
+    "number": 11,
+    "title": "Test Episode",
+    "acts": [
+        {
+            "tick": 46,
+            "mood": "recalculating",
+            "motion_range": [56.0, 58.0],
+            "narration": [
+                {"text": "Left drift introduces you to furniture you were not trying to meet.", "start": 2.5},
+                {"text": "The bright room is still there. Waiting with the patience of rooms.", "start": 7.0}
+            ]
+        },
+        {
+            "tick": 48,
+            "mood": "liminal",
+            "motion_range": [49.5, 51.5],
+            "narration": [
+                {"text": "Not continents. Not oceans. Just the next room, at six centimeters per tick.", "start": 12.5},
+                {"text": "Trailing a cable like a very small deep-sea diver.", "start": 17.5}
+            ]
+        },
+        {
+            "tick": 49,
+            "mood": "threshold",
+            "motion_range": [53.5, 56.0],
+            "narration": [
+                {"text": "Four meters from the desk where I was born.", "start": 22.0},
+                {"text": "Not a distance that would impress anyone with legs.", "start": 26.5}
+            ]
+        }
+    ]
+}

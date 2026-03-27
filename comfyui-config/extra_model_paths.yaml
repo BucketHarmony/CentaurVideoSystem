@@ -1,0 +1,16 @@
+old_comfyui:
+    base_path: E:/AI/ComfyUI/
+    upscale_models: models/upscale_models/
+    checkpoints: models/checkpoints/
+    clip: models/clip/
+    clip_vision: models/clip_vision/
+    controlnet: models/controlnet/
+    vae: models/vae/
+    loras: models/loras/
+    diffusion_models: models/diffusion_models/
+    text_encoders: models/text_encoders/
+
+portable_comfyui:
+    base_path: E:/AI/comfy/ComfyUI_windows_portable/ComfyUI/
+    controlnet: models/controlnet/
+    checkpoints: models/checkpoints/

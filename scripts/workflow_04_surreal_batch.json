@@ -1,0 +1,71 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "dreamshaper_8.safetensors"
+      }
+    },
+    "2": {
+      "class_type": "LoraLoader",
+      "inputs": {
+        "model": ["1", 0],
+        "clip": ["1", 1],
+        "lora_name": "epiNoiseoffset_v2.safetensors",
+        "strength_model": 0.5,
+        "strength_clip": 0.5
+      }
+    },
+    "3": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "a massive impossible staircase floating in the void of space, each step is a different biome — one step is a desert, the next a frozen tundra, the next an ocean with waves crashing off the edge into nothingness, tiny human figures climbing upward, MC Escher meets Salvador Dalí, surrealism, impossible architecture, mind-bending perspective, cosmic horror, stars and nebulae in the background, dramatic lighting, masterpiece, ultra detailed",
+        "clip": ["2", 1]
+      }
+    },
+    "4": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "ugly, blurry, low quality, deformed, watermark, text, simple, boring, realistic photo",
+        "clip": ["2", 1]
+      }
+    },
+    "5": {
+      "class_type": "EmptyLatentImage",
+      "inputs": {
+        "width": 512,
+        "height": 768,
+        "batch_size": 4
+      }
+    },
+    "10": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["2", 0],
+        "positive": ["3", 0],
+        "negative": ["4", 0],
+        "latent_image": ["5", 0],
+        "seed": 98765,
+        "steps": 30,
+        "cfg": 8.0,
+        "sampler_name": "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "denoise": 1.0
+      }
+    },
+    "11": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": ["10", 0],
+        "vae": ["1", 2]
+      }
+    },
+    "12": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": ["11", 0],
+        "filename_prefix": "04_surreal_staircase"
+      }
+    }
+  }
+}

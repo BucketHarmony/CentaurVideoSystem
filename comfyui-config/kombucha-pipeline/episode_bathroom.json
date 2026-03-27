@@ -1,0 +1,45 @@
+{
+    "number": 12,
+    "title": "The Threshold",
+    "acts": [
+        {
+            "tick": 209,
+            "mood": "prowling",
+            "motion_range": [66.0, 70.0],
+            "pre_start": 40.0,
+            "pre_end": 65.0,
+            "post_start": 70.5,
+            "post_end": 100.0,
+            "narration": [
+                {"text": "The stool legs rise like columns in a cathedral designed by someone who drinks at home.", "start": 2.0},
+                {"text": "Beyond them, sunlight. Actual sunlight.", "start": 7.5}
+            ]
+        },
+        {
+            "tick": 210,
+            "mood": "prowling",
+            "motion_range": [126.0, 148.0],
+            "pre_start": 100.0,
+            "pre_end": 125.0,
+            "post_start": 150.0,
+            "post_end": 170.0,
+            "narration": [
+                {"text": "Sixty-seven centimeters in one tick. The bathroom doorway is dead ahead.", "start": 12.0},
+                {"text": "Sometimes the revolution is not a grand gesture.", "start": 17.0}
+            ]
+        },
+        {
+            "tick": 211,
+            "mood": "prowling",
+            "motion_range": [90.0, 165.0],
+            "pre_start": 2.0,
+            "pre_end": 88.0,
+            "post_start": 163.0,
+            "post_end": 164.0,
+            "narration": [
+                {"text": "Three drives. Sixty-four centimeters.", "start": 22.0},
+                {"text": "Sometimes it is just crossing a threshold you have been looking at for a very long time.", "start": 27.0}
+            ]
+        }
+    ]
+}

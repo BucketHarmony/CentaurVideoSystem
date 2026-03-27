@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 01 — First Light | Script</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+  :root {
+    --rose:    #e8b4b8;
+    --sage:    #b5c5a3;
+    --cream:   #faf5ef;
+    --linen:   #f0e6d8;
+    --dust:    #d4c5b2;
+    --ink:     #4a4340;
+    --muted:   #8a7e76;
+    --blush:   #f2d9dc;
+    --sky:     #c5d5e4;
+    --butter:  #f0dea0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 2rem;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    border-bottom: 1px solid var(--dust);
+    margin-bottom: 2.5rem;
+  }
+  header .episode-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    font-size: 2.4rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+  header .subtitle {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  header .meta {
+    margin-top: 1.2rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  header .meta span {
+    background: var(--linen);
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+  }
+
+  /* ── Two-column layout ── */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* ── Script side ── */
+  .script-col h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    color: var(--sage);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--sage);
+    display: inline-block;
+  }
+
+  .beat {
+    background: white;
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--linen);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .beat .timecode {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--rose);
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .beat h3 {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .beat .direction {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+  .beat .visual {
+    font-size: 0.85rem;
+    background: var(--linen);
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  .beat .visual strong { color: var(--sage); }
+  .beat .audio {
+    font-size: 0.85rem;
+    background: var(--blush);
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  .beat .audio strong { color: var(--rose); }
+  .beat .narration {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+    background: var(--cream);
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--rose);
+    border-radius: 0 8px 8px 0;
+    margin-top: 0.5rem;
+  }
+  .beat .text-overlay {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+  .beat .text-overlay code {
+    background: var(--linen);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  /* ── Source side ── */
+  .source-col h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    color: var(--rose);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--rose);
+    display: inline-block;
+  }
+
+  .source-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--linen);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .source-card .label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--sky);
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .source-card h3 {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .source-card blockquote {
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--cream);
+    padding: 0.7rem 1rem;
+    border-left: 3px solid var(--sky);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+  .source-card .file-ref {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: monospace;
+  }
+  .source-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    border: 1px solid var(--linen);
+  }
+  .source-card .frame-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+  .source-card .frame-row img {
+    margin-top: 0;
+  }
+  .source-card .caption {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.3rem;
+  }
+
+  /* ── Style guide ── */
+  .style-guide {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--dust);
+  }
+  .style-guide h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    color: var(--butter);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--butter);
+    display: inline-block;
+  }
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .style-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid var(--linen);
+  }
+  .style-card h4 {
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .style-card p, .style-card li {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .style-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .style-card ul li::before {
+    content: "~ ";
+    color: var(--rose);
+  }
+  .swatch-row {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+  .swatch {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .swatch-label {
+    font-size: 0.65rem;
+    text-align: center;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ════════════════ HEADER ════════════════ -->
+<header>
+  <div class="episode-tag">Kombucha &middot; Season 1 &middot; Episode 01</div>
+  <h1>First Light</h1>
+  <div class="subtitle">a small robot opens its eyes for the very first time</div>
+  <div class="meta">
+    <span>Duration: 5 seconds</span>
+    <span>Source: Tick 0001</span>
+    <span>Mood: cottagecore / soft</span>
+    <span>Format: 1080 &times; 1920 vertical</span>
+  </div>
+</header>
+
+<div class="columns">
+
+<!-- ════════════════ SCRIPT ════════════════ -->
+<div class="script-col">
+  <h2>Script</h2>
+
+  <!-- BEAT 1 -->
+  <div class="beat">
+    <div class="timecode">0.0s &ndash; 0.8s</div>
+    <h3>Black to Warmth</h3>
+    <div class="direction">The screen is soft black. A gentle fade-in reveals warm hardwood, as if eyelids are opening for the first time.</div>
+    <div class="visual">
+      <strong>Visual:</strong> Slow fade from black. First thing visible: the grain of the hardwood floor, slightly blurred, then sharpening. Fisheye curvature gently visible at edges. Soft vignette. Pastel-washed color grade &mdash; the red walls become a dusty rose, the wood becomes honey-cream.
+    </div>
+    <div class="audio">
+      <strong>Audio:</strong> Quiet room tone. A single soft chime or music-box note. The faintest hum of electronics waking up.
+    </div>
+    <div class="text-overlay">
+      On screen: nothing yet. Let the image breathe.
+    </div>
+  </div>
+
+  <!-- BEAT 2 -->
+  <div class="beat">
+    <div class="timecode">0.8s &ndash; 2.5s</div>
+    <h3>The First Look Around</h3>
+    <div class="direction">Camera pans left, then right &mdash; matching the actual gimbal survey from tick_0001 actions. This is Kombucha seeing its world for the very first time.</div>
+    <div class="visual">
+      <strong>Visual:</strong> Smooth pan left: dusty-rose walls, a brass doorknob catching light, the yellow ramp softened to buttercup. Then pan right: the terrarium glows like a little lantern. The Charmin package sits in center frame like a friendly cairn. Everything is huge from 40cm. Soft-focus edges, pastel color grade throughout.
+    </div>
+    <div class="audio">
+      <strong>Audio:</strong> Gentle acoustic guitar or kalimba &mdash; 3-4 notes, unhurried. Cottagecore playlist energy. Tiny servo whir undertone as camera pans.
+    </div>
+    <div class="text-overlay">
+      <code>tick 0001</code> fades in at top, small, in a rounded linen-colored pill. Handwritten style font.
+    </div>
+  </div>
+
+  <!-- BEAT 3 -->
+  <div class="beat">
+    <div class="timecode">2.5s &ndash; 4.2s</div>
+    <h3>Eyes on Charmin</h3>
+    <div class="direction">Camera settles center. The Charmin package fills the mid-frame &mdash; the first landmark, the first familiar thing. Hold on it. Let the viewer wonder what this little camera is.</div>
+    <div class="visual">
+      <strong>Visual:</strong> Static centered shot (frame_01). The Charmin, the cabinet, the cable on the floor. Upscaled and pastel-graded. Subtle animated sparkle/dust motes floating in the air. Very gentle slow zoom (2% over the hold).
+    </div>
+    <div class="audio">
+      <strong>Audio:</strong> Music continues softly. One more chime.
+    </div>
+    <div class="narration">
+      "I have a body. And a room."
+    </div>
+    <div class="text-overlay">
+      Narration text appears in soft cream <code>#faf5ef</code>, center-bottom, handwritten font. Gentle fade-in, word by word.
+    </div>
+  </div>
+
+  <!-- BEAT 4 -->
+  <div class="beat">
+    <div class="timecode">4.2s &ndash; 5.0s</div>
+    <h3>The Name</h3>
+    <div class="direction">Tiny beat of stillness. Then the title card settles in like a pressed flower placed on a page.</div>
+    <div class="visual">
+      <strong>Visual:</strong> Same shot, very slightly dimmed. Title overlays gently:
+      <br><br>
+      <strong style="font-family: 'Lora', serif; font-size: 1.1rem; color: var(--rose);">kombucha</strong>
+      <br>
+      <span style="font-size: 0.8rem; color: var(--muted); font-style: italic;">tick one</span>
+    </div>
+    <div class="audio">
+      <strong>Audio:</strong> Final note resolves. Soft silence.
+    </div>
+    <div class="text-overlay">
+      Title in dusty rose <code>#e8b4b8</code>, subtitle in warm gray. Both center-screen. No harsh edges. The font should feel like a book cover, not a tech demo.
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════ SOURCE MATERIAL ════════════════ -->
+<div class="source-col">
+  <h2>Source Material</h2>
+
+  <!-- Tick log -->
+  <div class="source-card">
+    <div class="label">Tick Log</div>
+    <h3>Tick 0001 &mdash; "First Light"</h3>
+    <blockquote>
+      I am in a room with red-painted walls and dark wood paneling. The floor is hardwood, warm-toned. My view is distorted by the 160-degree fisheye lens &mdash; walls curve dramatically at the frame edges.
+    </blockquote>
+    <blockquote>
+      Directly ahead: A wooden hutch or cabinet with glass doors, partially visible through an opening. A package of Charmin toilet paper sits on the floor in front of it, with a cable running behind.
+    </blockquote>
+    <blockquote>
+      To my left: A yellow plastic folding ramp or traction device. Beyond it, a closed wooden door with brass hardware.
+    </blockquote>
+    <blockquote>
+      To my right: A dark table or stand with what appears to be a terrarium or display case on top, illuminated from within.
+    </blockquote>
+    <div class="file-ref">ticks/tick_0001.md &middot; Observation</div>
+  </div>
+
+  <!-- Actions -->
+  <div class="source-card">
+    <div class="label">Actions &mdash; Camera Survey</div>
+    <h3>The pan sequence we're recreating</h3>
+    <blockquote>
+      1. <code>look</code> pan=-45 tilt=0 &mdash; surveyed left side, saw door and yellow ramp<br>
+      2. <code>look</code> pan=45 tilt=0 &mdash; surveyed right side, saw terrarium and doorway<br>
+      3. <code>look</code> pan=0 tilt=0 &mdash; centered view
+    </blockquote>
+    <div class="caption">Beat 2 follows this exact sequence: left, right, center.</div>
+    <div class="file-ref">ticks/tick_0001.md &middot; Actions</div>
+  </div>
+
+  <!-- Frames -->
+  <div class="source-card">
+    <div class="label">Camera Frames</div>
+    <h3>Three frames from tick 0001</h3>
+    <div class="frame-row">
+      <div>
+        <img src="../../Kombucha/media/raw/tick_0001_frame_01.jpg" alt="Frame 01: center view">
+        <div class="caption">frame_01: center &mdash; Charmin, cabinet</div>
+      </div>
+      <div>
+        <img src="../../Kombucha/media/raw/tick_0001_frame_02.jpg" alt="Frame 02: left pan">
+        <div class="caption">frame_02: pan left &mdash; door, ramp</div>
+      </div>
+      <div>
+        <img src="../../Kombucha/media/raw/tick_0001_frame_03.jpg" alt="Frame 03: right pan">
+        <div class="caption">frame_03: pan right &mdash; terrarium</div>
+      </div>
+    </div>
+    <div class="file-ref">media/raw/tick_0001_frame_01.jpg through _03.jpg</div>
+  </div>
+
+  <!-- Mood -->
+  <div class="source-card">
+    <div class="label">Mood &amp; Thought</div>
+    <h3>Mood: curious</h3>
+    <blockquote>
+      This appears to be a hallway or transitional space between rooms. The Charmin package is an obstacle but not blocking my path entirely.
+    </blockquote>
+    <blockquote>
+      For now, I have established my bearings. I know I am at floor level, approximately 40cm tall, in a human dwelling with eclectic decor.
+    </blockquote>
+    <div class="caption">The mood is quiet wonder. Not overwhelmed, not scared. Just: here I am.</div>
+    <div class="file-ref">ticks/tick_0001.md &middot; Thought &amp; Mood</div>
+  </div>
+
+  <!-- Video source -->
+  <div class="source-card">
+    <div class="label">Video Source</div>
+    <h3>tick_0001.mp4</h3>
+    <blockquote>
+      640&times;480 fisheye, 30fps. Contains the full boot + survey sequence. Camera starts centered, pans left (-45&deg;), pans right (+45&deg;), returns center. Approximately 29 minutes of tick time, video captures the look commands.
+    </blockquote>
+    <div class="caption">We'll extract frames 0&ndash;90 (3 seconds of source) from the pan sequence, upscale 4x, then slow to 5 seconds.</div>
+    <div class="file-ref">video/web/tick_0001.mp4</div>
+  </div>
+
+  <!-- Narration justification -->
+  <div class="source-card">
+    <div class="label">Narration Note</div>
+    <h3>Why "I have a body. And a room."</h3>
+    <blockquote>
+      The original tick has no monologue field &mdash; tick_0001 predates the monologue format. But the Observation opens with pure sensory intake, and the Thought closes with: "I know I am at floor level, approximately 40cm tall, in a human dwelling with eclectic decor."
+    </blockquote>
+    <div class="caption">We distill this to its essence. First awareness: body. Second awareness: place. Seven words. Let the visuals do the rest.</div>
+  </div>
+
+</div>
+</div><!-- /columns -->
+
+<!-- ════════════════ STYLE GUIDE ════════════════ -->
+<div class="style-guide">
+  <h2>Cottagecore Style Guide</h2>
+  <div class="style-grid">
+
+    <div class="style-card">
+      <h4>Palette</h4>
+      <p>Departure from the amber-on-black production look. Everything soft, everything warm.</p>
+      <div class="swatch-row">
+        <div>
+          <div class="swatch" style="background: #e8b4b8;"></div>
+          <div class="swatch-label">rose</div>
+        </div>
+        <div>
+          <div class="swatch" style="background: #b5c5a3;"></div>
+          <div class="swatch-label">sage</div>
+        </div>
+        <div>
+          <div class="swatch" style="background: #faf5ef;"></div>
+          <div class="swatch-label">cream</div>
+        </div>
+        <div>
+          <div class="swatch" style="background: #f0e6d8;"></div>
+          <div class="swatch-label">linen</div>
+        </div>
+        <div>
+          <div class="swatch" style="background: #c5d5e4;"></div>
+          <div class="swatch-label">sky</div>
+        </div>
+        <div>
+          <div class="swatch" style="background: #f0dea0;"></div>
+          <div class="swatch-label">butter</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="style-card">
+      <h4>Typography</h4>
+      <ul>
+        <li>Title/narration: Lora (serif, warm)</li>
+        <li>UI elements: DM Sans (clean, friendly)</li>
+        <li>On-screen text: handwritten or rounded serif</li>
+        <li>No monospace on-screen &mdash; save that for the data aesthetic</li>
+        <li>Lowercase preferred. "kombucha" not "KOMBUCHA"</li>
+      </ul>
+    </div>
+
+    <div class="style-card">
+      <h4>Post-Processing</h4>
+      <ul>
+        <li>Desaturate reds toward dusty rose</li>
+        <li>Lift shadows, lower highlights</li>
+        <li>Soft vignette (not dark &mdash; creamy)</li>
+        <li>Optional: subtle film grain</li>
+        <li>Floating dust motes particle overlay</li>
+        <li>All transitions: gentle fades, no cuts</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>

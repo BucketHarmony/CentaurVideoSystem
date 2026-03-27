@@ -1,0 +1,24 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# ComfyUI framework (its own git repo — we track our files separately)
+ComfyUI/
+
+# Windows
+*.lnk
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log
+*.tmp

@@ -1,0 +1,86 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "dreamshaper_8.safetensors"
+      }
+    },
+    "2": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "an ancient overgrown temple deep in a jungle, massive stone pillars wrapped in vines, golden light filtering through the canopy, a mysterious glowing portal at the center, cinematic composition, concept art, artstation trending, ultra detailed",
+        "clip": ["1", 1]
+      }
+    },
+    "3": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "ugly, blurry, low quality, deformed, watermark, text, extra limbs, bad anatomy",
+        "clip": ["1", 1]
+      }
+    },
+    "4": {
+      "class_type": "EmptyLatentImage",
+      "inputs": {
+        "width": 512,
+        "height": 512,
+        "batch_size": 1
+      }
+    },
+    "5": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["1", 0],
+        "positive": ["2", 0],
+        "negative": ["3", 0],
+        "latent_image": ["4", 0],
+        "seed": 7777,
+        "steps": 25,
+        "cfg": 7.5,
+        "sampler_name": "dpmpp_2m",
+        "scheduler": "karras",
+        "denoise": 1.0
+      }
+    },
+    "6": {
+      "class_type": "LatentUpscale",
+      "inputs": {
+        "samples": ["5", 0],
+        "upscale_method": "nearest-exact",
+        "width": 768,
+        "height": 768,
+        "crop": "disabled"
+      }
+    },
+    "7": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["1", 0],
+        "positive": ["2", 0],
+        "negative": ["3", 0],
+        "latent_image": ["6", 0],
+        "seed": 7777,
+        "steps": 15,
+        "cfg": 7.5,
+        "sampler_name": "dpmpp_2m",
+        "scheduler": "karras",
+        "denoise": 0.45
+      }
+    },
+    "8": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": ["7", 0],
+        "vae": ["1", 2]
+      }
+    },
+    "9": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": ["8", 0],
+        "filename_prefix": "02_hires_temple"
+      }
+    }
+  }
+}

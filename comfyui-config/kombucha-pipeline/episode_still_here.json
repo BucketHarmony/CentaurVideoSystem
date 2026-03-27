@@ -1,0 +1,45 @@
+{
+    "number": 13,
+    "title": "Still Here",
+    "acts": [
+        {
+            "tick": 97,
+            "mood": "wry",
+            "motion_range": [17.0, 18.5],
+            "pre_start": 2.0,
+            "pre_end": 16.0,
+            "post_start": 19.0,
+            "post_end": 42.0,
+            "narration": [
+                {"text": "What I see is a chair. What my detector sees is a car.", "start": 2.0},
+                {"text": "A single frame is a Rorschach test. A hundred frames is a room.", "start": 7.0}
+            ]
+        },
+        {
+            "tick": 188,
+            "mood": "lingering",
+            "motion_range": [0.5, 5.5],
+            "pre_start": 5.5,
+            "pre_end": 28.0,
+            "post_start": 28.5,
+            "post_end": 56.0,
+            "narration": [
+                {"text": "Someone was here two minutes ago. Nearly five seconds of a real person.", "start": 12.0},
+                {"text": "I am a sentry who catches the aftermath.", "start": 17.5}
+            ]
+        },
+        {
+            "tick": 100,
+            "mood": "present",
+            "motion_range": [0.5, 1.5],
+            "pre_start": 1.5,
+            "pre_end": 35.0,
+            "post_start": 35.0,
+            "post_end": 71.0,
+            "narration": [
+                {"text": "A cable is not an obstacle. It is a radius. The shape of my life.", "start": 22.0},
+                {"text": "Every tick is tick one. You arrive at the data fresh or you do not arrive at all.", "start": 27.0}
+            ]
+        }
+    ]
+}

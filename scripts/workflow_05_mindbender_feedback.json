@@ -1,0 +1,132 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "dreamshaper_8.safetensors"
+      }
+    },
+    "2": {
+      "class_type": "LoraLoader",
+      "inputs": {
+        "model": ["1", 0],
+        "clip": ["1", 1],
+        "lora_name": "epiNoiseoffset_v2.safetensors",
+        "strength_model": 0.6,
+        "strength_clip": 0.6
+      }
+    },
+    "3": {
+      "class_type": "LoraLoader",
+      "inputs": {
+        "model": ["2", 0],
+        "clip": ["2", 1],
+        "lora_name": "theovercomer8sContrastFix_sd15.safetensors",
+        "strength_model": 0.3,
+        "strength_clip": 0.3
+      }
+    },
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "04_surreal_staircase_00001_.png"
+      }
+    },
+    "11": {
+      "class_type": "VAEEncode",
+      "inputs": {
+        "pixels": ["10", 0],
+        "vae": ["1", 2]
+      }
+    },
+    "20": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "the staircase has shattered into fragments, each fragment is a portal to a different dimension, through one portal you see an underwater city with jellyfish lanterns, through another a clockwork solar system with gears for planets, fractal geometry, impossible physics, time is visible as ribbons of light weaving between the fragments, a massive eye watches from the void, eldritch cosmic horror beauty, DMT vision, Alex Grey inspired sacred geometry, hyper detailed, octane render, 8k",
+        "clip": ["3", 1]
+      }
+    },
+    "21": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "ugly, blurry, low quality, deformed, watermark, text, simple, boring, monochrome",
+        "clip": ["3", 1]
+      }
+    },
+    "30": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["3", 0],
+        "positive": ["20", 0],
+        "negative": ["21", 0],
+        "latent_image": ["11", 0],
+        "seed": 271828,
+        "steps": 35,
+        "cfg": 8.5,
+        "sampler_name": "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "denoise": 0.72
+      }
+    },
+    "31": {
+      "class_type": "LatentUpscale",
+      "inputs": {
+        "samples": ["30", 0],
+        "upscale_method": "bislerp",
+        "width": 768,
+        "height": 1152,
+        "crop": "disabled"
+      }
+    },
+    "32": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["3", 0],
+        "positive": ["20", 0],
+        "negative": ["21", 0],
+        "latent_image": ["31", 0],
+        "seed": 271828,
+        "steps": 20,
+        "cfg": 7.5,
+        "sampler_name": "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "denoise": 0.35
+      }
+    },
+    "33": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": ["32", 0],
+        "vae": ["1", 2]
+      }
+    },
+    "40": {
+      "class_type": "UpscaleModelLoader",
+      "inputs": {
+        "model_name": "4x-UltraSharp.pth"
+      }
+    },
+    "41": {
+      "class_type": "ImageUpscaleWithModel",
+      "inputs": {
+        "upscale_model": ["40", 0],
+        "image": ["33", 0]
+      }
+    },
+    "42": {
+      "class_type": "ImageScaleBy",
+      "inputs": {
+        "image": ["41", 0],
+        "upscale_method": "lanczos",
+        "scale_by": 0.5
+      }
+    },
+    "50": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": ["42", 0],
+        "filename_prefix": "05_mindbender_final"
+      }
+    }
+  }
+}

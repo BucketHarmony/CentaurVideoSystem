@@ -1,0 +1,143 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "dreamshaper_8.safetensors"
+      }
+    },
+    "2": {
+      "class_type": "DeforumPromptNode",
+      "inputs": {
+        "prompts": "0:'a vast cosmic nebula with swirling galaxies and stardust, deep space, vibrant colors, ultra detailed, 8k'\n60:'an ancient underwater city with bioluminescent coral towers, schools of glowing jellyfish, volumetric god rays piercing the deep ocean, ultra detailed'"
+      }
+    },
+    "3": {
+      "class_type": "DeforumBaseParamsNode",
+      "inputs": {
+        "deforum_data": ["2", 0],
+        "width": 512,
+        "height": 512,
+        "seed_schedule": "0: (42)",
+        "seed_behavior": "fixed",
+        "sampler_name": "euler_ancestral",
+        "scheduler": "normal",
+        "prompt_weighting": true,
+        "normalize_prompt_weights": true,
+        "log_weighted_subprompts": false
+      }
+    },
+    "4": {
+      "class_type": "DeforumAnimParamsNode",
+      "inputs": {
+        "deforum_data": ["3", 0],
+        "animation_mode": "2D",
+        "max_frames": 120,
+        "border": "wrap"
+      }
+    },
+    "5": {
+      "class_type": "DeforumTranslationParamsNode",
+      "inputs": {
+        "deforum_data": ["4", 0],
+        "angle": "0:(0)",
+        "zoom": "0:(1.005+0.003*sin(1.25*3.14*t/30))",
+        "translation_x": "0:(2*sin(3.14*t/60))",
+        "translation_y": "0:(0)",
+        "translation_z": "0:(1.75)",
+        "transform_center_x": "0:(0.5)",
+        "transform_center_y": "0:(0.5)",
+        "rotation_3d_x": "0:(0)",
+        "rotation_3d_y": "0:(0)",
+        "rotation_3d_z": "0:(0.3*sin(3.14*t/90))"
+      }
+    },
+    "10": {
+      "class_type": "DeforumGetCachedLatentNode",
+      "inputs": {
+        "cache_index": 0
+      }
+    },
+    "11": {
+      "class_type": "DeforumIteratorNode",
+      "inputs": {
+        "deforum_data": ["5", 0],
+        "latent_type": "stable_diffusion",
+        "latent": ["10", 0],
+        "seed": 42424242,
+        "subseed": 0,
+        "subseed_strength": 0.8,
+        "slerp_strength": 0.1,
+        "reset_counter": false,
+        "reset_latent": false,
+        "enable_autoqueue": false
+      }
+    },
+    "20": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "masterpiece, best quality, ultra detailed",
+        "clip": ["1", 1]
+      }
+    },
+    "21": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "ugly, blurry, low quality, deformed, watermark, text",
+        "clip": ["1", 1]
+      }
+    },
+    "30": {
+      "class_type": "DeforumKSampler",
+      "inputs": {
+        "model": ["1", 0],
+        "latent": ["11", 1],
+        "positive": ["20", 0],
+        "negative": ["21", 0],
+        "deforum_frame_data": ["11", 0]
+      }
+    },
+    "31": {
+      "class_type": "DeforumCacheLatentNode",
+      "inputs": {
+        "latent": ["30", 0],
+        "cache_index": 0
+      }
+    },
+    "32": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": ["30", 0],
+        "vae": ["1", 2]
+      }
+    },
+    "40": {
+      "class_type": "DeforumVideoSaveNode",
+      "inputs": {
+        "image": ["32", 0],
+        "filename_prefix": "deforum_cosmic",
+        "fps": 24,
+        "codec": "libx264",
+        "pixel_format": "yuv420p",
+        "format": "mp4",
+        "quality": 8,
+        "dump_by": "max_frames",
+        "dump_every": 0,
+        "dump_now": false,
+        "skip_save": false,
+        "skip_return": true,
+        "enable_preview": false,
+        "restore": false,
+        "clear_cache": false,
+        "deforum_frame_data": ["11", 0]
+      }
+    },
+    "50": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": ["32", 0],
+        "filename_prefix": "deforum_frame"
+      }
+    }
+  }
+}

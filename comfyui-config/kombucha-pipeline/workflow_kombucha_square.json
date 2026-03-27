@@ -1,0 +1,272 @@
+{
+  "last_node_id": 11,
+  "last_link_id": 22,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "ParseTickLog",
+      "pos": [100, 100],
+      "size": [400, 150],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "title", "type": "STRING", "links": [1], "slot_index": 0},
+        {"name": "mood", "type": "STRING", "links": [2], "slot_index": 1},
+        {"name": "monologue", "type": "STRING", "links": [3, 14], "slot_index": 2},
+        {"name": "best_quote", "type": "STRING", "links": [], "slot_index": 3},
+        {"name": "tick_number", "type": "STRING", "links": [], "slot_index": 4},
+        {"name": "goal", "type": "STRING", "links": [], "slot_index": 5},
+        {"name": "intent", "type": "STRING", "links": [], "slot_index": 6}
+      ],
+      "properties": {"Node name for S&R": "ParseTickLog"},
+      "widgets_values": ["E:/AI/Kombucha/ticks/tick_0053.md"]
+    },
+    {
+      "id": 2,
+      "type": "VHS_LoadVideoPath",
+      "pos": [100, 380],
+      "size": [400, 250],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {"name": "meta_batch", "type": "VHS_BatchManager", "link": null, "shape": 7},
+        {"name": "vae", "type": "VAE", "link": null, "shape": 7}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [17], "slot_index": 0},
+        {"name": "frame_count", "type": "INT", "links": [], "slot_index": 1},
+        {"name": "audio", "type": "AUDIO", "links": [], "slot_index": 2},
+        {"name": "video_info", "type": "VHS_VIDEOINFO", "links": [], "slot_index": 3}
+      ],
+      "properties": {"Node name for S&R": "VHS_LoadVideoPath"},
+      "widgets_values": {
+        "video": "E:/AI/Kombucha/video/web/tick_0053.mp4",
+        "force_rate": 30,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 90,
+        "skip_first_frames": 0,
+        "select_every_nth": 1
+      }
+    },
+    {
+      "id": 10,
+      "type": "CosyMotes",
+      "pos": [600, 380],
+      "size": [350, 380],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 17}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [4], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "CosyMotes"},
+      "widgets_values": [1.0, 0.35, 0.3, 120.0, 200, 0.4, 4.0, 0.7, 1.05, 42]
+    },
+    {
+      "id": 3,
+      "type": "UpscaleModelLoader",
+      "pos": [600, 830],
+      "size": [300, 60],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "UPSCALE_MODEL", "type": "UPSCALE_MODEL", "links": [5], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "UpscaleModelLoader"},
+      "widgets_values": ["RealESRGAN_x4plus.pth"]
+    },
+    {
+      "id": 4,
+      "type": "ImageUpscaleWithModel",
+      "pos": [1050, 430],
+      "size": [300, 80],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"name": "upscale_model", "type": "UPSCALE_MODEL", "link": 5},
+        {"name": "image", "type": "IMAGE", "link": 4}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [6], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "ImageUpscaleWithModel"},
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "ImageScale",
+      "pos": [1400, 430],
+      "size": [300, 130],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "image", "type": "IMAGE", "link": 6}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [10], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "ImageScale"},
+      "widgets_values": ["lanczos", 1080, 810, "disabled"]
+    },
+    {
+      "id": 6,
+      "type": "VerticalFrameComposite",
+      "pos": [1800, 380],
+      "size": [350, 170],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 10}
+      ],
+      "outputs": [
+        {"name": "images", "type": "IMAGE", "links": [18], "slot_index": 0},
+        {"name": "top_zone_height", "type": "INT", "links": [], "slot_index": 1},
+        {"name": "bottom_zone_start", "type": "INT", "links": [], "slot_index": 2}
+      ],
+      "properties": {"Node name for S&R": "VerticalFrameComposite"},
+      "widgets_values": [1080, 1080, 25, 0.4, 0]
+    },
+    {
+      "id": 7,
+      "type": "TextOverlay",
+      "pos": [2250, 380],
+      "size": [400, 500],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 18},
+        {"name": "title_text", "type": "STRING", "link": 1, "widget": {"name": "title_text"}},
+        {"name": "subtitle_text", "type": "STRING", "link": 2, "widget": {"name": "subtitle_text"}},
+        {"name": "body_text", "type": "STRING", "link": 3, "widget": {"name": "body_text"}}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [19], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "TextOverlay"},
+      "widgets_values": [
+        "TICK 053",
+        "triumphant",
+        "",
+        50,
+        880,
+        72,
+        30,
+        28,
+        "#ffffff",
+        "#d4922a",
+        "#e8dcc8",
+        "#e8a830",
+        36,
+        4
+      ]
+    },
+    {
+      "id": 8,
+      "type": "ElevenLabsTTS",
+      "pos": [600, 100],
+      "size": [400, 280],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {"name": "text", "type": "STRING", "link": 14, "widget": {"name": "text"}}
+      ],
+      "outputs": [
+        {"name": "AUDIO", "type": "AUDIO", "links": [20], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "ElevenLabsTTS"},
+      "widgets_values": [
+        "",
+        "",
+        "pNInz6obpgDQGcFmaJgB",
+        "eleven_multilingual_v2",
+        0.5,
+        0.75
+      ]
+    },
+    {
+      "id": 11,
+      "type": "PadToAudio",
+      "pos": [2750, 380],
+      "size": [300, 170],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 19},
+        {"name": "audio", "type": "AUDIO", "link": 20}
+      ],
+      "outputs": [
+        {"name": "images", "type": "IMAGE", "links": [21], "slot_index": 0},
+        {"name": "audio", "type": "AUDIO", "links": [22], "slot_index": 1}
+      ],
+      "properties": {"Node name for S&R": "PadToAudio"},
+      "widgets_values": [30, 1.0, 0.8, 0.4]
+    },
+    {
+      "id": 9,
+      "type": "VHS_VideoCombine",
+      "pos": [3150, 380],
+      "size": [400, 300],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 21},
+        {"name": "audio", "type": "AUDIO", "link": 22, "shape": 7},
+        {"name": "meta_batch", "type": "VHS_BatchManager", "link": null, "shape": 7},
+        {"name": "vae", "type": "VAE", "link": null, "shape": 7}
+      ],
+      "outputs": [
+        {"name": "Filenames", "type": "VHS_FILENAMES", "links": [], "slot_index": 0}
+      ],
+      "properties": {"Node name for S&R": "VHS_VideoCombine"},
+      "widgets_values": {
+        "frame_rate": 30,
+        "loop_count": 0,
+        "filename_prefix": "kombucha_square",
+        "format": "video/h264-mp4",
+        "pingpong": false,
+        "save_output": true
+      }
+    }
+  ],
+  "links": [
+    [1, 1, 0, 7, 1, "STRING"],
+    [2, 1, 1, 7, 2, "STRING"],
+    [3, 1, 2, 7, 3, "STRING"],
+    [4, 10, 0, 4, 1, "IMAGE"],
+    [5, 3, 0, 4, 0, "UPSCALE_MODEL"],
+    [6, 4, 0, 5, 0, "IMAGE"],
+    [10, 5, 0, 6, 0, "IMAGE"],
+    [14, 1, 2, 8, 0, "STRING"],
+    [17, 2, 0, 10, 0, "IMAGE"],
+    [18, 6, 0, 7, 0, "IMAGE"],
+    [19, 7, 0, 11, 0, "IMAGE"],
+    [20, 8, 0, 11, 1, "AUDIO"],
+    [21, 11, 0, 9, 0, "IMAGE"],
+    [22, 11, 1, 9, 1, "AUDIO"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [0, 0]
+    }
+  },
+  "version": 0.4
+}

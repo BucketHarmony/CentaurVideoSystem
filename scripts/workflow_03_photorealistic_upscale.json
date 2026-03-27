@@ -1,0 +1,117 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "epicphotogasm_ultimateFidelity (3).safetensors"
+      }
+    },
+    "2": {
+      "class_type": "LoraLoader",
+      "inputs": {
+        "model": ["1", 0],
+        "clip": ["1", 1],
+        "lora_name": "theovercomer8sContrastFix_sd15.safetensors",
+        "strength_model": 0.4,
+        "strength_clip": 0.4
+      }
+    },
+    "3": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "cinematic photograph of a lone astronaut standing on the edge of a massive crater on an alien planet, two moons visible in a violet sky, bioluminescent fog rolling across the ground, dramatic rim lighting, shot on ARRI Alexa, shallow depth of field, film grain, 8k uhd",
+        "clip": ["2", 1]
+      }
+    },
+    "4": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "cartoon, painting, illustration, ugly, blurry, low quality, deformed, watermark, text, oversaturated",
+        "clip": ["2", 1]
+      }
+    },
+    "5": {
+      "class_type": "EmptyLatentImage",
+      "inputs": {
+        "width": 512,
+        "height": 512,
+        "batch_size": 1
+      }
+    },
+    "10": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["2", 0],
+        "positive": ["3", 0],
+        "negative": ["4", 0],
+        "latent_image": ["5", 0],
+        "seed": 31415,
+        "steps": 30,
+        "cfg": 7.0,
+        "sampler_name": "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "denoise": 1.0
+      }
+    },
+    "11": {
+      "class_type": "LatentUpscale",
+      "inputs": {
+        "samples": ["10", 0],
+        "upscale_method": "bislerp",
+        "width": 768,
+        "height": 768,
+        "crop": "disabled"
+      }
+    },
+    "12": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["2", 0],
+        "positive": ["3", 0],
+        "negative": ["4", 0],
+        "latent_image": ["11", 0],
+        "seed": 31415,
+        "steps": 18,
+        "cfg": 7.0,
+        "sampler_name": "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "denoise": 0.4
+      }
+    },
+    "13": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": ["12", 0],
+        "vae": ["1", 2]
+      }
+    },
+    "20": {
+      "class_type": "UpscaleModelLoader",
+      "inputs": {
+        "model_name": "4x-UltraSharp.pth"
+      }
+    },
+    "21": {
+      "class_type": "ImageUpscaleWithModel",
+      "inputs": {
+        "upscale_model": ["20", 0],
+        "image": ["13", 0]
+      }
+    },
+    "22": {
+      "class_type": "ImageScaleBy",
+      "inputs": {
+        "image": ["21", 0],
+        "upscale_method": "lanczos",
+        "scale_by": 0.5
+      }
+    },
+    "30": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": ["22", 0],
+        "filename_prefix": "03_astronaut_alien_planet"
+      }
+    }
+  }
+}

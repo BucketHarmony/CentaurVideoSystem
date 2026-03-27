@@ -1,0 +1,238 @@
+{
+  "prompt": {
+    "1": {
+      "inputs": {
+        "ckpt_name": "dreamshaper_8.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Checkpoint"
+      }
+    },
+    "2": {
+      "inputs": {
+        "prompts": "0:'a lush enchanted forest path, dappled sunlight through canopy, moss covered stones, fireflies, volumetric fog, ultra detailed, fantasy art, 8k'\n60:'a mystical crystal cavern with glowing amethyst formations, underground river reflecting prismatic light, ethereal atmosphere, ultra detailed'\n120:'emerging into a vast meadow at golden hour, wildflowers swaying, distant mountains, aurora beginning in the sky, painterly, ultra detailed'"
+      },
+      "class_type": "DeforumPromptNode",
+      "_meta": {
+        "title": "(deforum) Prompt"
+      }
+    },
+    "3": {
+      "inputs": {
+        "width": 512,
+        "height": 512,
+        "seed_schedule": "0:(12345)",
+        "seed_behavior": "fixed",
+        "sampler_name": "euler_ancestral",
+        "scheduler": "normal",
+        "prompt_weighting": true,
+        "normalize_prompt_weights": true,
+        "log_weighted_subprompts": false,
+        "deforum_data": [
+          "2",
+          0
+        ]
+      },
+      "class_type": "DeforumBaseParamsNode",
+      "_meta": {
+        "title": "(deforum) Base Parameters"
+      }
+    },
+    "4": {
+      "inputs": {
+        "animation_mode": "2D",
+        "max_frames": 180,
+        "border": "wrap",
+        "deforum_data": [
+          "3",
+          0
+        ]
+      },
+      "class_type": "DeforumAnimParamsNode",
+      "_meta": {
+        "title": "(deforum) Animation Parameters"
+      }
+    },
+    "5": {
+      "inputs": {
+        "angle": "0:(0)",
+        "zoom": "0:(1.004+0.002*sin(3.14*t/45))",
+        "translation_x": "0:(1.5*sin(3.14*t/90))",
+        "translation_y": "0:(0.5*cos(3.14*t/120))",
+        "translation_z": "0:(1.5)",
+        "transform_center_x": "0:(0.5)",
+        "transform_center_y": "0:(0.5)",
+        "rotation_3d_x": "0:(0)",
+        "rotation_3d_y": "0:(0)",
+        "rotation_3d_z": "0:(0.2*sin(3.14*t/60))",
+        "deforum_data": [
+          "4",
+          0
+        ]
+      },
+      "class_type": "DeforumTranslationParamsNode",
+      "_meta": {
+        "title": "(deforum) Translate Parameters"
+      }
+    },
+    "6": {
+      "inputs": {
+        "cache_index": 0
+      },
+      "class_type": "DeforumGetCachedLatentNode",
+      "_meta": {
+        "title": "(deforum) Load Cached Latent"
+      }
+    },
+    "7": {
+      "inputs": {
+        "latent_type": "stable_diffusion",
+        "seed": 12345,
+        "subseed": 0,
+        "subseed_strength": 0.1,
+        "slerp_strength": 0.0,
+        "reset_counter": false,
+        "reset_latent": false,
+        "enable_autoqueue": false,
+        "deforum_data": [
+          "5",
+          0
+        ],
+        "latent": [
+          "6",
+          0
+        ]
+      },
+      "class_type": "DeforumIteratorNode",
+      "_meta": {
+        "title": "(deforum) Iterator Node"
+      }
+    },
+    "8": {
+      "inputs": {
+        "text": "masterpiece, best quality, ultra detailed, sharp focus, professional, cinematic lighting",
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "Positive Prompt (Quality)"
+      }
+    },
+    "9": {
+      "inputs": {
+        "text": "ugly, blurry, low quality, deformed, watermark, text, jpeg artifacts, disfigured, poorly drawn",
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "Negative Prompt"
+      }
+    },
+    "10": {
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "latent": [
+          "7",
+          1
+        ],
+        "positive": [
+          "8",
+          0
+        ],
+        "negative": [
+          "9",
+          0
+        ],
+        "deforum_frame_data": [
+          "7",
+          0
+        ]
+      },
+      "class_type": "DeforumKSampler",
+      "_meta": {
+        "title": "(deforum) KSampler"
+      }
+    },
+    "11": {
+      "inputs": {
+        "cache_index": 0,
+        "latent": [
+          "10",
+          0
+        ]
+      },
+      "class_type": "DeforumCacheLatentNode",
+      "_meta": {
+        "title": "(deforum) Cache Latent"
+      }
+    },
+    "12": {
+      "inputs": {
+        "samples": [
+          "10",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "13": {
+      "inputs": {
+        "filename_prefix": "deforum_new",
+        "fps": 24,
+        "codec": "libx264",
+        "pixel_format": "yuv420p",
+        "format": "mp4",
+        "quality": 8,
+        "dump_by": "max_frames",
+        "dump_every": 0,
+        "dump_now": false,
+        "skip_save": false,
+        "skip_return": true,
+        "enable_preview": true,
+        "restore": false,
+        "clear_cache": false,
+        "image": [
+          "12",
+          0
+        ],
+        "deforum_frame_data": [
+          "7",
+          0
+        ]
+      },
+      "class_type": "DeforumVideoSaveNode",
+      "_meta": {
+        "title": "(deforum) Save Video"
+      }
+    },
+    "14": {
+      "inputs": {
+        "images": [
+          "12",
+          0
+        ]
+      },
+      "class_type": "PreviewImage",
+      "_meta": {
+        "title": "Preview Image"
+      }
+    }
+  }
+}
