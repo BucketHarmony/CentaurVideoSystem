@@ -12,7 +12,7 @@ Narration: "I have a body. And a room."
 import os
 
 from dotenv import load_dotenv
-load_dotenv(r"E:\AI\CVS\.env")
+load_dotenv()
 
 import math
 import random
@@ -34,10 +34,10 @@ from moviepy import (
 )
 
 # === Paths ===
-PROJECT = Path("E:/AI/Kombucha")
+PROJECT = Path(os.getenv("KOMBUCHA_DIR", ""))
 FRAMES_DIR = PROJECT / "media" / "raw"
 VIDEO_DIR = PROJECT / "video" / "web"
-OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output")
+OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 # Source
@@ -64,12 +64,13 @@ DURATION = 5.0
 TOTAL_FRAMES = int(DURATION * FPS)  # 150
 
 # Fonts
-FONT_SERIF = "C:/Windows/Fonts/georgia.ttf"
-FONT_SERIF_ITALIC = "C:/Windows/Fonts/georgiai.ttf"
+# Font paths — set these to match your system, or override via env vars
+FONT_SERIF = os.getenv("FONT_SERIF", "C:/Windows/Fonts/georgia.ttf")
+FONT_SERIF_ITALIC = os.getenv("FONT_SERIF_ITALIC", "C:/Windows/Fonts/georgiai.ttf")
 
 # ElevenLabs TTS
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
-ELEVENLABS_VOICE = "wVOQaU8CfoRJqCWsxoLv"  # series voice (dry, measured)
+ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "")
 ELEVENLABS_MODEL = "eleven_multilingual_v2"
 NARRATION_TEXT = "I have a body. And a room."
 

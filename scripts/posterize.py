@@ -5,16 +5,24 @@ Smooth, painterly color reduction at native resolution.
 No pixelation -- just clean color bands with soft edges.
 """
 
+import os
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw, ImageFont, ImageEnhance
 from pathlib import Path
 from moviepy import VideoFileClip
 import spandrel
 import torch
+from dotenv import load_dotenv
 
-OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output")
-VIDEO_PATH = Path("E:/AI/Kombucha/video/web/tick_0013.mp4")
-UPSCALE_MODEL = Path("E:/AI/ComfyUI/models/upscale_models/4x-UltraSharp.pth")
+load_dotenv()
+
+OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
+VIDEO_PATH = Path(os.getenv("KOMBUCHA_DIR", "")) / "video" / "web" / "tick_0013.mp4"
+UPSCALE_MODEL = Path(os.getenv("UPSCALE_MODEL_PATH", ""))
+
+# Font paths — set these to match your system, or override via env vars
+FONT_SERIF = os.getenv("FONT_SERIF", "C:/Windows/Fonts/georgia.ttf")
+FONT_SERIF_ITALIC = os.getenv("FONT_SERIF_ITALIC", "C:/Windows/Fonts/georgiai.ttf")
 
 # Stardew Valley palette
 PALETTE = np.array([
@@ -114,9 +122,9 @@ def build_vertical(img, title="KOMBUCHA", sub="tick 0013 -- i can feel my wheels
 
     draw = ImageDraw.Draw(canvas)
     try:
-        ft = ImageFont.truetype("C:/Windows/Fonts/georgia.ttf", 48)
-        fs = ImageFont.truetype("C:/Windows/Fonts/georgiai.ttf", 28)
-        fl = ImageFont.truetype("C:/Windows/Fonts/georgiai.ttf", 22)
+        ft = ImageFont.truetype(FONT_SERIF, 48)
+        fs = ImageFont.truetype(FONT_SERIF_ITALIC, 28)
+        fl = ImageFont.truetype(FONT_SERIF_ITALIC, 22)
     except OSError:
         ft = fs = fl = ImageFont.load_default()
 

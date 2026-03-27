@@ -14,6 +14,7 @@ Nodes:
   - TextOverlay: Safe-zone-aware text with bold sans-serif font
 """
 
+import os
 import re
 import tempfile
 from pathlib import Path
@@ -406,8 +407,9 @@ class TextOverlay:
     """
 
     # Default fonts: bold sans-serif for TikTok readability
-    FONT_TITLE = "C:/Windows/Fonts/impact.ttf"
-    FONT_BODY = "C:/Windows/Fonts/arialbd.ttf"
+    # Override via FONT_TITLE / FONT_BODY env vars if not on Windows
+    FONT_TITLE = os.getenv("FONT_TITLE", "C:/Windows/Fonts/impact.ttf")
+    FONT_BODY = os.getenv("FONT_BODY", "C:/Windows/Fonts/arialbd.ttf")
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -430,8 +432,8 @@ class TextOverlay:
                 "max_body_lines": ("INT", {"default": 4, "min": 1, "max": 30}),
             },
             "optional": {
-                "font_path_title": ("STRING", {"default": "C:/Windows/Fonts/impact.ttf"}),
-                "font_path_body": ("STRING", {"default": "C:/Windows/Fonts/arialbd.ttf"}),
+                "font_path_title": ("STRING", {"default": os.getenv("FONT_TITLE", "C:/Windows/Fonts/impact.ttf")}),
+                "font_path_body": ("STRING", {"default": os.getenv("FONT_BODY", "C:/Windows/Fonts/arialbd.ttf")}),
             }
         }
 
@@ -443,14 +445,19 @@ class TextOverlay:
                 title_y, body_y, font_size_title, font_size_subtitle, font_size_body,
                 title_color, subtitle_color, body_color, accent_color,
                 max_body_chars_per_line, max_body_lines,
-                font_path_title="C:/Windows/Fonts/impact.ttf",
-                font_path_body="C:/Windows/Fonts/arialbd.ttf"):
+                font_path_title=None,
+                font_path_body=None):
+
+        if font_path_title is None:
+            font_path_title = self.FONT_TITLE
+        if font_path_body is None:
+            font_path_body = self.FONT_BODY
 
         B, H, W, C = images.shape
 
         # Load fonts
         def load_font(path, size, fallback_path=None):
-            for p in [path, fallback_path, "C:/Windows/Fonts/arialbd.ttf",
+            for p in [path, fallback_path, self.FONT_BODY,
                        "C:/Windows/Fonts/arial.ttf"]:
                 if p:
                     try:

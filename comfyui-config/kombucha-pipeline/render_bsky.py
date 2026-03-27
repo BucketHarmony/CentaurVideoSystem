@@ -17,6 +17,9 @@ import tempfile
 import cv2
 import numpy as np
 import torch
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Ensure pipeline modules are importable
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -36,9 +39,10 @@ VerticalFrameComposite = _mod.VerticalFrameComposite
 def find_video(tick_num):
     """Locate the video file for a given tick number."""
     tick_str = f"tick_{tick_num:04d}"
+    kombucha_dir = os.getenv("KOMBUCHA_DIR", "")
     search_dirs = [
-        r"E:\AI\Kombucha\video\web",
-        r"E:\AI\Kombucha\video",
+        os.path.join(kombucha_dir, "video", "web"),
+        os.path.join(kombucha_dir, "video"),
     ]
     for d in search_dirs:
         path = os.path.join(d, f"{tick_str}.mp4")
@@ -138,7 +142,7 @@ def render(tick_num, max_seconds=10, fps=15, crf=18):
     writer.release()
 
     # Encode with ffmpeg
-    out_dir = r"E:\AI\CVS\ComfyUI\output"
+    out_dir = os.getenv("COMFYUI_OUTPUT_DIR", os.path.join(COMFYUI_DIR, "output"))
     out_path = os.path.join(out_dir, f"kombucha_bsky_tick{tick_num:04d}.mp4")
     print(f"Encoding H.264 CRF {crf}...")
     subprocess.run(

@@ -4,16 +4,25 @@ CVS -- Bluesky Square Template
 1024x1024 cottagecore with dark accent.
 """
 
+import os
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw, ImageFont, ImageEnhance
 from pathlib import Path
 from moviepy import VideoFileClip
 import spandrel
 import torch
+from dotenv import load_dotenv
 
-OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output")
-VIDEO_PATH = Path("E:/AI/Kombucha/video/web/tick_0013.mp4")
-UPSCALE_MODEL = Path("E:/AI/ComfyUI/models/upscale_models/4x-UltraSharp.pth")
+load_dotenv()
+
+OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
+VIDEO_PATH = Path(os.getenv("KOMBUCHA_DIR", "")) / "video" / "web" / "tick_0013.mp4"
+UPSCALE_MODEL = Path(os.getenv("UPSCALE_MODEL_PATH", ""))
+
+# Font paths — set these to match your system, or override via env vars
+FONT_SERIF = os.getenv("FONT_SERIF", "C:/Windows/Fonts/georgia.ttf")
+FONT_SERIF_ITALIC = os.getenv("FONT_SERIF_ITALIC", "C:/Windows/Fonts/georgiai.ttf")
+FONT_CONSOLA = os.getenv("FONT_CONSOLA", "C:/Windows/Fonts/consola.ttf")
 
 SQ = 1024
 
@@ -133,11 +142,11 @@ def build_template(frame_img, tick_num=13, mood="awake",
 
     # -- Fonts --
     try:
-        font_title = ImageFont.truetype("C:/Windows/Fonts/georgia.ttf", 38)
-        font_episode = ImageFont.truetype("C:/Windows/Fonts/georgiai.ttf", 30)
-        font_quote = ImageFont.truetype("C:/Windows/Fonts/georgiai.ttf", 30)
-        font_tick = ImageFont.truetype("C:/Windows/Fonts/consola.ttf", 28)
-        font_mood = ImageFont.truetype("C:/Windows/Fonts/consola.ttf", 29)
+        font_title = ImageFont.truetype(FONT_SERIF, 38)
+        font_episode = ImageFont.truetype(FONT_SERIF_ITALIC, 30)
+        font_quote = ImageFont.truetype(FONT_SERIF_ITALIC, 30)
+        font_tick = ImageFont.truetype(FONT_CONSOLA, 28)
+        font_mood = ImageFont.truetype(FONT_CONSOLA, 29)
     except OSError:
         font_title = font_episode = font_quote = font_tick = font_mood = ImageFont.load_default()
 
@@ -234,7 +243,7 @@ def main():
 
     # Also do tick 10 for variety
     print("\n4. Building tick 10 variant...")
-    frame10 = extract_frame(Path("E:/AI/Kombucha/video/web/tick_0010.mp4"), t=50.0)
+    frame10 = extract_frame(Path(os.getenv("KOMBUCHA_DIR", "")) / "video" / "web" / "tick_0010.mp4", t=50.0)
     hires10 = upscale_4x(frame10)
     result10 = build_template(
         hires10,

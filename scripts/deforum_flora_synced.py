@@ -33,8 +33,8 @@ import scipy.signal
 # Config
 # ===================================================================
 
-SERVER = "http://127.0.0.1:8188"
-OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output")
+SERVER = os.getenv("COMFYUI_URL", "http://127.0.0.1:8188")
+OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
 SR = 44100
 DURATION = 2.0
 FPS = 24

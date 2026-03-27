@@ -14,7 +14,7 @@ Three-part narration. Ambient pad. Film grain. Bokeh dust.
 import os
 
 from dotenv import load_dotenv
-load_dotenv(r"E:\AI\CVS\.env")
+load_dotenv()
 
 import math
 import random
@@ -39,10 +39,10 @@ from moviepy import (
 # Config
 # ═══════════════════════════════════════════════════════════════════════════
 
-PROJECT = Path("E:/AI/Kombucha")
+PROJECT = Path(os.getenv("KOMBUCHA_DIR", ""))
 VIDEO_PATH = PROJECT / "video" / "web" / "tick_0001.mp4"
-UPSCALE_MODEL_PATH = Path("E:/AI/ComfyUI/models/upscale_models/4x-UltraSharp.pth")
-OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output")
+UPSCALE_MODEL_PATH = Path(os.getenv("UPSCALE_MODEL_PATH", ""))
+OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
 FRAMES_DIR = OUTPUT_DIR / "cc_flora_masterpiece_frames"
 FRAMES_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -62,13 +62,14 @@ DUSTY_ROSE = (210, 165, 170)
 WARM_BLACK = (15, 13, 11)
 
 # Fonts
-FONT_SERIF = "C:/Windows/Fonts/georgia.ttf"
-FONT_SERIF_ITALIC = "C:/Windows/Fonts/georgiai.ttf"
-FONT_SERIF_BOLD = "C:/Windows/Fonts/georgiab.ttf"
+# Font paths — set these to match your system, or override via env vars
+FONT_SERIF = os.getenv("FONT_SERIF", "C:/Windows/Fonts/georgia.ttf")
+FONT_SERIF_ITALIC = os.getenv("FONT_SERIF_ITALIC", "C:/Windows/Fonts/georgiai.ttf")
+FONT_SERIF_BOLD = os.getenv("FONT_SERIF_BOLD", "C:/Windows/Fonts/georgiab.ttf")
 
 # ElevenLabs
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
-ELEVENLABS_VOICE = "wVOQaU8CfoRJqCWsxoLv"
+ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "")
 ELEVENLABS_MODEL = "eleven_multilingual_v2"
 
 # Narration lines and their start times in the output

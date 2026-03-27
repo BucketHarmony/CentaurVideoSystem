@@ -52,9 +52,8 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 # ── paths ─────────────────────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 COMFYUI_DIR = os.path.join(SCRIPT_DIR, "..", "..")
-KOMBUCHA_DIR = r"E:\AI\Kombucha"
+KOMBUCHA_DIR = os.getenv("KOMBUCHA_DIR", "")
 OUTPUT_DIR = os.path.join(COMFYUI_DIR, "output")
-ENV_FILE = r"E:\AI\CVS\.env"
 UPSCALE_MODEL = os.path.join(COMFYUI_DIR, "models", "upscale_models", "4x-UltraSharp.pth")
 
 CANVAS_W, CANVAS_H = 1080, 1080  # Square output
@@ -64,8 +63,9 @@ TOTAL_FRAMES = int(DURATION * FPS)  # 900
 ACT_FRAMES = 300  # 10s per act
 SR = 44100
 
-FONT_SERIF = "C:/Windows/Fonts/georgia.ttf"
-FONT_SERIF_ITALIC = "C:/Windows/Fonts/georgiai.ttf"
+# Font paths — set these to match your system, or override via env vars
+FONT_SERIF = os.getenv("FONT_SERIF", "C:/Windows/Fonts/georgia.ttf")
+FONT_SERIF_ITALIC = os.getenv("FONT_SERIF_ITALIC", "C:/Windows/Fonts/georgiai.ttf")
 
 # Palette (matching Flora cottagecore)
 LINEN = (240, 230, 216)
@@ -75,9 +75,9 @@ DUSTY_ROSE = (210, 165, 170)
 WARM_BLACK = (15, 13, 11)
 PILL_BG = (245, 238, 228)
 
-load_dotenv(ENV_FILE)
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
-ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "wVOQaU8CfoRJqCWsxoLv")
+ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "")
 ELEVENLABS_MODEL = os.getenv("ELEVENLABS_MODEL", "eleven_multilingual_v2")
 
 # ── load pipeline nodes ───────────────────────────────────────────────

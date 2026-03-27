@@ -36,13 +36,12 @@ from PIL import Image
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 COMFYUI_DIR = os.path.join(SCRIPT_DIR, "..", "..")
-KOMBUCHA_DIR = r"E:\AI\Kombucha"
+KOMBUCHA_DIR = os.getenv("KOMBUCHA_DIR", "")
 OUTPUT_DIR = os.path.join(COMFYUI_DIR, "output")
 UPSCALE_MODEL = os.path.join(COMFYUI_DIR, "models", "upscale_models", "RealESRGAN_x4plus.pth")
-ENV_FILE = r"E:\AI\CVS\.env"
 
 # Series bible voice
-VOICE_ID = "wVOQaU8CfoRJqCWsxoLv"
+VOICE_ID = os.getenv("ELEVENLABS_VOICE", "")
 
 # ── load pipeline nodes ───────────────────────────────────────────────────
 
@@ -64,7 +63,7 @@ PadToAudio = _mod.PadToAudio
 
 def load_env():
     """Load .env and return ElevenLabs key."""
-    load_dotenv(ENV_FILE)
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
     key = os.getenv("ELEVENLABS_API_KEY", "")
     return key
 

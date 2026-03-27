@@ -1,0 +1,27 @@
+{
+  "name": "CVS Demo",
+  "purpose": "Demonstration brand kit for testing CVS workflows",
+  "brand": {
+    "colors": {
+      "primary": "#DC143C",
+      "secondary": "#1a1a2e",
+      "accent": "#f0e68c"
+    },
+    "fonts": {
+      "heading": "Arial",
+      "body": "Arial"
+    },
+    "tone": "warm, professional, clear"
+  },
+  "style": {
+    "pacing": "measured, 3-5 seconds per text card",
+    "transitions": "crossfade",
+    "aspect_ratio": "16:9",
+    "duration_target": "15-30 seconds"
+  },
+  "rules": [
+    "Minimum brightness 0.05",
+    "Minimum resolution 720p",
+    "Hold text cards minimum 3 seconds"
+  ]
+}

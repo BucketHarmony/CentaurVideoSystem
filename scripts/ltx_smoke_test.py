@@ -27,8 +27,8 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
 
-SERVER = "http://127.0.0.1:8188"
-COMFY = Path("E:/AI/CVS/ComfyUI")
+SERVER = os.getenv("COMFYUI_URL", "http://127.0.0.1:8188")
+COMFY = Path(os.getenv("COMFYUI_DIR", str(Path(__file__).resolve().parents[1] / "ComfyUI")))
 
 MODELS = [
     {

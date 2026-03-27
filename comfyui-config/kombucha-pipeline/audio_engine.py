@@ -17,16 +17,17 @@ import os
 import subprocess
 import tempfile
 import wave
+from pathlib import Path
 
 import numpy as np
 import requests
 import scipy.signal
 from dotenv import load_dotenv
 
-load_dotenv(r"E:\AI\CVS\.env")
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
-ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "wVOQaU8CfoRJqCWsxoLv")
+ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "")
 ELEVENLABS_MODEL = os.getenv("ELEVENLABS_MODEL", "eleven_multilingual_v2")
 SR = 44100
 
@@ -276,7 +277,7 @@ def build_soundtrack(monologue, duration, mood="exploring", output_dir=None):
         path to final mixed WAV file, actual_duration
     """
     if output_dir is None:
-        output_dir = r"E:\AI\CVS\ComfyUI\output"
+        output_dir = os.getenv("COMFYUI_OUTPUT_DIR", str(Path(__file__).resolve().parents[2] / "ComfyUI" / "output"))
 
     print("  [audio] Generating TTS...")
     tts_path = os.path.join(output_dir, "kombucha_tts_temp.mp3")

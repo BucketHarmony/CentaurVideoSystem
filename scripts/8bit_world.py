@@ -4,13 +4,21 @@ CVS -- 8-Bit World Builder
 Takes a rover frame -> edge detection outline -> pixelated Stardew Valley / Minecraft aesthetic.
 """
 
+import os
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw, ImageEnhance, ImageFont
 from pathlib import Path
 from moviepy import VideoFileClip
+from dotenv import load_dotenv
 
-OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output")
-VIDEO_PATH = Path("E:/AI/Kombucha/video/web/tick_0013.mp4")
+load_dotenv()
+
+OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
+VIDEO_PATH = Path(os.getenv("KOMBUCHA_DIR", "")) / "video" / "web" / "tick_0013.mp4"
+
+# Font paths — set these to match your system, or override via env vars
+FONT_CONSOLA = os.getenv("FONT_CONSOLA", "C:/Windows/Fonts/consola.ttf")
+FONT_CONSOLA_BOLD = os.getenv("FONT_CONSOLA_BOLD", "C:/Windows/Fonts/consolab.ttf")
 
 # Stardew Valley palette — warm, earthy, cozy pixel farm life
 PALETTE = [
@@ -180,9 +188,9 @@ def build_vertical_canvas(framed, title="KOMBUCHA",
 
     draw = ImageDraw.Draw(canvas)
     try:
-        font_title = ImageFont.truetype("C:/Windows/Fonts/consola.ttf", 48)
-        font_sub = ImageFont.truetype("C:/Windows/Fonts/consola.ttf", 28)
-        font_label = ImageFont.truetype("C:/Windows/Fonts/consolab.ttf", 22)
+        font_title = ImageFont.truetype(FONT_CONSOLA, 48)
+        font_sub = ImageFont.truetype(FONT_CONSOLA, 28)
+        font_label = ImageFont.truetype(FONT_CONSOLA_BOLD, 22)
     except OSError:
         font_title = font_sub = font_label = ImageFont.load_default()
 
