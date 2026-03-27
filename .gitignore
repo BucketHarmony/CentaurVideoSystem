@@ -19,6 +19,9 @@ Desktop.ini
 .vscode/
 .idea/
 
+# Demo output (generated, not tracked)
+demo/output/
+
 # Misc
 *.log
 *.tmp
