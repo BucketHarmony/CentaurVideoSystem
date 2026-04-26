@@ -138,7 +138,8 @@ def assert_caption_windows_in_beat(beats: Sequence[Beat]) -> List[Issue]:
     """Caption start/end times must fall within the beat duration."""
     issues: List[Issue] = []
     for slug, dur, _chord, _label, spec in beats:
-        if spec is None:
+        if spec is None or isinstance(spec, list):
+            # Multi-shot specs (romulus stakes) don't carry caption_lines.
             continue
         for line in spec.get("caption_lines") or []:
             try:

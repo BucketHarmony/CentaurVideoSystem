@@ -21,7 +21,44 @@ future video benefits from one bug fix, one improvement.
 > whole repo. Move to `E:/AI/CVS/BACKLOG.md` once the cross-pipeline
 > work begins.
 
-## Tier 1 — bugs that hurt me today (or will tomorrow)
+## Status — MPC scope (2026-04-26)
+
+**Tier 1 + Tier 2 (MPC scope) shipped** in `cvs_lib/` lift. All 8 MPC
+reels (`mpc_ep_*.py`) now import shared infrastructure:
+`cvs_lib.audio`, `.captions`, `.elevenlabs_tts`, `.env`, `.index`,
+`.moviepy_helpers`, `.mpc_chrome`, `.preflight`, `.preview`,
+`.beat_builder`. Per-script size dropped 36–52%. Byte-identical audio
+verified for all 7 migrated scripts vs. the now-deleted
+`mpc_ep_*_legacy.py` frozen copies.
+
+Tier 1 features wired:
+- **Preflight** — auto-runs before TTS in every reel; catches
+  duration mismatches, missing sources, in_t/out_t ordering, multi-
+  shot list specs, missing path/in_t/out_t keys. `--strict` promotes
+  warnings to errors.
+- **`--preview` flag** — emits one PNG per beat in ~6 s. Wired into
+  all 8 scripts.
+- **Beat-builder** — `python -m cvs_lib.beat_builder` produces a
+  one-beat mp4 in ~52 s.
+- **Caption auto-fill** — `cvs_lib.captions.events_from_beats` pulls
+  segments from the transcript index when `caption_lines` is absent.
+  Available everywhere; applied per-reel as an editorial choice.
+- **CTA externalized** — `mpc/cta.json` (multi-rally schema).
+
+Test coverage: 45 tests in `tests/cvs_lib/`.
+
+Remaining MPC follow-ups (post-lift):
+- Whether to drop `caption_lines` from individual reels and use the
+  index auto-fill is an editorial decision per reel (raw Whisper text
+  isn't always tighter than the curated em-dash phrasing).
+- Audio overhaul (sub-bass, motifs, transient hits) — see "Audio
+  overhaul" section below; depends on this lift but is a separate
+  session.
+
+The cc_flora / cc_ep / cc_hookshot pipelines have NOT been migrated;
+that's a separate plan.
+
+## Tier 1 — bugs that hurt me today (or will tomorrow) — SHIPPED
 
 ### Critical bug duplication (fix in lib during extraction)
 The codebase scan surfaced bugs that exist in many copies, with fixes
@@ -82,7 +119,7 @@ beat as a 5–10s vertical mp4 for review. Lets editorial pick lines
 without committing to a 4-min full-reel render. Reuses
 `build_beat_clip()` directly.
 
-## Tier 2 — Centralize into `cvs_lib/`
+## Tier 2 — Centralize into `cvs_lib/` — SHIPPED (MPC scope)
 
 This is the big rock. **8 functions are copy-pasted verbatim across
 all 8 MPC scripts**; visual filters are duplicated 19–21 times across
