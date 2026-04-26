@@ -1,0 +1,419 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_163747.mp4",
+    "filename": "20260425_163747.mp4",
+    "duration_s": 29.844875,
+    "size_bytes": 45264612,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 27.522
+    },
+    {
+      "t": 1.0,
+      "motion": 37.054
+    },
+    {
+      "t": 1.5,
+      "motion": 33.829
+    },
+    {
+      "t": 2.0,
+      "motion": 35.346
+    },
+    {
+      "t": 2.5,
+      "motion": 30.467
+    },
+    {
+      "t": 3.0,
+      "motion": 31.589
+    },
+    {
+      "t": 3.5,
+      "motion": 33.807
+    },
+    {
+      "t": 4.0,
+      "motion": 36.79
+    },
+    {
+      "t": 4.5,
+      "motion": 38.669
+    },
+    {
+      "t": 5.0,
+      "motion": 37.013
+    },
+    {
+      "t": 5.5,
+      "motion": 36.867
+    },
+    {
+      "t": 6.0,
+      "motion": 33.741
+    },
+    {
+      "t": 6.5,
+      "motion": 29.013
+    },
+    {
+      "t": 7.0,
+      "motion": 35.378
+    },
+    {
+      "t": 7.5,
+      "motion": 35.861
+    },
+    {
+      "t": 8.001,
+      "motion": 33.955
+    },
+    {
+      "t": 8.501,
+      "motion": 33.059
+    },
+    {
+      "t": 9.001,
+      "motion": 30.825
+    },
+    {
+      "t": 9.501,
+      "motion": 29.271
+    },
+    {
+      "t": 10.001,
+      "motion": 29.405
+    },
+    {
+      "t": 10.501,
+      "motion": 24.249
+    },
+    {
+      "t": 11.001,
+      "motion": 19.492
+    },
+    {
+      "t": 11.501,
+      "motion": 19.086
+    },
+    {
+      "t": 12.001,
+      "motion": 23.4
+    },
+    {
+      "t": 12.501,
+      "motion": 26.648
+    },
+    {
+      "t": 13.001,
+      "motion": 32.349
+    },
+    {
+      "t": 13.501,
+      "motion": 35.677
+    },
+    {
+      "t": 14.001,
+      "motion": 31.06
+    },
+    {
+      "t": 14.501,
+      "motion": 28.248
+    },
+    {
+      "t": 15.001,
+      "motion": 24.984
+    },
+    {
+      "t": 15.501,
+      "motion": 25.915
+    },
+    {
+      "t": 16.001,
+      "motion": 21.791
+    },
+    {
+      "t": 16.501,
+      "motion": 35.195
+    },
+    {
+      "t": 17.001,
+      "motion": 36.263
+    },
+    {
+      "t": 17.501,
+      "motion": 30.388
+    },
+    {
+      "t": 18.001,
+      "motion": 34.301
+    },
+    {
+      "t": 18.501,
+      "motion": 32.416
+    },
+    {
+      "t": 19.001,
+      "motion": 31.551
+    },
+    {
+      "t": 19.501,
+      "motion": 25.454
+    },
+    {
+      "t": 20.001,
+      "motion": 22.601
+    },
+    {
+      "t": 20.501,
+      "motion": 29.209
+    },
+    {
+      "t": 21.001,
+      "motion": 34.398
+    },
+    {
+      "t": 21.501,
+      "motion": 35.705
+    },
+    {
+      "t": 22.001,
+      "motion": 34.212
+    },
+    {
+      "t": 22.501,
+      "motion": 31.687
+    },
+    {
+      "t": 23.001,
+      "motion": 24.737
+    },
+    {
+      "t": 23.501,
+      "motion": 25.566
+    },
+    {
+      "t": 24.002,
+      "motion": 30.219
+    },
+    {
+      "t": 24.502,
+      "motion": 27.958
+    },
+    {
+      "t": 25.002,
+      "motion": 23.881
+    },
+    {
+      "t": 25.502,
+      "motion": 22.425
+    },
+    {
+      "t": 26.002,
+      "motion": 18.053
+    },
+    {
+      "t": 26.502,
+      "motion": 22.905
+    },
+    {
+      "t": 27.002,
+      "motion": 28.461
+    },
+    {
+      "t": 27.502,
+      "motion": 27.538
+    },
+    {
+      "t": 28.002,
+      "motion": 24.088
+    },
+    {
+      "t": 28.502,
+      "motion": 19.584
+    },
+    {
+      "t": 29.002,
+      "motion": 23.357
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 16.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s11_t0016.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 19.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s13_t0019.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 22.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s15_t0022.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s16_t0024.jpg"
+    },
+    {
+      "idx": 17,
+      "t": 25.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s17_t0025.jpg"
+    },
+    {
+      "idx": 18,
+      "t": 27.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s18_t0027.jpg"
+    },
+    {
+      "idx": 19,
+      "t": 28.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_163747_s19_t0028.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.991,
+    "duration_s": 29.8453125,
+    "text": "Do not know who I am. My name is Donovan McKinney. I currently serve as a state representative in the 11th House District. If you know anything about 8 Mile, you heard about the 8 Mile movie? Yeah, come on. That's my district. So I represent M&M's Old Trailer Park and Warren also represent where he grew up at on the other side of 8 Mile in Detroit. Let me tell you why I'm here. ICE is not new to our community. So how many people know that?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.68,
+        "text": "Do not know who I am."
+      },
+      {
+        "start": 1.68,
+        "end": 3.44,
+        "text": "My name is Donovan McKinney."
+      },
+      {
+        "start": 3.44,
+        "end": 7.24,
+        "text": "I currently serve as a state representative in the 11th House District."
+      },
+      {
+        "start": 7.24,
+        "end": 10.64,
+        "text": "If you know anything about 8 Mile, you heard about the 8 Mile movie?"
+      },
+      {
+        "start": 10.64,
+        "end": 12.08,
+        "text": "Yeah, come on."
+      },
+      {
+        "start": 12.08,
+        "end": 13.08,
+        "text": "That's my district."
+      },
+      {
+        "start": 13.08,
+        "end": 16.28,
+        "text": "So I represent M&M's Old Trailer Park and"
+      },
+      {
+        "start": 16.28,
+        "end": 21.56,
+        "text": "Warren also represent where he grew up at on the other side of 8 Mile in Detroit."
+      },
+      {
+        "start": 21.56,
+        "end": 26.42,
+        "text": "Let me tell you why I'm here."
+      },
+      {
+        "start": 26.42,
+        "end": 28.58,
+        "text": "ICE is not new to our community."
+      },
+      {
+        "start": 28.58,
+        "end": 29.58,
+        "text": "So how many people know that?"
+      }
+    ]
+  },
+  "tags": [
+    "ICE",
+    "camera_shake",
+    "dialogue",
+    "high_motion",
+    "horizontal",
+    "speech"
+  ]
+}

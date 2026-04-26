@@ -1,0 +1,340 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_154736.mp4",
+    "filename": "20260425_154736.mp4",
+    "duration_s": 26.09025,
+    "size_bytes": 39443540,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 37.163
+    },
+    {
+      "t": 1.0,
+      "motion": 38.707
+    },
+    {
+      "t": 1.5,
+      "motion": 37.98
+    },
+    {
+      "t": 2.0,
+      "motion": 35.705
+    },
+    {
+      "t": 2.5,
+      "motion": 31.876
+    },
+    {
+      "t": 3.0,
+      "motion": 28.909
+    },
+    {
+      "t": 3.5,
+      "motion": 28.383
+    },
+    {
+      "t": 4.0,
+      "motion": 26.83
+    },
+    {
+      "t": 4.5,
+      "motion": 26.629
+    },
+    {
+      "t": 5.0,
+      "motion": 26.088
+    },
+    {
+      "t": 5.5,
+      "motion": 26.648
+    },
+    {
+      "t": 6.0,
+      "motion": 27.747
+    },
+    {
+      "t": 6.5,
+      "motion": 27.305
+    },
+    {
+      "t": 7.0,
+      "motion": 26.711
+    },
+    {
+      "t": 7.5,
+      "motion": 26.035
+    },
+    {
+      "t": 8.0,
+      "motion": 26.461
+    },
+    {
+      "t": 8.501,
+      "motion": 26.847
+    },
+    {
+      "t": 9.001,
+      "motion": 25.63
+    },
+    {
+      "t": 9.501,
+      "motion": 26.022
+    },
+    {
+      "t": 10.001,
+      "motion": 27.062
+    },
+    {
+      "t": 10.501,
+      "motion": 28.261
+    },
+    {
+      "t": 11.001,
+      "motion": 29.574
+    },
+    {
+      "t": 11.501,
+      "motion": 30.582
+    },
+    {
+      "t": 12.001,
+      "motion": 30.59
+    },
+    {
+      "t": 12.501,
+      "motion": 31.596
+    },
+    {
+      "t": 13.001,
+      "motion": 30.723
+    },
+    {
+      "t": 13.501,
+      "motion": 32.904
+    },
+    {
+      "t": 14.001,
+      "motion": 34.266
+    },
+    {
+      "t": 14.501,
+      "motion": 38.804
+    },
+    {
+      "t": 15.001,
+      "motion": 41.256
+    },
+    {
+      "t": 15.501,
+      "motion": 42.184
+    },
+    {
+      "t": 16.001,
+      "motion": 40.882
+    },
+    {
+      "t": 16.501,
+      "motion": 39.838
+    },
+    {
+      "t": 17.001,
+      "motion": 39.251
+    },
+    {
+      "t": 17.501,
+      "motion": 38.114
+    },
+    {
+      "t": 18.001,
+      "motion": 32.916
+    },
+    {
+      "t": 18.501,
+      "motion": 26.637
+    },
+    {
+      "t": 19.001,
+      "motion": 40.626
+    },
+    {
+      "t": 19.501,
+      "motion": 44.262
+    },
+    {
+      "t": 20.001,
+      "motion": 45.525
+    },
+    {
+      "t": 20.501,
+      "motion": 43.298
+    },
+    {
+      "t": 21.001,
+      "motion": 41.464
+    },
+    {
+      "t": 21.501,
+      "motion": 40.45
+    },
+    {
+      "t": 22.001,
+      "motion": 39.523
+    },
+    {
+      "t": 22.501,
+      "motion": 38.943
+    },
+    {
+      "t": 23.001,
+      "motion": 38.166
+    },
+    {
+      "t": 23.501,
+      "motion": 38.221
+    },
+    {
+      "t": 24.001,
+      "motion": 39.747
+    },
+    {
+      "t": 24.502,
+      "motion": 36.618
+    },
+    {
+      "t": 25.002,
+      "motion": 34.782
+    },
+    {
+      "t": 25.502,
+      "motion": 32.524
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 16.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s11_t0016.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 19.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s13_t0019.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 22.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s15_t0022.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s16_t0024.jpg"
+    },
+    {
+      "idx": 17,
+      "t": 25.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_154736_s17_t0025.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.954,
+    "duration_s": 26.0906875,
+    "text": "of Romulus engaged, and we have to build the power that elected officials, local officials cannot ignore. So, we've been out here for, this is our tenth week protesting the coup out of town.",
+    "segments": [
+      {
+        "start": 0.34,
+        "end": 8.34,
+        "text": "of Romulus engaged, and we have to build the power that elected officials, local officials"
+      },
+      {
+        "start": 8.34,
+        "end": 10.34,
+        "text": "cannot ignore."
+      },
+      {
+        "start": 12.34,
+        "end": 18.34,
+        "text": "So, we've been out here for, this is our tenth week protesting the coup out of town."
+      }
+    ]
+  },
+  "tags": [
+    "Romulus",
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal"
+  ]
+}

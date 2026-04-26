@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_153128.mp4",
+    "filename": "20260425_153128.mp4",
+    "duration_s": 11.029167,
+    "size_bytes": 16424944,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 49.486
+    },
+    {
+      "t": 1.0,
+      "motion": 48.078
+    },
+    {
+      "t": 1.5,
+      "motion": 47.496
+    },
+    {
+      "t": 2.0,
+      "motion": 44.942
+    },
+    {
+      "t": 2.5,
+      "motion": 45.667
+    },
+    {
+      "t": 3.0,
+      "motion": 43.022
+    },
+    {
+      "t": 3.5,
+      "motion": 40.802
+    },
+    {
+      "t": 4.0,
+      "motion": 41.28
+    },
+    {
+      "t": 4.5,
+      "motion": 41.924
+    },
+    {
+      "t": 5.0,
+      "motion": 41.414
+    },
+    {
+      "t": 5.501,
+      "motion": 40.519
+    },
+    {
+      "t": 6.001,
+      "motion": 39.301
+    },
+    {
+      "t": 6.501,
+      "motion": 39.117
+    },
+    {
+      "t": 7.001,
+      "motion": 40.218
+    },
+    {
+      "t": 7.501,
+      "motion": 38.291
+    },
+    {
+      "t": 8.001,
+      "motion": 38.078
+    },
+    {
+      "t": 8.501,
+      "motion": 39.985
+    },
+    {
+      "t": 9.001,
+      "motion": 43.521
+    },
+    {
+      "t": 9.501,
+      "motion": 45.137
+    },
+    {
+      "t": 10.001,
+      "motion": 46.611
+    },
+    {
+      "t": 10.501,
+      "motion": 43.422
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_153128_s06_t0009.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.938,
+    "duration_s": 11.0293125,
+    "text": "And NDCM is a coalition of people groups that has been around since 2019, originally formed to oppose the construction of the new...",
+    "segments": [
+      {
+        "start": 0.46,
+        "end": 11.02,
+        "text": "And NDCM is a coalition of people groups that has been around since 2019, originally formed to oppose the construction of the new..."
+      }
+    ]
+  },
+  "tags": [
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal"
+  ]
+}

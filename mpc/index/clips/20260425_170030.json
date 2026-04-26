@@ -1,0 +1,317 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_170030.mp4",
+    "filename": "20260425_170030.mp4",
+    "duration_s": 25.194271,
+    "size_bytes": 38167065,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 38.443
+    },
+    {
+      "t": 1.0,
+      "motion": 36.622
+    },
+    {
+      "t": 1.5,
+      "motion": 39.691
+    },
+    {
+      "t": 2.0,
+      "motion": 45.283
+    },
+    {
+      "t": 2.5,
+      "motion": 43.051
+    },
+    {
+      "t": 3.0,
+      "motion": 31.951
+    },
+    {
+      "t": 3.5,
+      "motion": 26.176
+    },
+    {
+      "t": 4.0,
+      "motion": 25.666
+    },
+    {
+      "t": 4.5,
+      "motion": 27.326
+    },
+    {
+      "t": 5.0,
+      "motion": 26.535
+    },
+    {
+      "t": 5.5,
+      "motion": 28.2
+    },
+    {
+      "t": 6.001,
+      "motion": 28.268
+    },
+    {
+      "t": 6.501,
+      "motion": 33.946
+    },
+    {
+      "t": 7.001,
+      "motion": 34.106
+    },
+    {
+      "t": 7.501,
+      "motion": 23.817
+    },
+    {
+      "t": 8.001,
+      "motion": 19.523
+    },
+    {
+      "t": 8.501,
+      "motion": 16.703
+    },
+    {
+      "t": 9.001,
+      "motion": 13.359
+    },
+    {
+      "t": 9.501,
+      "motion": 16.898
+    },
+    {
+      "t": 10.001,
+      "motion": 22.747
+    },
+    {
+      "t": 10.501,
+      "motion": 23.216
+    },
+    {
+      "t": 11.001,
+      "motion": 21.629
+    },
+    {
+      "t": 11.501,
+      "motion": 24.53
+    },
+    {
+      "t": 12.001,
+      "motion": 32.618
+    },
+    {
+      "t": 12.501,
+      "motion": 30.422
+    },
+    {
+      "t": 13.001,
+      "motion": 32.93
+    },
+    {
+      "t": 13.501,
+      "motion": 29.025
+    },
+    {
+      "t": 14.001,
+      "motion": 27.714
+    },
+    {
+      "t": 14.501,
+      "motion": 35.208
+    },
+    {
+      "t": 15.001,
+      "motion": 40.922
+    },
+    {
+      "t": 15.501,
+      "motion": 42.552
+    },
+    {
+      "t": 16.001,
+      "motion": 46.264
+    },
+    {
+      "t": 16.501,
+      "motion": 45.383
+    },
+    {
+      "t": 17.002,
+      "motion": 44.637
+    },
+    {
+      "t": 17.502,
+      "motion": 43.152
+    },
+    {
+      "t": 18.002,
+      "motion": 41.302
+    },
+    {
+      "t": 18.502,
+      "motion": 40.795
+    },
+    {
+      "t": 19.002,
+      "motion": 43.259
+    },
+    {
+      "t": 19.502,
+      "motion": 48.624
+    },
+    {
+      "t": 20.002,
+      "motion": 50.213
+    },
+    {
+      "t": 20.502,
+      "motion": 53.001
+    },
+    {
+      "t": 21.002,
+      "motion": 51.552
+    },
+    {
+      "t": 21.502,
+      "motion": 48.805
+    },
+    {
+      "t": 22.002,
+      "motion": 47.747
+    },
+    {
+      "t": 22.502,
+      "motion": 45.218
+    },
+    {
+      "t": 23.002,
+      "motion": 42.66
+    },
+    {
+      "t": 23.502,
+      "motion": 42.767
+    },
+    {
+      "t": 24.002,
+      "motion": 43.07
+    },
+    {
+      "t": 24.502,
+      "motion": 40.598
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 11.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s07_t0011.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 14.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s09_t0014.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 17.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s11_t0017.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 20.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s13_t0020.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 23.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s15_t0023.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170030_s16_t0024.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.935,
+    "duration_s": 25.1946875,
+    "text": "Abolish ICE!",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 23.69,
+        "text": "Abolish ICE!"
+      }
+    ]
+  },
+  "tags": [
+    "ICE",
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal"
+  ]
+}

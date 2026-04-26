@@ -1,0 +1,622 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_170328.mp4",
+    "filename": "20260425_170328.mp4",
+    "duration_s": 49.087229,
+    "size_bytes": 75093426,
+    "width": 1920,
+    "height": 1080,
+    "fps": 29.97002997002997,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 37.59
+    },
+    {
+      "t": 1.0,
+      "motion": 33.817
+    },
+    {
+      "t": 1.5,
+      "motion": 32.538
+    },
+    {
+      "t": 2.0,
+      "motion": 31.132
+    },
+    {
+      "t": 2.5,
+      "motion": 30.775
+    },
+    {
+      "t": 3.0,
+      "motion": 34.997
+    },
+    {
+      "t": 3.5,
+      "motion": 32.073
+    },
+    {
+      "t": 4.0,
+      "motion": 28.397
+    },
+    {
+      "t": 4.5,
+      "motion": 28.17
+    },
+    {
+      "t": 5.0,
+      "motion": 28.186
+    },
+    {
+      "t": 5.501,
+      "motion": 28.543
+    },
+    {
+      "t": 6.001,
+      "motion": 29.226
+    },
+    {
+      "t": 6.501,
+      "motion": 31.034
+    },
+    {
+      "t": 7.001,
+      "motion": 31.475
+    },
+    {
+      "t": 7.501,
+      "motion": 27.195
+    },
+    {
+      "t": 8.001,
+      "motion": 21.596
+    },
+    {
+      "t": 8.501,
+      "motion": 27.198
+    },
+    {
+      "t": 9.001,
+      "motion": 28.079
+    },
+    {
+      "t": 9.501,
+      "motion": 27.169
+    },
+    {
+      "t": 10.001,
+      "motion": 28.703
+    },
+    {
+      "t": 10.501,
+      "motion": 29.748
+    },
+    {
+      "t": 11.001,
+      "motion": 26.633
+    },
+    {
+      "t": 11.501,
+      "motion": 27.163
+    },
+    {
+      "t": 12.001,
+      "motion": 28.422
+    },
+    {
+      "t": 12.501,
+      "motion": 29.423
+    },
+    {
+      "t": 13.001,
+      "motion": 26.945
+    },
+    {
+      "t": 13.501,
+      "motion": 21.591
+    },
+    {
+      "t": 14.001,
+      "motion": 26.338
+    },
+    {
+      "t": 14.501,
+      "motion": 27.305
+    },
+    {
+      "t": 15.001,
+      "motion": 27.705
+    },
+    {
+      "t": 15.501,
+      "motion": 24.958
+    },
+    {
+      "t": 16.001,
+      "motion": 20.601
+    },
+    {
+      "t": 16.502,
+      "motion": 21.028
+    },
+    {
+      "t": 17.002,
+      "motion": 19.243
+    },
+    {
+      "t": 17.502,
+      "motion": 19.572
+    },
+    {
+      "t": 18.002,
+      "motion": 16.486
+    },
+    {
+      "t": 18.502,
+      "motion": 19.848
+    },
+    {
+      "t": 19.002,
+      "motion": 20.729
+    },
+    {
+      "t": 19.502,
+      "motion": 20.025
+    },
+    {
+      "t": 20.002,
+      "motion": 19.47
+    },
+    {
+      "t": 20.502,
+      "motion": 19.633
+    },
+    {
+      "t": 21.002,
+      "motion": 19.876
+    },
+    {
+      "t": 21.502,
+      "motion": 17.737
+    },
+    {
+      "t": 22.002,
+      "motion": 22.769
+    },
+    {
+      "t": 22.502,
+      "motion": 21.382
+    },
+    {
+      "t": 23.002,
+      "motion": 19.477
+    },
+    {
+      "t": 23.502,
+      "motion": 26.384
+    },
+    {
+      "t": 24.002,
+      "motion": 29.218
+    },
+    {
+      "t": 24.502,
+      "motion": 24.432
+    },
+    {
+      "t": 25.002,
+      "motion": 24.995
+    },
+    {
+      "t": 25.502,
+      "motion": 25.377
+    },
+    {
+      "t": 26.002,
+      "motion": 23.883
+    },
+    {
+      "t": 26.502,
+      "motion": 21.901
+    },
+    {
+      "t": 27.003,
+      "motion": 26.71
+    },
+    {
+      "t": 27.503,
+      "motion": 26.613
+    },
+    {
+      "t": 28.003,
+      "motion": 24.73
+    },
+    {
+      "t": 28.503,
+      "motion": 23.175
+    },
+    {
+      "t": 29.003,
+      "motion": 22.066
+    },
+    {
+      "t": 29.503,
+      "motion": 21.366
+    },
+    {
+      "t": 30.003,
+      "motion": 18.229
+    },
+    {
+      "t": 30.503,
+      "motion": 22.812
+    },
+    {
+      "t": 31.003,
+      "motion": 22.943
+    },
+    {
+      "t": 31.503,
+      "motion": 23.165
+    },
+    {
+      "t": 32.003,
+      "motion": 23.214
+    },
+    {
+      "t": 32.503,
+      "motion": 23.044
+    },
+    {
+      "t": 33.003,
+      "motion": 21.331
+    },
+    {
+      "t": 33.503,
+      "motion": 21.518
+    },
+    {
+      "t": 34.003,
+      "motion": 21.155
+    },
+    {
+      "t": 34.503,
+      "motion": 23.482
+    },
+    {
+      "t": 35.003,
+      "motion": 26.261
+    },
+    {
+      "t": 35.503,
+      "motion": 26.667
+    },
+    {
+      "t": 36.003,
+      "motion": 27.876
+    },
+    {
+      "t": 36.503,
+      "motion": 27.52
+    },
+    {
+      "t": 37.003,
+      "motion": 27.586
+    },
+    {
+      "t": 37.504,
+      "motion": 25.108
+    },
+    {
+      "t": 38.004,
+      "motion": 21.687
+    },
+    {
+      "t": 38.504,
+      "motion": 22.794
+    },
+    {
+      "t": 39.004,
+      "motion": 25.941
+    },
+    {
+      "t": 39.504,
+      "motion": 29.264
+    },
+    {
+      "t": 40.004,
+      "motion": 26.76
+    },
+    {
+      "t": 40.504,
+      "motion": 24.6
+    },
+    {
+      "t": 41.004,
+      "motion": 18.187
+    },
+    {
+      "t": 41.504,
+      "motion": 21.753
+    },
+    {
+      "t": 42.004,
+      "motion": 25.934
+    },
+    {
+      "t": 42.504,
+      "motion": 22.138
+    },
+    {
+      "t": 43.004,
+      "motion": 21.013
+    },
+    {
+      "t": 43.504,
+      "motion": 22.298
+    },
+    {
+      "t": 44.004,
+      "motion": 20.709
+    },
+    {
+      "t": 44.504,
+      "motion": 19.211
+    },
+    {
+      "t": 45.004,
+      "motion": 11.207
+    },
+    {
+      "t": 45.504,
+      "motion": 19.503
+    },
+    {
+      "t": 46.004,
+      "motion": 20.002
+    },
+    {
+      "t": 46.504,
+      "motion": 16.181
+    },
+    {
+      "t": 47.004,
+      "motion": 22.027
+    },
+    {
+      "t": 47.504,
+      "motion": 23.13
+    },
+    {
+      "t": 48.004,
+      "motion": 23.245
+    },
+    {
+      "t": 48.505,
+      "motion": 18.755
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 11.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s07_t0011.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 14.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s09_t0014.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 17.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s11_t0017.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 20.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s13_t0020.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 23.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s15_t0023.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s16_t0024.jpg"
+    },
+    {
+      "idx": 17,
+      "t": 26.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s17_t0026.jpg"
+    },
+    {
+      "idx": 18,
+      "t": 27.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s18_t0027.jpg"
+    },
+    {
+      "idx": 19,
+      "t": 29.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s19_t0029.jpg"
+    },
+    {
+      "idx": 20,
+      "t": 30.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s20_t0030.jpg"
+    },
+    {
+      "idx": 21,
+      "t": 32.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s21_t0032.jpg"
+    },
+    {
+      "idx": 22,
+      "t": 33.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s22_t0033.jpg"
+    },
+    {
+      "idx": 23,
+      "t": 35.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s23_t0035.jpg"
+    },
+    {
+      "idx": 24,
+      "t": 36.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s24_t0036.jpg"
+    },
+    {
+      "idx": 25,
+      "t": 38.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s25_t0038.jpg"
+    },
+    {
+      "idx": 26,
+      "t": 39.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s26_t0039.jpg"
+    },
+    {
+      "idx": 27,
+      "t": 41.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s27_t0041.jpg"
+    },
+    {
+      "idx": 28,
+      "t": 42.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s28_t0042.jpg"
+    },
+    {
+      "idx": 29,
+      "t": 44.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s29_t0044.jpg"
+    },
+    {
+      "idx": 30,
+      "t": 45.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s30_t0045.jpg"
+    },
+    {
+      "idx": 31,
+      "t": 47.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s31_t0047.jpg"
+    },
+    {
+      "idx": 32,
+      "t": 48.505,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170328_s32_t0048.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.985,
+    "duration_s": 49.088,
+    "text": "So I'm Dylan Wigella. I represent Garden City Inkster, Northeast Romulus, and Southeast Westland and the Michigan House. Woo-woo! You know, I've been thinking, and I think one of the things that we need to be focusing on here and talking about is this number that I can't get out of my head. $254 million, which is the amount the GEO Group profited off of private detention last year. It is immoral for people to be profiting off of what is happening to people. I'll tell you another thing, another number I can't get out of my head. $4,400. That is how many times ICE has lost in court for wrongfully detaining people since October.",
+    "segments": [
+      {
+        "start": 3.66,
+        "end": 10.58,
+        "text": "So I'm Dylan Wigella. I represent Garden City Inkster, Northeast Romulus, and Southeast Westland and the Michigan House."
+      },
+      {
+        "start": 10.8,
+        "end": 11.16,
+        "text": "Woo-woo!"
+      },
+      {
+        "start": 12.28,
+        "end": 20.06,
+        "text": "You know, I've been thinking, and I think one of the things that we need to be focusing on here and talking about is this number that I can't get out of my head."
+      },
+      {
+        "start": 21.48,
+        "end": 29.26,
+        "text": "$254 million, which is the amount the GEO Group profited off of private detention last year."
+      },
+      {
+        "start": 29.26,
+        "end": 35.28,
+        "text": "It is immoral for people to be profiting off of what is happening to people."
+      },
+      {
+        "start": 35.96,
+        "end": 38.72,
+        "text": "I'll tell you another thing, another number I can't get out of my head."
+      },
+      {
+        "start": 39.26,
+        "end": 47.98,
+        "text": "$4,400. That is how many times ICE has lost in court for wrongfully detaining people since October."
+      }
+    ]
+  },
+  "tags": [
+    "ICE",
+    "Romulus",
+    "camera_shake",
+    "court",
+    "dialogue",
+    "high_motion",
+    "horizontal",
+    "immigrant"
+  ]
+}

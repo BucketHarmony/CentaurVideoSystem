@@ -1,0 +1,40 @@
+{
+  "_comment": "Michigan Progressive Caucus brand palette. Hex codes estimated from logo PNG, ±5% per channel. Confirm with caucus comms before high-stakes use.",
+  "_source": "https://www.miprogressivecaucus.com/ (extracted 2026-04-25)",
+  "colors": {
+    "sky_blue":      { "hex": "#5CB7DD", "rgb": [92, 183, 221],  "role": "primary" },
+    "soft_pink":     { "hex": "#F4A8C0", "rgb": [244, 168, 192], "role": "secondary" },
+    "deep_magenta":  { "hex": "#8B3A52", "rgb": [139, 58, 82],   "role": "accent" },
+    "white":         { "hex": "#FFFFFF", "rgb": [255, 255, 255], "role": "light" },
+    "near_black":    { "hex": "#1A1A1A", "rgb": [26, 26, 26],    "role": "text_dark" }
+  },
+  "fonts": {
+    "headline": {
+      "family": "Montserrat",
+      "weight": "Black",
+      "path": "C:/Windows/Fonts/Montserrat.otf",
+      "fallback": "C:/Windows/Fonts/arialbd.ttf"
+    },
+    "body": {
+      "family": "Montserrat",
+      "weight": "Regular",
+      "path": "C:/Windows/Fonts/Montserrat.otf",
+      "fallback": "C:/Windows/Fonts/arial.ttf"
+    }
+  },
+  "logo": {
+    "wide": "E:/AI/CVS/mpc/brand/logo_wide.png"
+  },
+  "safe_zones_1080x1920": {
+    "top_clear_px": 150,
+    "bottom_clear_px": 480,
+    "right_clear_px": 120,
+    "content_box": [40, 200, 960, 1440]
+  },
+  "social": {
+    "instagram": "@michiganprogressive",
+    "facebook": "MDPProgressiveCaucus",
+    "email": "michiganprogressivecaucus@gmail.com",
+    "website": "miprogressivecaucus.com"
+  }
+}

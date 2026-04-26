@@ -1,0 +1,727 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_151118.mp4",
+    "filename": "20260425_151118.mp4",
+    "duration_s": 59.412396,
+    "size_bytes": 91308484,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 36.73
+    },
+    {
+      "t": 1.0,
+      "motion": 41.717
+    },
+    {
+      "t": 1.5,
+      "motion": 44.41
+    },
+    {
+      "t": 2.0,
+      "motion": 41.351
+    },
+    {
+      "t": 2.5,
+      "motion": 44.582
+    },
+    {
+      "t": 3.0,
+      "motion": 41.669
+    },
+    {
+      "t": 3.5,
+      "motion": 37.715
+    },
+    {
+      "t": 4.0,
+      "motion": 35.233
+    },
+    {
+      "t": 4.5,
+      "motion": 31.897
+    },
+    {
+      "t": 5.0,
+      "motion": 32.45
+    },
+    {
+      "t": 5.5,
+      "motion": 36.283
+    },
+    {
+      "t": 6.0,
+      "motion": 39.465
+    },
+    {
+      "t": 6.5,
+      "motion": 45.255
+    },
+    {
+      "t": 7.0,
+      "motion": 47.16
+    },
+    {
+      "t": 7.5,
+      "motion": 48.079
+    },
+    {
+      "t": 8.0,
+      "motion": 47.819
+    },
+    {
+      "t": 8.5,
+      "motion": 45.168
+    },
+    {
+      "t": 9.0,
+      "motion": 43.227
+    },
+    {
+      "t": 9.501,
+      "motion": 46.055
+    },
+    {
+      "t": 10.001,
+      "motion": 44.139
+    },
+    {
+      "t": 10.501,
+      "motion": 40.766
+    },
+    {
+      "t": 11.001,
+      "motion": 35.987
+    },
+    {
+      "t": 11.501,
+      "motion": 35.332
+    },
+    {
+      "t": 12.001,
+      "motion": 34.823
+    },
+    {
+      "t": 12.501,
+      "motion": 37.248
+    },
+    {
+      "t": 13.001,
+      "motion": 39.107
+    },
+    {
+      "t": 13.501,
+      "motion": 38.303
+    },
+    {
+      "t": 14.001,
+      "motion": 36.264
+    },
+    {
+      "t": 14.501,
+      "motion": 45.643
+    },
+    {
+      "t": 15.001,
+      "motion": 47.422
+    },
+    {
+      "t": 15.501,
+      "motion": 49.931
+    },
+    {
+      "t": 16.001,
+      "motion": 66.37
+    },
+    {
+      "t": 16.501,
+      "motion": 73.122
+    },
+    {
+      "t": 17.001,
+      "motion": 63.151
+    },
+    {
+      "t": 17.501,
+      "motion": 53.669
+    },
+    {
+      "t": 18.001,
+      "motion": 57.123
+    },
+    {
+      "t": 18.501,
+      "motion": 59.799
+    },
+    {
+      "t": 19.001,
+      "motion": 58.836
+    },
+    {
+      "t": 19.501,
+      "motion": 52.371
+    },
+    {
+      "t": 20.001,
+      "motion": 57.468
+    },
+    {
+      "t": 20.501,
+      "motion": 44.979
+    },
+    {
+      "t": 21.001,
+      "motion": 39.618
+    },
+    {
+      "t": 21.501,
+      "motion": 37.507
+    },
+    {
+      "t": 22.001,
+      "motion": 40.829
+    },
+    {
+      "t": 22.501,
+      "motion": 44.03
+    },
+    {
+      "t": 23.001,
+      "motion": 50.146
+    },
+    {
+      "t": 23.501,
+      "motion": 51.011
+    },
+    {
+      "t": 24.001,
+      "motion": 45.543
+    },
+    {
+      "t": 24.501,
+      "motion": 60.924
+    },
+    {
+      "t": 25.001,
+      "motion": 59.427
+    },
+    {
+      "t": 25.501,
+      "motion": 48.798
+    },
+    {
+      "t": 26.001,
+      "motion": 53.269
+    },
+    {
+      "t": 26.501,
+      "motion": 60.753
+    },
+    {
+      "t": 27.001,
+      "motion": 53.625
+    },
+    {
+      "t": 27.502,
+      "motion": 39.049
+    },
+    {
+      "t": 28.002,
+      "motion": 38.311
+    },
+    {
+      "t": 28.502,
+      "motion": 33.798
+    },
+    {
+      "t": 29.002,
+      "motion": 41.695
+    },
+    {
+      "t": 29.502,
+      "motion": 49.194
+    },
+    {
+      "t": 30.002,
+      "motion": 47.135
+    },
+    {
+      "t": 30.502,
+      "motion": 46.833
+    },
+    {
+      "t": 31.002,
+      "motion": 40.265
+    },
+    {
+      "t": 31.502,
+      "motion": 42.201
+    },
+    {
+      "t": 32.002,
+      "motion": 51.771
+    },
+    {
+      "t": 32.502,
+      "motion": 58.254
+    },
+    {
+      "t": 33.002,
+      "motion": 51.841
+    },
+    {
+      "t": 33.502,
+      "motion": 43.932
+    },
+    {
+      "t": 34.002,
+      "motion": 41.767
+    },
+    {
+      "t": 34.502,
+      "motion": 45.301
+    },
+    {
+      "t": 35.002,
+      "motion": 56.911
+    },
+    {
+      "t": 35.502,
+      "motion": 46.126
+    },
+    {
+      "t": 36.002,
+      "motion": 39.693
+    },
+    {
+      "t": 36.502,
+      "motion": 47.061
+    },
+    {
+      "t": 37.002,
+      "motion": 67.098
+    },
+    {
+      "t": 37.502,
+      "motion": 68.568
+    },
+    {
+      "t": 38.002,
+      "motion": 59.179
+    },
+    {
+      "t": 38.502,
+      "motion": 57.145
+    },
+    {
+      "t": 39.002,
+      "motion": 51.253
+    },
+    {
+      "t": 39.502,
+      "motion": 49.135
+    },
+    {
+      "t": 40.002,
+      "motion": 58.061
+    },
+    {
+      "t": 40.502,
+      "motion": 55.195
+    },
+    {
+      "t": 41.002,
+      "motion": 43.877
+    },
+    {
+      "t": 41.502,
+      "motion": 50.32
+    },
+    {
+      "t": 42.002,
+      "motion": 50.839
+    },
+    {
+      "t": 42.502,
+      "motion": 45.78
+    },
+    {
+      "t": 43.002,
+      "motion": 45.843
+    },
+    {
+      "t": 43.502,
+      "motion": 42.685
+    },
+    {
+      "t": 44.002,
+      "motion": 42.456
+    },
+    {
+      "t": 44.502,
+      "motion": 48.629
+    },
+    {
+      "t": 45.002,
+      "motion": 48.898
+    },
+    {
+      "t": 45.503,
+      "motion": 40.256
+    },
+    {
+      "t": 46.003,
+      "motion": 35.665
+    },
+    {
+      "t": 46.503,
+      "motion": 38.316
+    },
+    {
+      "t": 47.003,
+      "motion": 40.516
+    },
+    {
+      "t": 47.503,
+      "motion": 48.207
+    },
+    {
+      "t": 48.003,
+      "motion": 58.799
+    },
+    {
+      "t": 48.503,
+      "motion": 55.508
+    },
+    {
+      "t": 49.003,
+      "motion": 51.471
+    },
+    {
+      "t": 49.503,
+      "motion": 51.267
+    },
+    {
+      "t": 50.003,
+      "motion": 56.772
+    },
+    {
+      "t": 50.503,
+      "motion": 55.577
+    },
+    {
+      "t": 51.003,
+      "motion": 59.441
+    },
+    {
+      "t": 51.503,
+      "motion": 58.505
+    },
+    {
+      "t": 52.003,
+      "motion": 60.968
+    },
+    {
+      "t": 52.503,
+      "motion": 59.663
+    },
+    {
+      "t": 53.003,
+      "motion": 53.645
+    },
+    {
+      "t": 53.503,
+      "motion": 63.329
+    },
+    {
+      "t": 54.003,
+      "motion": 56.959
+    },
+    {
+      "t": 54.503,
+      "motion": 57.542
+    },
+    {
+      "t": 55.003,
+      "motion": 62.117
+    },
+    {
+      "t": 55.503,
+      "motion": 62.624
+    },
+    {
+      "t": 56.003,
+      "motion": 54.023
+    },
+    {
+      "t": 56.503,
+      "motion": 42.009
+    },
+    {
+      "t": 57.003,
+      "motion": 34.186
+    },
+    {
+      "t": 57.503,
+      "motion": 42.42
+    },
+    {
+      "t": 58.003,
+      "motion": 56.849
+    },
+    {
+      "t": 58.503,
+      "motion": 41.669
+    },
+    {
+      "t": 59.003,
+      "motion": 25.23
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 16.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s11_t0016.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 19.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s13_t0019.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 22.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s15_t0022.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s16_t0024.jpg"
+    },
+    {
+      "idx": 17,
+      "t": 25.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s17_t0025.jpg"
+    },
+    {
+      "idx": 18,
+      "t": 27.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s18_t0027.jpg"
+    },
+    {
+      "idx": 19,
+      "t": 28.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s19_t0028.jpg"
+    },
+    {
+      "idx": 20,
+      "t": 30.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s20_t0030.jpg"
+    },
+    {
+      "idx": 21,
+      "t": 31.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s21_t0031.jpg"
+    },
+    {
+      "idx": 22,
+      "t": 33.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s22_t0033.jpg"
+    },
+    {
+      "idx": 23,
+      "t": 34.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s23_t0034.jpg"
+    },
+    {
+      "idx": 24,
+      "t": 36.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s24_t0036.jpg"
+    },
+    {
+      "idx": 25,
+      "t": 37.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s25_t0037.jpg"
+    },
+    {
+      "idx": 26,
+      "t": 39.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s26_t0039.jpg"
+    },
+    {
+      "idx": 27,
+      "t": 40.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s27_t0040.jpg"
+    },
+    {
+      "idx": 28,
+      "t": 42.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s28_t0042.jpg"
+    },
+    {
+      "idx": 29,
+      "t": 43.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s29_t0043.jpg"
+    },
+    {
+      "idx": 30,
+      "t": 45.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s30_t0045.jpg"
+    },
+    {
+      "idx": 31,
+      "t": 46.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s31_t0046.jpg"
+    },
+    {
+      "idx": 32,
+      "t": 48.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s32_t0048.jpg"
+    },
+    {
+      "idx": 33,
+      "t": 49.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s33_t0049.jpg"
+    },
+    {
+      "idx": 34,
+      "t": 51.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s34_t0051.jpg"
+    },
+    {
+      "idx": 35,
+      "t": 52.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s35_t0052.jpg"
+    },
+    {
+      "idx": 36,
+      "t": 54.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s36_t0054.jpg"
+    },
+    {
+      "idx": 37,
+      "t": 55.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s37_t0055.jpg"
+    },
+    {
+      "idx": 38,
+      "t": 57.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s38_t0057.jpg"
+    },
+    {
+      "idx": 39,
+      "t": 58.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151118_s39_t0058.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.994,
+    "duration_s": 59.4133125,
+    "text": "Okay, thank you. Just going down real quick. Thank you. Right there. That's how I feel. You want to know how I feel about this guy?",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.0,
+        "text": "Okay, thank you."
+      },
+      {
+        "start": 16.02,
+        "end": 18.94,
+        "text": "Just going down real quick."
+      },
+      {
+        "start": 28.58,
+        "end": 29.58,
+        "text": "Thank you."
+      },
+      {
+        "start": 49.46,
+        "end": 51.46,
+        "text": "Right there. That's how I feel."
+      },
+      {
+        "start": 51.46,
+        "end": 53.46,
+        "text": "You want to know how I feel about this guy?"
+      }
+    ]
+  },
+  "tags": [
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal"
+  ]
+}

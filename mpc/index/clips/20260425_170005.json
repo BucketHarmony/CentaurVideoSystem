@@ -1,0 +1,239 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_170005.mp4",
+    "filename": "20260425_170005.mp4",
+    "duration_s": 16.661083,
+    "size_bytes": 25473495,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 35.591
+    },
+    {
+      "t": 1.0,
+      "motion": 38.439
+    },
+    {
+      "t": 1.5,
+      "motion": 38.113
+    },
+    {
+      "t": 2.0,
+      "motion": 35.984
+    },
+    {
+      "t": 2.5,
+      "motion": 30.859
+    },
+    {
+      "t": 3.001,
+      "motion": 27.434
+    },
+    {
+      "t": 3.501,
+      "motion": 29.369
+    },
+    {
+      "t": 4.001,
+      "motion": 29.873
+    },
+    {
+      "t": 4.501,
+      "motion": 27.92
+    },
+    {
+      "t": 5.001,
+      "motion": 25.817
+    },
+    {
+      "t": 5.501,
+      "motion": 28.073
+    },
+    {
+      "t": 6.001,
+      "motion": 31.264
+    },
+    {
+      "t": 6.501,
+      "motion": 32.065
+    },
+    {
+      "t": 7.001,
+      "motion": 29.29
+    },
+    {
+      "t": 7.501,
+      "motion": 26.404
+    },
+    {
+      "t": 8.001,
+      "motion": 25.783
+    },
+    {
+      "t": 8.502,
+      "motion": 25.083
+    },
+    {
+      "t": 9.002,
+      "motion": 24.082
+    },
+    {
+      "t": 9.502,
+      "motion": 21.383
+    },
+    {
+      "t": 10.002,
+      "motion": 21.141
+    },
+    {
+      "t": 10.502,
+      "motion": 20.341
+    },
+    {
+      "t": 11.002,
+      "motion": 22.044
+    },
+    {
+      "t": 11.502,
+      "motion": 20.868
+    },
+    {
+      "t": 12.002,
+      "motion": 14.969
+    },
+    {
+      "t": 12.502,
+      "motion": 18.797
+    },
+    {
+      "t": 13.002,
+      "motion": 21.105
+    },
+    {
+      "t": 13.502,
+      "motion": 23.536
+    },
+    {
+      "t": 14.002,
+      "motion": 23.912
+    },
+    {
+      "t": 14.503,
+      "motion": 24.116
+    },
+    {
+      "t": 15.003,
+      "motion": 28.056
+    },
+    {
+      "t": 15.503,
+      "motion": 25.937
+    },
+    {
+      "t": 16.003,
+      "motion": 29.8
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170005_s10_t0015.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.967,
+    "duration_s": 16.6613125,
+    "text": "We are some of the singing resistance groups. They're all around the country, and we are trying to give support to the community. Now, we're not just going to sing for you. We want to sing with you. So please, you'll know the tune that I...",
+    "segments": [
+      {
+        "start": 0.72,
+        "end": 4.4,
+        "text": "We are some of the singing resistance groups."
+      },
+      {
+        "start": 4.7,
+        "end": 10.16,
+        "text": "They're all around the country, and we are trying to give support to the community."
+      },
+      {
+        "start": 10.3,
+        "end": 11.96,
+        "text": "Now, we're not just going to sing for you."
+      },
+      {
+        "start": 12.34,
+        "end": 13.78,
+        "text": "We want to sing with you."
+      },
+      {
+        "start": 14.12,
+        "end": 16.64,
+        "text": "So please, you'll know the tune that I..."
+      }
+    ]
+  },
+  "tags": [
+    "camera_shake",
+    "dialogue",
+    "high_motion",
+    "horizontal",
+    "speech"
+  ]
+}

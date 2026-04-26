@@ -1,0 +1,234 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_165207.mp4",
+    "filename": "20260425_165207.mp4",
+    "duration_s": 16.042417,
+    "size_bytes": 24627292,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 23.704
+    },
+    {
+      "t": 1.0,
+      "motion": 26.407
+    },
+    {
+      "t": 1.5,
+      "motion": 26.232
+    },
+    {
+      "t": 2.0,
+      "motion": 25.277
+    },
+    {
+      "t": 2.5,
+      "motion": 28.877
+    },
+    {
+      "t": 3.0,
+      "motion": 30.004
+    },
+    {
+      "t": 3.5,
+      "motion": 28.355
+    },
+    {
+      "t": 4.0,
+      "motion": 27.42
+    },
+    {
+      "t": 4.5,
+      "motion": 28.736
+    },
+    {
+      "t": 5.0,
+      "motion": 28.516
+    },
+    {
+      "t": 5.5,
+      "motion": 26.756
+    },
+    {
+      "t": 6.0,
+      "motion": 25.242
+    },
+    {
+      "t": 6.5,
+      "motion": 25.349
+    },
+    {
+      "t": 7.0,
+      "motion": 26.785
+    },
+    {
+      "t": 7.5,
+      "motion": 27.991
+    },
+    {
+      "t": 8.0,
+      "motion": 28.107
+    },
+    {
+      "t": 8.5,
+      "motion": 28.593
+    },
+    {
+      "t": 9.0,
+      "motion": 27.419
+    },
+    {
+      "t": 9.5,
+      "motion": 25.45
+    },
+    {
+      "t": 10.0,
+      "motion": 22.263
+    },
+    {
+      "t": 10.5,
+      "motion": 22.4
+    },
+    {
+      "t": 11.0,
+      "motion": 24.851
+    },
+    {
+      "t": 11.501,
+      "motion": 27.199
+    },
+    {
+      "t": 12.001,
+      "motion": 26.95
+    },
+    {
+      "t": 12.501,
+      "motion": 26.343
+    },
+    {
+      "t": 13.001,
+      "motion": 24.321
+    },
+    {
+      "t": 13.501,
+      "motion": 25.503
+    },
+    {
+      "t": 14.001,
+      "motion": 23.48
+    },
+    {
+      "t": 14.501,
+      "motion": 23.38
+    },
+    {
+      "t": 15.001,
+      "motion": 26.975
+    },
+    {
+      "t": 15.501,
+      "motion": 24.205
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_165207_s10_t0015.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.722,
+    "duration_s": 16.0426875,
+    "text": "For right and justice, we win. My friend, my name is Dr. Naz Hassan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is at test right now.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.0,
+        "text": "For right and justice, we win."
+      },
+      {
+        "start": 3.5,
+        "end": 5.8,
+        "text": "My friend, my name is Dr. Naz Hassan."
+      },
+      {
+        "start": 6.1,
+        "end": 7.32,
+        "text": "I'm not going to take much time."
+      },
+      {
+        "start": 8.67,
+        "end": 10.95,
+        "text": "I am very fearful of what's going around."
+      },
+      {
+        "start": 11.77,
+        "end": 14.94,
+        "text": "Our democracy is at test right now."
+      }
+    ]
+  },
+  "tags": [
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal"
+  ]
+}

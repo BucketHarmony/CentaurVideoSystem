@@ -1,0 +1,352 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_161528.mp4",
+    "filename": "20260425_161528.mp4",
+    "duration_s": 26.98625,
+    "size_bytes": 41260325,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 27.622
+    },
+    {
+      "t": 1.0,
+      "motion": 28.375
+    },
+    {
+      "t": 1.5,
+      "motion": 26.388
+    },
+    {
+      "t": 2.0,
+      "motion": 24.123
+    },
+    {
+      "t": 2.5,
+      "motion": 23.696
+    },
+    {
+      "t": 3.0,
+      "motion": 24.701
+    },
+    {
+      "t": 3.5,
+      "motion": 27.822
+    },
+    {
+      "t": 4.0,
+      "motion": 26.45
+    },
+    {
+      "t": 4.5,
+      "motion": 23.629
+    },
+    {
+      "t": 5.0,
+      "motion": 22.645
+    },
+    {
+      "t": 5.5,
+      "motion": 22.498
+    },
+    {
+      "t": 6.0,
+      "motion": 21.007
+    },
+    {
+      "t": 6.5,
+      "motion": 19.097
+    },
+    {
+      "t": 7.0,
+      "motion": 27.094
+    },
+    {
+      "t": 7.5,
+      "motion": 31.917
+    },
+    {
+      "t": 8.001,
+      "motion": 32.954
+    },
+    {
+      "t": 8.501,
+      "motion": 32.794
+    },
+    {
+      "t": 9.001,
+      "motion": 32.818
+    },
+    {
+      "t": 9.501,
+      "motion": 32.93
+    },
+    {
+      "t": 10.001,
+      "motion": 32.506
+    },
+    {
+      "t": 10.501,
+      "motion": 31.65
+    },
+    {
+      "t": 11.001,
+      "motion": 30.848
+    },
+    {
+      "t": 11.501,
+      "motion": 27.818
+    },
+    {
+      "t": 12.001,
+      "motion": 29.463
+    },
+    {
+      "t": 12.501,
+      "motion": 31.062
+    },
+    {
+      "t": 13.001,
+      "motion": 32.28
+    },
+    {
+      "t": 13.501,
+      "motion": 33.52
+    },
+    {
+      "t": 14.001,
+      "motion": 34.167
+    },
+    {
+      "t": 14.501,
+      "motion": 33.242
+    },
+    {
+      "t": 15.001,
+      "motion": 32.961
+    },
+    {
+      "t": 15.501,
+      "motion": 31.583
+    },
+    {
+      "t": 16.001,
+      "motion": 30.247
+    },
+    {
+      "t": 16.501,
+      "motion": 27.947
+    },
+    {
+      "t": 17.001,
+      "motion": 26.571
+    },
+    {
+      "t": 17.501,
+      "motion": 26.288
+    },
+    {
+      "t": 18.001,
+      "motion": 26.734
+    },
+    {
+      "t": 18.501,
+      "motion": 27.822
+    },
+    {
+      "t": 19.001,
+      "motion": 29.013
+    },
+    {
+      "t": 19.501,
+      "motion": 29.757
+    },
+    {
+      "t": 20.001,
+      "motion": 29.741
+    },
+    {
+      "t": 20.501,
+      "motion": 24.473
+    },
+    {
+      "t": 21.001,
+      "motion": 25.639
+    },
+    {
+      "t": 21.501,
+      "motion": 31.449
+    },
+    {
+      "t": 22.001,
+      "motion": 30.058
+    },
+    {
+      "t": 22.501,
+      "motion": 30.434
+    },
+    {
+      "t": 23.002,
+      "motion": 29.425
+    },
+    {
+      "t": 23.502,
+      "motion": 28.864
+    },
+    {
+      "t": 24.002,
+      "motion": 27.933
+    },
+    {
+      "t": 24.502,
+      "motion": 26.138
+    },
+    {
+      "t": 25.002,
+      "motion": 24.152
+    },
+    {
+      "t": 25.502,
+      "motion": 23.492
+    },
+    {
+      "t": 26.002,
+      "motion": 23.917
+    },
+    {
+      "t": 26.502,
+      "motion": 24.298
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 16.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s11_t0016.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 19.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s13_t0019.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 22.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s15_t0022.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s16_t0024.jpg"
+    },
+    {
+      "idx": 17,
+      "t": 25.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_161528_s17_t0025.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.883,
+    "duration_s": 26.9866875,
+    "text": "that we are not going to let them out of hook. I joined the bill to impeach Kristi Noem. She is fired but her crimes are still there and she will be prosecuted for her crimes. Kristi Noem will be prosecuted.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 4.44,
+        "text": "that we are not going to let them out of"
+      },
+      {
+        "start": 4.44,
+        "end": 13.24,
+        "text": "hook. I joined the bill to impeach"
+      },
+      {
+        "start": 13.24,
+        "end": 17.98,
+        "text": "Kristi Noem. She is fired but her crimes are"
+      },
+      {
+        "start": 17.98,
+        "end": 26.98,
+        "text": "still there and she will be prosecuted for her crimes. Kristi Noem will be prosecuted."
+      }
+    ]
+  },
+  "tags": [
+    "camera_shake",
+    "dialogue",
+    "high_motion",
+    "horizontal"
+  ]
+}

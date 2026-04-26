@@ -1,0 +1,297 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_170500.mp4",
+    "filename": "20260425_170500.mp4",
+    "duration_s": 21.631667,
+    "size_bytes": 32934455,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 27.86
+    },
+    {
+      "t": 1.0,
+      "motion": 26.809
+    },
+    {
+      "t": 1.5,
+      "motion": 24.994
+    },
+    {
+      "t": 2.0,
+      "motion": 30.291
+    },
+    {
+      "t": 2.5,
+      "motion": 35.293
+    },
+    {
+      "t": 3.0,
+      "motion": 35.913
+    },
+    {
+      "t": 3.5,
+      "motion": 35.213
+    },
+    {
+      "t": 4.0,
+      "motion": 36.099
+    },
+    {
+      "t": 4.5,
+      "motion": 37.242
+    },
+    {
+      "t": 5.0,
+      "motion": 37.743
+    },
+    {
+      "t": 5.5,
+      "motion": 33.939
+    },
+    {
+      "t": 6.0,
+      "motion": 31.955
+    },
+    {
+      "t": 6.501,
+      "motion": 35.491
+    },
+    {
+      "t": 7.001,
+      "motion": 35.968
+    },
+    {
+      "t": 7.501,
+      "motion": 36.031
+    },
+    {
+      "t": 8.001,
+      "motion": 36.9
+    },
+    {
+      "t": 8.501,
+      "motion": 37.31
+    },
+    {
+      "t": 9.001,
+      "motion": 36.961
+    },
+    {
+      "t": 9.501,
+      "motion": 34.728
+    },
+    {
+      "t": 10.001,
+      "motion": 32.328
+    },
+    {
+      "t": 10.501,
+      "motion": 27.252
+    },
+    {
+      "t": 11.001,
+      "motion": 20.622
+    },
+    {
+      "t": 11.501,
+      "motion": 24.859
+    },
+    {
+      "t": 12.001,
+      "motion": 24.036
+    },
+    {
+      "t": 12.501,
+      "motion": 24.289
+    },
+    {
+      "t": 13.001,
+      "motion": 26.722
+    },
+    {
+      "t": 13.501,
+      "motion": 29.033
+    },
+    {
+      "t": 14.001,
+      "motion": 30.918
+    },
+    {
+      "t": 14.501,
+      "motion": 32.537
+    },
+    {
+      "t": 15.001,
+      "motion": 34.356
+    },
+    {
+      "t": 15.501,
+      "motion": 35.576
+    },
+    {
+      "t": 16.001,
+      "motion": 33.765
+    },
+    {
+      "t": 16.501,
+      "motion": 32.524
+    },
+    {
+      "t": 17.001,
+      "motion": 32.451
+    },
+    {
+      "t": 17.501,
+      "motion": 32.654
+    },
+    {
+      "t": 18.001,
+      "motion": 32.768
+    },
+    {
+      "t": 18.501,
+      "motion": 30.052
+    },
+    {
+      "t": 19.001,
+      "motion": 28.221
+    },
+    {
+      "t": 19.502,
+      "motion": 27.398
+    },
+    {
+      "t": 20.002,
+      "motion": 25.782
+    },
+    {
+      "t": 20.502,
+      "motion": 24.356
+    },
+    {
+      "t": 21.002,
+      "motion": 22.002
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 11.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s07_t0011.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 14.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s09_t0014.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 17.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s11_t0017.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 20.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_170500_s13_t0020.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.982,
+    "duration_s": 21.632,
+    "text": "Legislation that would take masks off of ICE. We have stood with Dana Nessel and Bob McCrane at the press conference suing the federal government. But here's the truth. What we have seen in the federal government goes beyond what is happening in this moment. Year after year, both Democrats and Republicans have been voting to increase ISIS funding.",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.48,
+        "text": "Legislation that would take masks off of ICE."
+      },
+      {
+        "start": 2.48,
+        "end": 9.04,
+        "text": "We have stood with Dana Nessel and Bob McCrane at the press conference suing the federal government."
+      },
+      {
+        "start": 9.04,
+        "end": 14.16,
+        "text": "But here's the truth. What we have seen in the federal government goes beyond what is happening"
+      },
+      {
+        "start": 14.16,
+        "end": 20.32,
+        "text": "in this moment. Year after year, both Democrats and Republicans have been voting to increase"
+      },
+      {
+        "start": 20.32,
+        "end": 21.6,
+        "text": "ISIS funding."
+      }
+    ]
+  },
+  "tags": [
+    "ICE",
+    "Nessel",
+    "camera_shake",
+    "court",
+    "dialogue",
+    "high_motion",
+    "horizontal",
+    "press"
+  ]
+}

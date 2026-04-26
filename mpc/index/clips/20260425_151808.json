@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_151808.mp4",
+    "filename": "20260425_151808.mp4",
+    "duration_s": 6.954563,
+    "size_bytes": 10662504,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 32.371
+    },
+    {
+      "t": 1.0,
+      "motion": 27.242
+    },
+    {
+      "t": 1.5,
+      "motion": 27.665
+    },
+    {
+      "t": 2.0,
+      "motion": 32.117
+    },
+    {
+      "t": 2.5,
+      "motion": 34.188
+    },
+    {
+      "t": 3.0,
+      "motion": 32.916
+    },
+    {
+      "t": 3.5,
+      "motion": 31.014
+    },
+    {
+      "t": 4.001,
+      "motion": 23.216
+    },
+    {
+      "t": 4.501,
+      "motion": 15.008
+    },
+    {
+      "t": 5.001,
+      "motion": 17.404
+    },
+    {
+      "t": 5.501,
+      "motion": 20.786
+    },
+    {
+      "t": 6.001,
+      "motion": 29.995
+    },
+    {
+      "t": 6.501,
+      "motion": 32.495
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151808_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151808_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151808_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151808_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_151808_s04_t0006.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.99,
+    "duration_s": 6.9546875,
+    "text": "Okay. All right. Thank you.",
+    "segments": [
+      {
+        "start": 0.34,
+        "end": 1.18,
+        "text": "Okay."
+      },
+      {
+        "start": 3.52,
+        "end": 4.68,
+        "text": "All right."
+      },
+      {
+        "start": 5.08,
+        "end": 5.78,
+        "text": "Thank you."
+      }
+    ]
+  },
+  "tags": [
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal",
+    "short"
+  ]
+}

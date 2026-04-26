@@ -1,0 +1,1121 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\20260425_155050.mp4",
+    "filename": "20260425_155050.mp4",
+    "duration_s": 88.233292,
+    "size_bytes": 134979926,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 35.24
+    },
+    {
+      "t": 1.0,
+      "motion": 38.72
+    },
+    {
+      "t": 1.5,
+      "motion": 33.999
+    },
+    {
+      "t": 2.0,
+      "motion": 26.288
+    },
+    {
+      "t": 2.5,
+      "motion": 17.152
+    },
+    {
+      "t": 3.0,
+      "motion": 17.929
+    },
+    {
+      "t": 3.5,
+      "motion": 18.795
+    },
+    {
+      "t": 4.0,
+      "motion": 21.162
+    },
+    {
+      "t": 4.5,
+      "motion": 21.351
+    },
+    {
+      "t": 5.0,
+      "motion": 23.494
+    },
+    {
+      "t": 5.5,
+      "motion": 24.522
+    },
+    {
+      "t": 6.0,
+      "motion": 24.012
+    },
+    {
+      "t": 6.5,
+      "motion": 24.254
+    },
+    {
+      "t": 7.0,
+      "motion": 24.197
+    },
+    {
+      "t": 7.5,
+      "motion": 22.105
+    },
+    {
+      "t": 8.0,
+      "motion": 20.073
+    },
+    {
+      "t": 8.5,
+      "motion": 18.514
+    },
+    {
+      "t": 9.001,
+      "motion": 19.715
+    },
+    {
+      "t": 9.501,
+      "motion": 20.018
+    },
+    {
+      "t": 10.001,
+      "motion": 18.681
+    },
+    {
+      "t": 10.501,
+      "motion": 19.565
+    },
+    {
+      "t": 11.001,
+      "motion": 21.715
+    },
+    {
+      "t": 11.501,
+      "motion": 25.475
+    },
+    {
+      "t": 12.001,
+      "motion": 32.698
+    },
+    {
+      "t": 12.501,
+      "motion": 30.575
+    },
+    {
+      "t": 13.001,
+      "motion": 26.526
+    },
+    {
+      "t": 13.501,
+      "motion": 24.573
+    },
+    {
+      "t": 14.001,
+      "motion": 21.403
+    },
+    {
+      "t": 14.501,
+      "motion": 18.651
+    },
+    {
+      "t": 15.001,
+      "motion": 18.025
+    },
+    {
+      "t": 15.501,
+      "motion": 19.101
+    },
+    {
+      "t": 16.001,
+      "motion": 19.686
+    },
+    {
+      "t": 16.501,
+      "motion": 19.562
+    },
+    {
+      "t": 17.001,
+      "motion": 18.012
+    },
+    {
+      "t": 17.501,
+      "motion": 18.262
+    },
+    {
+      "t": 18.001,
+      "motion": 17.576
+    },
+    {
+      "t": 18.501,
+      "motion": 18.052
+    },
+    {
+      "t": 19.001,
+      "motion": 19.136
+    },
+    {
+      "t": 19.501,
+      "motion": 16.968
+    },
+    {
+      "t": 20.001,
+      "motion": 17.469
+    },
+    {
+      "t": 20.501,
+      "motion": 17.937
+    },
+    {
+      "t": 21.001,
+      "motion": 16.648
+    },
+    {
+      "t": 21.501,
+      "motion": 15.689
+    },
+    {
+      "t": 22.001,
+      "motion": 15.544
+    },
+    {
+      "t": 22.501,
+      "motion": 17.238
+    },
+    {
+      "t": 23.001,
+      "motion": 20.258
+    },
+    {
+      "t": 23.501,
+      "motion": 22.784
+    },
+    {
+      "t": 24.001,
+      "motion": 25.108
+    },
+    {
+      "t": 24.501,
+      "motion": 25.119
+    },
+    {
+      "t": 25.001,
+      "motion": 17.091
+    },
+    {
+      "t": 25.501,
+      "motion": 18.026
+    },
+    {
+      "t": 26.001,
+      "motion": 20.954
+    },
+    {
+      "t": 26.502,
+      "motion": 21.134
+    },
+    {
+      "t": 27.002,
+      "motion": 20.611
+    },
+    {
+      "t": 27.502,
+      "motion": 21.467
+    },
+    {
+      "t": 28.002,
+      "motion": 18.782
+    },
+    {
+      "t": 28.502,
+      "motion": 17.658
+    },
+    {
+      "t": 29.002,
+      "motion": 20.493
+    },
+    {
+      "t": 29.502,
+      "motion": 19.798
+    },
+    {
+      "t": 30.002,
+      "motion": 12.051
+    },
+    {
+      "t": 30.502,
+      "motion": 11.256
+    },
+    {
+      "t": 31.002,
+      "motion": 13.489
+    },
+    {
+      "t": 31.502,
+      "motion": 11.586
+    },
+    {
+      "t": 32.002,
+      "motion": 15.523
+    },
+    {
+      "t": 32.502,
+      "motion": 12.863
+    },
+    {
+      "t": 33.002,
+      "motion": 16.754
+    },
+    {
+      "t": 33.502,
+      "motion": 16.858
+    },
+    {
+      "t": 34.002,
+      "motion": 16.004
+    },
+    {
+      "t": 34.502,
+      "motion": 16.154
+    },
+    {
+      "t": 35.002,
+      "motion": 13.635
+    },
+    {
+      "t": 35.502,
+      "motion": 16.331
+    },
+    {
+      "t": 36.002,
+      "motion": 18.214
+    },
+    {
+      "t": 36.502,
+      "motion": 20.544
+    },
+    {
+      "t": 37.002,
+      "motion": 21.961
+    },
+    {
+      "t": 37.502,
+      "motion": 18.588
+    },
+    {
+      "t": 38.002,
+      "motion": 18.589
+    },
+    {
+      "t": 38.502,
+      "motion": 20.158
+    },
+    {
+      "t": 39.002,
+      "motion": 17.808
+    },
+    {
+      "t": 39.502,
+      "motion": 20.246
+    },
+    {
+      "t": 40.002,
+      "motion": 19.774
+    },
+    {
+      "t": 40.502,
+      "motion": 16.617
+    },
+    {
+      "t": 41.002,
+      "motion": 13.866
+    },
+    {
+      "t": 41.502,
+      "motion": 11.715
+    },
+    {
+      "t": 42.002,
+      "motion": 9.731
+    },
+    {
+      "t": 42.502,
+      "motion": 11.132
+    },
+    {
+      "t": 43.002,
+      "motion": 15.255
+    },
+    {
+      "t": 43.502,
+      "motion": 18.036
+    },
+    {
+      "t": 44.003,
+      "motion": 21.064
+    },
+    {
+      "t": 44.503,
+      "motion": 19.027
+    },
+    {
+      "t": 45.003,
+      "motion": 18.693
+    },
+    {
+      "t": 45.503,
+      "motion": 18.969
+    },
+    {
+      "t": 46.003,
+      "motion": 19.09
+    },
+    {
+      "t": 46.503,
+      "motion": 17.402
+    },
+    {
+      "t": 47.003,
+      "motion": 17.189
+    },
+    {
+      "t": 47.503,
+      "motion": 18.267
+    },
+    {
+      "t": 48.003,
+      "motion": 15.905
+    },
+    {
+      "t": 48.503,
+      "motion": 10.989
+    },
+    {
+      "t": 49.003,
+      "motion": 8.533
+    },
+    {
+      "t": 49.503,
+      "motion": 7.313
+    },
+    {
+      "t": 50.003,
+      "motion": 8.346
+    },
+    {
+      "t": 50.503,
+      "motion": 12.248
+    },
+    {
+      "t": 51.003,
+      "motion": 13.333
+    },
+    {
+      "t": 51.503,
+      "motion": 10.884
+    },
+    {
+      "t": 52.003,
+      "motion": 12.709
+    },
+    {
+      "t": 52.503,
+      "motion": 14.164
+    },
+    {
+      "t": 53.003,
+      "motion": 14.578
+    },
+    {
+      "t": 53.503,
+      "motion": 19.551
+    },
+    {
+      "t": 54.003,
+      "motion": 17.111
+    },
+    {
+      "t": 54.503,
+      "motion": 12.903
+    },
+    {
+      "t": 55.003,
+      "motion": 17.43
+    },
+    {
+      "t": 55.503,
+      "motion": 17.645
+    },
+    {
+      "t": 56.003,
+      "motion": 15.712
+    },
+    {
+      "t": 56.503,
+      "motion": 14.807
+    },
+    {
+      "t": 57.003,
+      "motion": 21.013
+    },
+    {
+      "t": 57.503,
+      "motion": 20.332
+    },
+    {
+      "t": 58.003,
+      "motion": 15.941
+    },
+    {
+      "t": 58.503,
+      "motion": 16.992
+    },
+    {
+      "t": 59.003,
+      "motion": 16.212
+    },
+    {
+      "t": 59.503,
+      "motion": 17.741
+    },
+    {
+      "t": 60.003,
+      "motion": 17.955
+    },
+    {
+      "t": 60.503,
+      "motion": 17.406
+    },
+    {
+      "t": 61.004,
+      "motion": 15.149
+    },
+    {
+      "t": 61.504,
+      "motion": 13.769
+    },
+    {
+      "t": 62.004,
+      "motion": 14.635
+    },
+    {
+      "t": 62.504,
+      "motion": 14.553
+    },
+    {
+      "t": 63.004,
+      "motion": 18.706
+    },
+    {
+      "t": 63.504,
+      "motion": 17.196
+    },
+    {
+      "t": 64.004,
+      "motion": 10.485
+    },
+    {
+      "t": 64.504,
+      "motion": 15.067
+    },
+    {
+      "t": 65.004,
+      "motion": 14.849
+    },
+    {
+      "t": 65.504,
+      "motion": 16.052
+    },
+    {
+      "t": 66.004,
+      "motion": 16.399
+    },
+    {
+      "t": 66.504,
+      "motion": 16.364
+    },
+    {
+      "t": 67.004,
+      "motion": 17.038
+    },
+    {
+      "t": 67.504,
+      "motion": 16.819
+    },
+    {
+      "t": 68.004,
+      "motion": 18.379
+    },
+    {
+      "t": 68.504,
+      "motion": 18.964
+    },
+    {
+      "t": 69.004,
+      "motion": 18.669
+    },
+    {
+      "t": 69.504,
+      "motion": 24.29
+    },
+    {
+      "t": 70.004,
+      "motion": 24.362
+    },
+    {
+      "t": 70.504,
+      "motion": 25.918
+    },
+    {
+      "t": 71.004,
+      "motion": 26.164
+    },
+    {
+      "t": 71.504,
+      "motion": 22.096
+    },
+    {
+      "t": 72.004,
+      "motion": 20.838
+    },
+    {
+      "t": 72.504,
+      "motion": 16.137
+    },
+    {
+      "t": 73.004,
+      "motion": 9.157
+    },
+    {
+      "t": 73.504,
+      "motion": 12.072
+    },
+    {
+      "t": 74.004,
+      "motion": 9.058
+    },
+    {
+      "t": 74.504,
+      "motion": 12.445
+    },
+    {
+      "t": 75.004,
+      "motion": 18.644
+    },
+    {
+      "t": 75.504,
+      "motion": 24.469
+    },
+    {
+      "t": 76.004,
+      "motion": 29.503
+    },
+    {
+      "t": 76.504,
+      "motion": 26.072
+    },
+    {
+      "t": 77.004,
+      "motion": 31.971
+    },
+    {
+      "t": 77.504,
+      "motion": 40.47
+    },
+    {
+      "t": 78.004,
+      "motion": 31.827
+    },
+    {
+      "t": 78.505,
+      "motion": 23.284
+    },
+    {
+      "t": 79.005,
+      "motion": 28.277
+    },
+    {
+      "t": 79.505,
+      "motion": 31.867
+    },
+    {
+      "t": 80.005,
+      "motion": 32.725
+    },
+    {
+      "t": 80.505,
+      "motion": 29.12
+    },
+    {
+      "t": 81.005,
+      "motion": 32.758
+    },
+    {
+      "t": 81.505,
+      "motion": 31.057
+    },
+    {
+      "t": 82.005,
+      "motion": 27.41
+    },
+    {
+      "t": 82.505,
+      "motion": 27.498
+    },
+    {
+      "t": 83.005,
+      "motion": 23.386
+    },
+    {
+      "t": 83.505,
+      "motion": 22.816
+    },
+    {
+      "t": 84.005,
+      "motion": 23.231
+    },
+    {
+      "t": 84.505,
+      "motion": 22.505
+    },
+    {
+      "t": 85.005,
+      "motion": 21.167
+    },
+    {
+      "t": 85.505,
+      "motion": 18.645
+    },
+    {
+      "t": 86.005,
+      "motion": 19.121
+    },
+    {
+      "t": 86.505,
+      "motion": 21.214
+    },
+    {
+      "t": 87.005,
+      "motion": 21.678
+    },
+    {
+      "t": 87.505,
+      "motion": 20.807
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 16.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s11_t0016.jpg"
+    },
+    {
+      "idx": 12,
+      "t": 18.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s12_t0018.jpg"
+    },
+    {
+      "idx": 13,
+      "t": 19.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s13_t0019.jpg"
+    },
+    {
+      "idx": 14,
+      "t": 21.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s14_t0021.jpg"
+    },
+    {
+      "idx": 15,
+      "t": 22.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s15_t0022.jpg"
+    },
+    {
+      "idx": 16,
+      "t": 24.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s16_t0024.jpg"
+    },
+    {
+      "idx": 17,
+      "t": 25.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s17_t0025.jpg"
+    },
+    {
+      "idx": 18,
+      "t": 27.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s18_t0027.jpg"
+    },
+    {
+      "idx": 19,
+      "t": 28.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s19_t0028.jpg"
+    },
+    {
+      "idx": 20,
+      "t": 32.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s20_t0032.jpg"
+    },
+    {
+      "idx": 21,
+      "t": 33.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s21_t0033.jpg"
+    },
+    {
+      "idx": 22,
+      "t": 35.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s22_t0035.jpg"
+    },
+    {
+      "idx": 23,
+      "t": 37.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s23_t0037.jpg"
+    },
+    {
+      "idx": 24,
+      "t": 38.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s24_t0038.jpg"
+    },
+    {
+      "idx": 25,
+      "t": 40.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s25_t0040.jpg"
+    },
+    {
+      "idx": 26,
+      "t": 43.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s26_t0043.jpg"
+    },
+    {
+      "idx": 27,
+      "t": 44.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s27_t0044.jpg"
+    },
+    {
+      "idx": 28,
+      "t": 46.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s28_t0046.jpg"
+    },
+    {
+      "idx": 29,
+      "t": 47.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s29_t0047.jpg"
+    },
+    {
+      "idx": 30,
+      "t": 52.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s30_t0052.jpg"
+    },
+    {
+      "idx": 31,
+      "t": 54.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s31_t0054.jpg"
+    },
+    {
+      "idx": 32,
+      "t": 55.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s32_t0055.jpg"
+    },
+    {
+      "idx": 33,
+      "t": 57.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s33_t0057.jpg"
+    },
+    {
+      "idx": 34,
+      "t": 58.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s34_t0058.jpg"
+    },
+    {
+      "idx": 35,
+      "t": 60.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s35_t0060.jpg"
+    },
+    {
+      "idx": 36,
+      "t": 62.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s36_t0062.jpg"
+    },
+    {
+      "idx": 37,
+      "t": 63.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s37_t0063.jpg"
+    },
+    {
+      "idx": 38,
+      "t": 65.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s38_t0065.jpg"
+    },
+    {
+      "idx": 39,
+      "t": 66.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s39_t0066.jpg"
+    },
+    {
+      "idx": 40,
+      "t": 68.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s40_t0068.jpg"
+    },
+    {
+      "idx": 41,
+      "t": 69.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s41_t0069.jpg"
+    },
+    {
+      "idx": 42,
+      "t": 71.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s42_t0071.jpg"
+    },
+    {
+      "idx": 43,
+      "t": 72.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s43_t0072.jpg"
+    },
+    {
+      "idx": 44,
+      "t": 75.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s44_t0075.jpg"
+    },
+    {
+      "idx": 45,
+      "t": 76.504,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s45_t0076.jpg"
+    },
+    {
+      "idx": 46,
+      "t": 78.004,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s46_t0078.jpg"
+    },
+    {
+      "idx": 47,
+      "t": 79.505,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s47_t0079.jpg"
+    },
+    {
+      "idx": 48,
+      "t": 81.005,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s48_t0081.jpg"
+    },
+    {
+      "idx": 49,
+      "t": 82.505,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s49_t0082.jpg"
+    },
+    {
+      "idx": 50,
+      "t": 84.005,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s50_t0084.jpg"
+    },
+    {
+      "idx": 51,
+      "t": 85.505,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s51_t0085.jpg"
+    },
+    {
+      "idx": 52,
+      "t": 87.005,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\20260425_155050_s52_t0087.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 0.936,
+    "duration_s": 88.2346875,
+    "text": "in one of the stories that's written in English. She writes, In August 1991, my family wanted a better future for their children, so we moved from Mexico to America. The hardships and obstacles we faced in Mexico didn't just stop there. What we were running from soon came to America. Our rapists followed us to our new beginning, our second chance. We tried to beat the odds, or what stereotype idea people think of Mexico slash Hispanic culture. At the age of 14, I was married to a 22-year-old man. This man was authorized to live in America due to his employment. I went through domestic violence with my husband, the same violence I endured from earlier years of childhood, which led CPS to removing me from my home. I thought he would protect me, but I was wrong. He was later deported after a gruesome assault, which caused me to be left in critical condition at the hospital. Not only did he leave me mentally and physically vulnerable, he left me with five beautiful children. Out of my five children, three of them are special needs. I had to learn how to take care and nurture them. As of now, I am married to another snake. Another man tried to beat me, hurt me, and was running into my daughter's room. There he was calling. I was shocked. When the police arrived, I was the one who was being put in the...",
+    "segments": [
+      {
+        "start": 0.08,
+        "end": 2.38,
+        "text": "in one of the stories that's written in English."
+      },
+      {
+        "start": 3.28,
+        "end": 3.74,
+        "text": "She writes,"
+      },
+      {
+        "start": 3.86,
+        "end": 7.78,
+        "text": "In August 1991, my family wanted a better future for their children,"
+      },
+      {
+        "start": 8.08,
+        "end": 10.28,
+        "text": "so we moved from Mexico to America."
+      },
+      {
+        "start": 10.95,
+        "end": 14.95,
+        "text": "The hardships and obstacles we faced in Mexico didn't just stop there."
+      },
+      {
+        "start": 14.95,
+        "end": 17.51,
+        "text": "What we were running from soon came to America."
+      },
+      {
+        "start": 18.27,
+        "end": 22.03,
+        "text": "Our rapists followed us to our new beginning, our second chance."
+      },
+      {
+        "start": 23.15,
+        "end": 28.59,
+        "text": "We tried to beat the odds, or what stereotype idea people think of Mexico"
+      },
+      {
+        "start": 28.59,
+        "end": 30.45,
+        "text": "slash Hispanic culture."
+      },
+      {
+        "start": 31.36,
+        "end": 35.0,
+        "text": "At the age of 14, I was married to a 22-year-old man."
+      },
+      {
+        "start": 35.74,
+        "end": 39.3,
+        "text": "This man was authorized to live in America due to his employment."
+      },
+      {
+        "start": 40.1,
+        "end": 42.4,
+        "text": "I went through domestic violence with my husband,"
+      },
+      {
+        "start": 42.4,
+        "end": 45.52,
+        "text": "the same violence I endured from earlier years of childhood,"
+      },
+      {
+        "start": 46.16,
+        "end": 48.94,
+        "text": "which led CPS to removing me from my home."
+      },
+      {
+        "start": 49.76,
+        "end": 52.26,
+        "text": "I thought he would protect me, but I was wrong."
+      },
+      {
+        "start": 53.24,
+        "end": 55.96,
+        "text": "He was later deported after a gruesome assault,"
+      },
+      {
+        "start": 56.12,
+        "end": 58.6,
+        "text": "which caused me to be left in critical condition at the hospital."
+      },
+      {
+        "start": 59.14,
+        "end": 62.18,
+        "text": "Not only did he leave me mentally and physically vulnerable,"
+      },
+      {
+        "start": 63.06,
+        "end": 69.62,
+        "text": "he left me with five beautiful children."
+      },
+      {
+        "start": 69.62,
+        "end": 72.24,
+        "text": "Out of my five children, three of them are special needs."
+      },
+      {
+        "start": 73.08,
+        "end": 77.18,
+        "text": "I had to learn how to take care and nurture them."
+      },
+      {
+        "start": 77.28,
+        "end": 78.82,
+        "text": "As of now, I am married to another snake."
+      },
+      {
+        "start": 79.58,
+        "end": 83.0,
+        "text": "Another man tried to beat me, hurt me, and was running into my daughter's room."
+      },
+      {
+        "start": 83.14,
+        "end": 84.86,
+        "text": "There he was calling. I was shocked."
+      },
+      {
+        "start": 85.48,
+        "end": 88.26,
+        "text": "When the police arrived, I was the one who was being put in the..."
+      }
+    ]
+  },
+  "tags": [
+    "camera_shake",
+    "dialogue",
+    "high_motion",
+    "horizontal",
+    "long"
+  ]
+}

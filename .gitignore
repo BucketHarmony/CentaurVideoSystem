@@ -22,6 +22,10 @@ Desktop.ini
 # Demo output (generated, not tracked)
 demo/output/
 
+# MPC pipeline — source footage and generated artifacts
+raw/
+mpc/index/thumbnails/
+
 # Misc
 *.log
 *.tmp
