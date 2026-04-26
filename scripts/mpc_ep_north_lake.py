@@ -1,24 +1,31 @@
 """
-MPC "Detroit Knows ICE" — 30s vertical reel, Donovan McKinney identity reel.
+MPC "North Lake" — 30s vertical reel, the testimony angle.
 
-Localizes the ICE fight to Detroit / Black neighborhoods. A state rep
-(MI-11) names himself, names his district, and grounds the fight in
-local memory: "ICE is not new to our community."
+Different lever from the other reels in the suite: not receipts (Follow
+the Money), not identity (Detroit Knows), not authority (Abolish ICE
+Congress), not duration (Ten Weeks), not energy (People Power). This
+one names *who's inside*: a translated message from Juan, released
+April 24 after 90 days at the North Lake detention center.
+
+Every other reel in the suite features MPC organizers, legislators,
+or activists speaking on behalf of those locked up. This reel hands
+the mic — through a translator — to someone who was actually in.
 
 Beats (30s):
-  0:00-0:09  HOOK    — C  — McKinney intro + 11th House District + 8 Mile .
-                       (163747 1.5-10.5)
-  0:09-0:19  STAKES  — Dm — "Let me tell you why I'm here. ICE is not new" .
-                       (163747 21.0-30.0)
-  0:19-0:24  CALL    — A  — "We're stronger together. Say it with me."  ...
-                       (164056 0.0-5.0; audio truncated at 4.72)
-  0:24-0:30  CTA     — A  — chant b-roll + tagline + synth VO .............
-                       "Detroit knows. Stronger together. Link in bio."
+  0:00-0:07  HOOK     — Dm — "I was released Friday — April 24."
+                        (155313 13.0-20.0)
+  0:07-0:15  INSIDE   — Am — "The conditions right now are very upsetting"
+                        (155313 20.0-28.0)
+  0:15-0:25  THE LAW  — Dm — "Federal judges issuing very high bond awards
+                        ... denials of bond in asylum cases."
+                        (155313 30.4-40.4)
+  0:25-0:30  CTA      — A  — chrome + chant b-roll + synth VO
+                        "Free them all. Stand with Juan. Chip in. Link in bio."
 
-Output: E:/AI/CVS/ComfyUI/output/mpc/detroit_knows.mp4
+Output: E:/AI/CVS/ComfyUI/output/mpc/north_lake.mp4
 
 Run:
-    python E:/AI/CVS/scripts/mpc_ep_detroit_knows.py
+    python E:/AI/CVS/scripts/mpc_ep_north_lake.py
 """
 
 from __future__ import annotations
@@ -61,11 +68,11 @@ BRAND = ROOT / "brand"
 ENV_PATH = Path("E:/AI/CVS/.env")
 OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output/mpc")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-OUTPUT_PATH = OUTPUT_DIR / "detroit_knows.mp4"
-AUDIO_PATH = OUTPUT_DIR / "detroit_knows_audio.wav"
+OUTPUT_PATH = OUTPUT_DIR / "north_lake.mp4"
+AUDIO_PATH = OUTPUT_DIR / "north_lake_audio.wav"
 TTS_CACHE = OUTPUT_DIR / "tts_cache"
 TTS_CACHE.mkdir(exist_ok=True)
-TTS_PREFIX = "dki"
+TTS_PREFIX = "nlk"
 _ROT_CACHE_DIR = OUTPUT_DIR / "_rot_cache"
 
 RAW_DIR = Path("E:/AI/CVS/raw/MPC/Ice Out Romulus")
@@ -93,41 +100,48 @@ CTA_WELL_H = LAYOUT.CTA_WELL_H
 # Beats
 # --------------------------------------------------------------------------- #
 
-INTRO = RAW_DIR / "20260425_163747.mp4"
-CALL = RAW_DIR / "20260425_164056.mp4"
+JUAN = RAW_DIR / "20260425_155313.mp4"
 CHANT = RAW_DIR / "20260425_170030.mp4"
 
 BEATS = [
-    ("hook",   9.0, "build", "REP. DONOVAN McKINNEY  •  MI-11",
-     {"path": INTRO, "in_t": 1.5, "out_t": 10.5,
-      "audio_gain": 1.15,
+    # HOOK: who Juan is, when he got out. The date specificity ("Friday,
+    # April 24") matters — it makes him a real person, not a case study.
+    # Source 13.0-20.0 catches "So this is from Juan, good morning. I was
+    # released Friday the 24th of April. I was detained for three months
+    # at North Lake, 90 days." — the establishing line + setup.
+    ("hook", 7.0, "grief", "RELEASED  •  APRIL 24",
+     {"path": JUAN, "in_t": 13.0, "out_t": 20.0,
+      "audio_gain": 1.25,
       "caption_lines": [
-          (0.0, 2.0, "My name is Donovan McKinney."),
-          (2.0, 5.7, "I currently serve as a state representative in the 11th House District."),
-          (5.7, 9.0, "If you know anything about 8 Mile, you heard about the 8 Mile movie?"),
+          (0.0, 2.5, "So this is from Juan."),
+          (2.7, 6.7, "I was released Friday — April 24."),
       ]}),
-    ("stakes", 10.0, "grief", "ICE IS NOT NEW HERE",
-     {"path": INTRO, "in_t": 20.5, "out_t": 30.0,
-      "audio_gain": 1.15,
+    # INSIDE: the conditions. Source 20.0-28.0 captures the conditions line
+    # cleanly. Speech ends ~27.5; 0.5s post-roll for the line to land.
+    ("inside", 8.0, "minor", "90 DAYS AT NORTH LAKE",
+     {"path": JUAN, "in_t": 20.0, "out_t": 28.0,
+      "audio_gain": 1.25,
       "caption_lines": [
-          (0.5, 4.5, "Let me tell you why I'm here."),
-          (5.0, 8.0, "ICE is not new to our community."),
-          (8.0, 9.5, "How many people know that?"),
+          (0.0, 7.7,
+           "The conditions right now are very upsetting — ICE is not following the law."),
       ]}),
-    ("call",   5.0, "resolve", "STRONGER TOGETHER",
-     {"path": CALL, "in_t": 0.0, "out_t": 5.0,
-      "audio_in": 0.0, "audio_out": 4.72,  # cut before profanity
-      "audio_gain": 1.2,
+    # THE LAW: the structural claim — judges denying bond, gaming asylum
+    # cases. Source 30.4-40.4 captures the full federal-judges sequence.
+    ("law", 10.0, "grief", "JUDGES IGNORING THE LAW",
+     {"path": JUAN, "in_t": 30.4, "out_t": 40.4,
+      "audio_gain": 1.25,
       "caption_lines": [
-          (0.2, 1.6, "We're stronger together."),
-          (1.8, 4.5, "Say it with me — we're stronger together."),
+          (0.0, 3.0, "Federal judges decide on their own terms."),
+          (3.2, 9.5,
+           "Very high bond awards — denials of bond in asylum cases."),
       ]}),
-    ("cta",    6.0, "resolve", "DETROIT KNOWS",
-     {"path": CHANT, "in_t": 1.0, "out_t": 7.0,
+    # CTA: brand chrome top + chant b-roll bottom. Synth VO closes.
+    ("cta", 5.0, "resolve", "FREE THEM ALL",
+     {"path": CHANT, "in_t": 8.0, "out_t": 13.0,
       "audio_gain": 0.5,
       "well_top": CTA_WELL_TOP, "well_h": CTA_WELL_H}),
 ]
-# Sanity: 9+10+5+6 = 30 ✓
+# Sanity: 7+8+10+5 = 30 ✓
 
 def _build_scenes():
     out, t = [], 0.0
@@ -153,8 +167,8 @@ SCENE_CHORDS = {
 }
 
 NARRATION_LINES = [
-    {"slug": "cta", "start_in_beat": 0.5,
-     "text": "Detroit knows. Stronger together. Link in bio."},
+    {"slug": "cta", "start_in_beat": 0.4,
+     "text": "Free them all. Stand with Juan. Chip in. Link in bio."},
 ]
 
 CTA_RALLY = "ice_out_romulus"
@@ -164,19 +178,20 @@ _CTA_RALLY_CFG = _CTA_CFG["rallies"][CTA_RALLY]
 CTA_URL = _CTA_RALLY_CFG.get("url", _CTA_DEFAULTS.get("url", ""))
 CTA_HANDLE_LINE = _CTA_RALLY_CFG.get(
     "handle_line", _CTA_DEFAULTS.get("handle_line", ""))
-CTA_HEADLINE = "DETROIT KNOWS"
-CTA_HEADLINE_SIZE = 72
-CTA_SUBHEAD = "STAND WITH US"
-CTA_SUBHEAD_SIZE = 48
+CTA_HEADLINE = "FREE THEM ALL"
+CTA_SUBHEAD = "STAND WITH JUAN"
 
 # --------------------------------------------------------------------------- #
 # Brand chrome (delegates to cvs_lib.mpc_chrome.ChromeRenderer)
 # --------------------------------------------------------------------------- #
 
+# Testimony reel: magenta on the human (release date — Juan as person),
+# magenta on the lived condition, sky on the structural claim (judges
+# acting outside the law — institutional accountability), magenta on CTA.
 CHIP_COLORS = {
-    "hook":   C["sky_blue"],
-    "stakes": C["deep_magenta"],
-    "call":   C["sky_blue"],
+    "hook":   C["deep_magenta"],
+    "inside": C["deep_magenta"],
+    "law":    C["sky_blue"],
     "cta":    C["deep_magenta"],
 }
 
@@ -191,12 +206,12 @@ def render_beat_chrome(slug, chip_label, well_transparent=True):
 
 def render_cta_chrome(well_transparent=True):
     return CHROME.render_cta(
-        headline=CTA_HEADLINE, subhead=CTA_SUBHEAD,
-        url=CTA_URL, handle_line=CTA_HANDLE_LINE,
+        headline=CTA_HEADLINE,
+        subhead=CTA_SUBHEAD,
+        url=CTA_URL,
+        handle_line=CTA_HANDLE_LINE,
         well_transparent=well_transparent,
         gradient_angle=300.0,
-        headline_size=CTA_HEADLINE_SIZE,
-        subhead_size=CTA_SUBHEAD_SIZE,
     )
 
 
@@ -368,7 +383,9 @@ def build_caption_events():
 def make_caption_clips(events):
     from cvs_lib.captions import make_caption_clips as _lib_make_caption_clips
     return _lib_make_caption_clips(
-        events, width=W, caption_bottom=CAPTION_BOTTOM,
+        events,
+        width=W,
+        caption_bottom=CAPTION_BOTTOM,
         font_path=FONT_HEADLINE,
     )
 
@@ -378,7 +395,7 @@ def make_caption_clips(events):
 # --------------------------------------------------------------------------- #
 
 def main():
-    print("Building MPC Detroit Knows (30s identity reel)...")
+    print("Building MPC North Lake (30s testimony reel)...")
 
     print("\n[pre-warm] generating any missing TTS...")
     synthesize_narration(load_env())

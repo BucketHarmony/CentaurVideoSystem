@@ -5,33 +5,34 @@ Composites real source footage from the Ice Out Romulus rally with brand
 chrome (text, logo, scene overlays) + audio (harmonic hum chord per scene
 + ElevenLabs narration + Wigella native sync sound on the FIGHT beat).
 
-Migrated to import shared infrastructure from `cvs_lib`. Romulus is the
-most divergent reel: 4-scene structure (hook/stakes/fight/cta) with
-SCENE_CHORDS keyed by slug, narration timed by absolute scene-timeline
-"start" (not "start_in_beat"), Wigella native-audio FIGHT beat instead
-of synth VO, and per-scene custom chrome that doesn't fit the
-ChromeRenderer mold. Those pieces stay local; everything else (synth,
-ducking, footage prep, caption strip render, TTS HTTP, rotation cache,
-.env loader) delegates to `cvs_lib`.
-
 Scenes:
-  0:00-0:04    HOOK   — A minor — chant footage  — "Hundreds of us marched..."
-  0:04-0:14.5  STAKES — D minor — warehouse + chant — "DHS bought a warehouse..."
-  0:14.5-0:23.5 FIGHT — C major — Wigella sync   — "stood with Dana Nessel..."
-  0:23.5-0:30  CTA    — A major — split chrome   — "Chip in. Link below..."
+  0:00-0:04  HOOK    — A minor   — chant footage  — "Hundreds of us marched..."
+  0:04-0:13  STAKES  — D minor   — warehouse wide — "DHS bought a warehouse..."
+  0:13-0:23  FIGHT   — C major   — Wigella sync  — "stood with Dana Nessel..."
+  0:23-0:30  CTA     — A major   — full chrome   — "Chip in. Link below..."
+
+Source footage:
+  HOOK:    raw/MPC/Ice Out Romulus/20260425_170030.mp4 t=0.5..4.5 (Abolish ICE chant)
+  STAKES:  raw/MPC/Ice Out Romulus/20260425_151118.mp4 t=0.0..9.0 (warehouse + signs)
+  FIGHT:   raw/MPC/Ice Out Romulus/20260425_170500.mp4 t=0.0..10.0 (Wigella + native audio)
+  CTA:     no footage well — full brand chrome only
 
 Output: E:/AI/CVS/ComfyUI/output/mpc/romulus_rapid_response.mp4
-Run:    python E:/AI/CVS/scripts/mpc_ep_romulus.py
+
+Run:
+    python E:/AI/CVS/scripts/mpc_ep_romulus.py
 """
 
 from __future__ import annotations
 
 import json
 import math
+import wave
 from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from scipy.signal import butter, lfilter
 from moviepy.editor import (
     AudioFileClip,
     ColorClip,
@@ -40,12 +41,6 @@ from moviepy.editor import (
     VideoFileClip,
     concatenate_videoclips,
 )
-
-from cvs_lib import audio as cvs_audio
-from cvs_lib import captions as cvs_captions
-from cvs_lib import elevenlabs_tts as cvs_tts
-from cvs_lib import moviepy_helpers as cvs_movie
-from cvs_lib.env import load_env
 
 # --------------------------------------------------------------------------- #
 # Paths + brand
@@ -64,7 +59,6 @@ OUTPUT_PATH = OUTPUT_DIR / "romulus_rapid_response.mp4"
 AUDIO_PATH = OUTPUT_DIR / "romulus_rapid_response_audio.wav"
 TTS_CACHE = OUTPUT_DIR / "tts_cache"
 TTS_CACHE.mkdir(exist_ok=True)
-TTS_PREFIX = "romulus"
 
 RAW_DIR = Path("E:/AI/CVS/raw/MPC/Ice Out Romulus")
 
@@ -73,31 +67,48 @@ C = {name: tuple(meta["rgb"]) for name, meta in PALETTE["colors"].items()}
 FONT_HEADLINE = PALETTE["fonts"]["headline"]["path"]
 FONT_BODY = PALETTE["fonts"]["body"]["path"]
 LOGO_PATH = str(BRAND / "logo_wide_alpha.png")
+SAFE = PALETTE["safe_zones_1080x1920"]
 
-BANNER_H = 140
-WELL_TOP = BANNER_H
-WELL_BOTTOM = 1750
-WELL_H = WELL_BOTTOM - WELL_TOP
+# Layout zones — video-first: slim banner, well swallows most of the frame.
+# Captions overlay on top of the well, anchored to a fixed bottom y so multi-
+# line captions grow UPWARD into the video rather than down into TikTok UI.
+BANNER_H = 140                  # top white logo bar
+WELL_TOP = BANNER_H             # 140
+WELL_BOTTOM = 1750              # video now occupies ~84% of frame
+WELL_H = WELL_BOTTOM - WELL_TOP # 1610
+# Bottom y the caption strip anchors against (top of TikTok UI safe zone).
 CAPTION_BOTTOM = 1620
 
-CTA_CHROME_BOTTOM = 720
+# CTA scene uses a split layout: chrome in top, chant footage in bottom.
+# Chrome zone shrunk so footage takes more of the frame on the CTA beat too.
+CTA_CHROME_BOTTOM = 720         # chrome ends here; video starts here
 CTA_WELL_TOP = 720
 CTA_WELL_BOTTOM = 1920
-CTA_WELL_H = CTA_WELL_BOTTOM - CTA_WELL_TOP
+CTA_WELL_H = CTA_WELL_BOTTOM - CTA_WELL_TOP   # 1200
 
+# Per-scene source footage. Each entry is a dict (single shot) or list (chained).
+# Optional keys: crop_x_frac, audio_gain, audio_in/audio_out (for trimming a
+# mid-sentence tail), well_top/well_h (for non-default wells like CTA's split).
 FOOTAGE = {
     "hook":   {"path": RAW_DIR / "20260425_170030.mp4", "in_t": 0.5,  "out_t": 4.5,
-               "audio_gain": 1.0},
+               "audio_gain": 1.0},                                                      # 4.0s
     "stakes": [
+        # 4.5s warehouse establishing (crop shifted right to keep the building in frame)
         {"path": RAW_DIR / "20260425_151118.mp4", "in_t": 0.0,  "out_t": 4.5,
          "crop_x_frac": 0.62, "audio_gain": 1.0},
+        # 6.0s chant footage extended past 14.5 → 16.0 to land cleanly on
+        # an "Abolish ICE!" beat instead of cutting mid-chant.
         {"path": RAW_DIR / "20260425_170030.mp4", "in_t": 10.0, "out_t": 16.0,
          "audio_gain": 1.0},
-    ],
+    ],                                                                                  # 10.5s total
+    # Wigella speaking — native sync sound IS the FIGHT narration. Audio
+    # range trimmed to 0..9.0 to land on the end of "...suing the federal
+    # government." Scene shrunk 10s → 9s to make room for extended chant.
     "fight":  {"path": RAW_DIR / "20260425_170500.mp4", "in_t": 0.0, "out_t": 9.0,
-               "audio_in": 0.0, "audio_out": 9.0, "audio_gain": 1.4},
+               "audio_in": 0.0, "audio_out": 9.0, "audio_gain": 1.4},                   # 9.0s
+    # CTA bottom-half: chant + signs. Trimmed 7s → 6.5s to balance.
     "cta":    {"path": RAW_DIR / "20260425_170245.mp4", "in_t": 8.0, "out_t": 14.5,
-               "audio_gain": 0.7,
+               "audio_gain": 0.7,                                                       # 6.5s
                "well_top": CTA_WELL_TOP, "well_h": CTA_WELL_H},
 }
 
@@ -107,7 +118,10 @@ FOOTAGE = {
 
 SR = 44100
 N = int(SR * DURATION)
+T = np.linspace(0, DURATION, N, endpoint=False)
 
+# Scene boundaries (start, end, slug, label) — extended STAKES to capture
+# a clean "Abolish ICE!" beat; FIGHT and CTA shrink to keep total = 30s.
 SCENES = [
     (0.0,  4.0,  "hook",   "OPEN"),
     (4.0,  14.5, "stakes", "STAKES"),
@@ -115,16 +129,14 @@ SCENES = [
     (23.5, 30.0, "cta",    "CTA"),
 ]
 
-# SCENE_CHORDS keyed by slug directly (vs the other 7 reels which key by
-# minor/grief/build/resolve). cvs_audio.harmonic_hum tolerates any keying as
-# long as every beat's chord_key (BEATS[i][2]) is a key of scene_chords. We
-# build a synthetic BEATS list where slug == chord_key so the lib resolves
-# `chord_for_slug[slug]` to slug, then `scene_chords[slug]` to the notes.
+# Harmonic hum: chord per scene (Hz), one root + a few colour tones.
+# The progression Am -> Dm -> C -> A traces the emotional arc of the words:
+# protest urgency -> grief over injustice -> rising hope -> triumphant resolve.
 SCENE_CHORDS = {
-    "hook":   [110.00, 164.81, 220.00],
-    "stakes": [73.42,  110.00, 146.83, 174.61],
-    "fight":  [130.81, 196.00, 261.63, 329.63],
-    "cta":    [110.00, 164.81, 220.00, 277.18],
+    "hook":   [110.00, 164.81, 220.00],            # A minor (A2 + E3 + A3)
+    "stakes": [73.42,  110.00, 146.83, 174.61],    # D minor (D2 + A2 + D3 + F3)
+    "fight":  [130.81, 196.00, 261.63, 329.63],    # C major (C3 + G3 + C4 + E4)
+    "cta":    [110.00, 164.81, 220.00, 277.18],    # A major (A2 + E3 + A3 + C#4)
 }
 
 NARRATION_LINES = [
@@ -132,6 +144,7 @@ NARRATION_LINES = [
      "text": "Today, hundreds of us marched in Romulus."},
     {"slug": "stakes", "start": 4.30,
      "text": "DHS bought a warehouse near Metro Airport. We march for our neighbors."},
+    # FIGHT VO replaced by Wigella native sync sound from FOOTAGE["fight"].
     {"slug": "cta",    "start": 23.90,
      "text": "Chip in to the Michigan Progressive Caucus. Link below. We don't back down."},
 ]
@@ -139,7 +152,7 @@ NARRATION_LINES = [
 CTA_URL = "secure.actblue.com/donate/michigan-progressive-caucus-1"
 
 # --------------------------------------------------------------------------- #
-# PIL helpers (kept local — romulus chrome is too bespoke for ChromeRenderer)
+# PIL helpers
 # --------------------------------------------------------------------------- #
 
 def font(size: int, bold: bool = True) -> ImageFont.FreeTypeFont:
@@ -179,8 +192,24 @@ def gradient_bg(c1, c2, angle_deg=135.0):
         img[..., i] = (c1[i] * (1 - proj) + c2[i] * proj).astype(np.uint8)
     return img
 
+# --------------------------------------------------------------------------- #
+# Layout safety: bbox-aware text helpers + per-scene overlap guard
+# --------------------------------------------------------------------------- #
+#
+# Every `draw_*` helper returns the bounding box of the element it placed.
+# Each `render_*` scene collects those bboxes into `elems` and calls
+# `check_overlaps()` at the end. If any two registered elements overlap (with
+# a small padding tolerance), the build prints a clear warning per scene so
+# layout regressions are caught before export instead of after eyeballing
+# the rendered video.
 
 def measure_text_bbox(draw, text, fnt, x_center, top):
+    """
+    Compute (bbox, draw_x, draw_y) so that drawing `text` at (draw_x, draw_y)
+    with `fnt` lands the ink horizontally centered on `x_center` and starting
+    at y=`top`. The returned bbox reflects the actual ink extent (from
+    Pillow's textbbox) — accounting for font ascender/descender offsets.
+    """
     l, t, r, b = draw.textbbox((0, 0), text, font=fnt)
     w, h = r - l, b - t
     draw_x = x_center - w // 2 - l
@@ -191,6 +220,11 @@ def measure_text_bbox(draw, text, fnt, x_center, top):
 
 def draw_centered_text(draw, text, fnt, x_center, top, fill,
                        shadow_offset=None, shadow_color=(0, 0, 0, 200)):
+    """
+    Draw `text` horizontally centered on `x_center` with the top of the ink
+    at y=`top`. Returns the actual ink bbox (extended to include shadow if
+    `shadow_offset` is given).
+    """
     bbox, dx, dy = measure_text_bbox(draw, text, fnt, x_center, top)
     if shadow_offset:
         sx, sy = shadow_offset
@@ -201,6 +235,13 @@ def draw_centered_text(draw, text, fnt, x_center, top, fill,
 
 
 def check_overlaps(scene_name, elements, padding=4, fail_on_overlap=False):
+    """
+    Walk every pair of bboxes in `elements` (list of (label, (x0,y0,x1,y1)))
+    and print any pair that overlaps by more than `padding` px on both axes.
+    Used at the end of every scene render to catch silent layout regressions.
+
+    Set `fail_on_overlap=True` to raise instead of warn — useful in CI.
+    """
     issues = []
     for i, (la, ba) in enumerate(elements):
         for lb, bb in elements[i + 1:]:
@@ -217,7 +258,12 @@ def check_overlaps(scene_name, elements, padding=4, fail_on_overlap=False):
         raise RuntimeError(f"[layout/{scene_name}] layout overlap detected")
 
 
+# --------------------------------------------------------------------------- #
+# Scene chrome — top banner, video-well placeholder, bottom caption
+# --------------------------------------------------------------------------- #
+
 def draw_top_banner(img, banner_h=BANNER_H, target_w=560):
+    """White bar with centered MPC logo. `target_w` shrinks for the slim banner."""
     draw = ImageDraw.Draw(img, "RGBA")
     draw.rectangle((0, 0, W, banner_h), fill=(*C["white"], 255))
     logo = Image.open(LOGO_PATH).convert("RGBA")
@@ -230,6 +276,10 @@ def draw_top_banner(img, banner_h=BANNER_H, target_w=560):
 
 def draw_well_placeholder(img, well_color_top, well_color_bottom, footage_hint,
                           transparent=False, well_top=WELL_TOP, well_h=WELL_H):
+    """
+    Backdrop for the video well. `well_top`/`well_h` allow non-default wells
+    (CTA's bottom-half split, etc).
+    """
     if transparent:
         well = np.zeros((well_h, W, 4), dtype=np.uint8)
         img.paste(Image.fromarray(well, "RGBA"), (0, well_top))
@@ -251,7 +301,34 @@ def draw_well_placeholder(img, well_color_top, well_color_bottom, footage_hint,
                               fill=(255, 255, 255, 90))
 
 
+def draw_caption(img, text, size=58, y_top=1240, plate_alpha=200, color=None):
+    """
+    Bottom caption: bold white text on a translucent dark plate. Returns the
+    plate bbox (which fully encloses the text) — that's the box to register
+    with the overlap guard.
+    """
+    if color is None:
+        color = C["white"]
+    draw = ImageDraw.Draw(img, "RGBA")
+    fnt = font(size, bold=True)
+    lines = wrap(draw, text, fnt, max_w=940)
+    line_h = int(size * 1.18)
+    block_h = line_h * len(lines) + 56
+    plate_top = y_top
+    plate_bot = min(WELL_BOTTOM, plate_top + block_h)
+    draw.rectangle((0, plate_top, W, plate_bot), fill=(*C["near_black"], plate_alpha))
+
+    for i, line in enumerate(lines):
+        line_top = plate_top + 28 + i * line_h
+        draw_centered_text(draw, line, fnt, W // 2, line_top,
+                           fill=(*color, 255),
+                           shadow_offset=(3, 3),
+                           shadow_color=(0, 0, 0, 220))
+    return (0, plate_top, W, plate_bot)
+
+
 def draw_lower_third_pill(img, label, y=1140, color=None):
+    """Pill-shaped chip for an address/location callout. Returns the pill bbox."""
     if color is None:
         color = C["deep_magenta"]
     draw = ImageDraw.Draw(img, "RGBA")
@@ -263,6 +340,7 @@ def draw_lower_third_pill(img, label, y=1140, color=None):
     x = (W - pill_w) // 2
     draw.rounded_rectangle((x, y, x + pill_w, y + pill_h),
                            radius=pill_h // 2, fill=(*color, 240))
+    # Center text inside pill using bbox-correct coords (no font baseline slop)
     draw_x = x + pad_x - l
     draw_y = y + pad_y - t
     draw.text((draw_x, draw_y), label, font=fnt, fill=(*C["white"], 255))
@@ -271,6 +349,14 @@ def draw_lower_third_pill(img, label, y=1140, color=None):
 
 def draw_giant_callout(img, label, top_y, size=240, color=None,
                        sub=None, sub_size=50, sub_gap=None):
+    """
+    Big centered callout (e.g. 'MAY 18') with optional subtitle below.
+    `top_y` is the y of the top of the label ink. The sub flows AFTER the
+    label's actual ink-bbox bottom + `sub_gap` (default scales with `size`,
+    so a 240pt headline gets a meaningful breathing pad rather than a fixed
+    24px gap that disappears at large sizes).
+    Returns (label_bbox, sub_bbox) — sub_bbox is None when no subtitle.
+    """
     if color is None:
         color = C["soft_pink"]
     draw = ImageDraw.Draw(img, "RGBA")
@@ -283,6 +369,7 @@ def draw_giant_callout(img, label, top_y, size=240, color=None,
     if sub:
         sub_fnt = font(sub_size, bold=True)
         if sub_gap is None:
+            # Proportional to label size so big headlines get visible space
             sub_gap = max(28, int(size * 0.18))
         sub_top = label_bbox[3] + sub_gap
         sub_bbox = draw_centered_text(draw, sub, sub_fnt, W // 2, sub_top,
@@ -293,12 +380,14 @@ def draw_giant_callout(img, label, top_y, size=240, color=None,
 
 
 # --------------------------------------------------------------------------- #
-# Per-scene renderers (custom chrome — kept local)
+# Per-scene renderers
 # --------------------------------------------------------------------------- #
 
 def render_hook(well_transparent=False):
+    """0-4s: HOOK — protest crowd footage, headline. Transcript via overlay layer."""
     img = Image.new("RGBA", (W, H), (*C["near_black"], 255))
     elems = []
+
     elems.append(("well", draw_well_placeholder(
         img,
         well_color_top=(60, 50, 70),
@@ -306,6 +395,7 @@ def render_hook(well_transparent=False):
         footage_hint="protest crowd, signs, marchers on Cogswell",
         transparent=well_transparent)))
 
+    # Big in-well headline (flows from a top y; date strip flows after it)
     draw = ImageDraw.Draw(img, "RGBA")
     head_bbox = draw_centered_text(draw, "ROMULUS", font(108, bold=True),
                                    W // 2, 220, fill=(*C["soft_pink"], 255),
@@ -320,6 +410,7 @@ def render_hook(well_transparent=False):
                                    shadow_offset=(3, 3),
                                    shadow_color=(0, 0, 0, 230))
     elems.append(("date_strip", date_bbox))
+
     elems.append(("top_banner", draw_top_banner(img)))
 
     elems_for_check = [e for e in elems if e[0] != "well"] if well_transparent else elems
@@ -328,8 +419,16 @@ def render_hook(well_transparent=False):
 
 
 def render_stakes(well_transparent=False):
+    """4-13s: STAKES — warehouse footage + headline + address pill.
+
+    Subtitle reframed from "to cage immigrant neighbors" (dark/grim) to
+    "FOR OUR NEIGHBORS" — answers "what are we fighting for", echoes a real
+    line from the rally ("This is for our neighbors who are locked inside",
+    chanted in clip 170245). Stays warm/protective rather than fear-driven.
+    """
     img = Image.new("RGBA", (W, H), (*C["near_black"], 255))
     elems = []
+
     elems.append(("well", draw_well_placeholder(
         img,
         well_color_top=(80, 30, 50),
@@ -362,8 +461,15 @@ def render_stakes(well_transparent=False):
 
 
 def render_fight(well_transparent=False):
+    """13-23s: FIGHT — Wigella sync footage + MAY 18 over the speaker's legs.
+
+    The callout sits at top_y=1060 over the speaker's legs/grass, leaving
+    his head & mic visible. Sized so MAY 18 + INJUNCTION HEARING + AG NESSEL
+    strip ends above the transcript caption strip (anchored to CAPTION_BOTTOM).
+    """
     img = Image.new("RGBA", (W, H), (*C["near_black"], 255))
     elems = []
+
     elems.append(("well", draw_well_placeholder(
         img,
         well_color_top=(40, 70, 110),
@@ -395,13 +501,20 @@ def render_fight(well_transparent=False):
 
 
 def render_cta(well_transparent=False):
+    """23-30s: split layout — brand chrome in TOP HALF (0..960), chant + signs
+    footage in BOTTOM HALF (960..1920). Bottom half is punched transparent
+    when `well_transparent=True` so the FOOTAGE['cta'] clip composites in.
+    """
+    # Top-half background gradient (chrome zone only)
     bg_full = gradient_bg(C["sky_blue"], C["soft_pink"], angle_deg=300)
-    bg_full[CTA_CHROME_BOTTOM:, :, :] = 0
+    bg_full[CTA_CHROME_BOTTOM:, :, :] = 0  # zero the bottom half
     img = Image.fromarray(bg_full).convert("RGBA")
     if well_transparent:
+        # Punch bottom half fully transparent (alpha=0)
         bot = np.zeros((CTA_WELL_H, W, 4), dtype=np.uint8)
         img.paste(Image.fromarray(bot, "RGBA"), (0, CTA_WELL_TOP))
     else:
+        # Preview-mode: tint the bottom half so it's visible without footage
         tint = np.zeros((CTA_WELL_H, W, 4), dtype=np.uint8)
         tint[..., :3] = (40, 30, 50)
         tint[..., 3] = 255
@@ -410,6 +523,7 @@ def render_cta(well_transparent=False):
     draw = ImageDraw.Draw(img, "RGBA")
     elems = []
 
+    # Logo on white bar (BRAND RULE)
     logo = Image.open(LOGO_PATH).convert("RGBA")
     target_w = 720
     ratio = target_w / logo.width
@@ -424,6 +538,7 @@ def render_cta(well_transparent=False):
     img.paste(logo, ((W - target_w) // 2, bar_y), logo)
     elems.append(("logo_bar", (0, bar_top, W, bar_bot)))
 
+    # Tagline
     tag_top = bar_bot + 30
     tag_bbox = draw_centered_text(
         draw, "WE DON'T BACK DOWN", font(70, bold=True), W // 2, tag_top,
@@ -432,6 +547,7 @@ def render_cta(well_transparent=False):
         shadow_color=(*C["deep_magenta"], 230))
     elems.append(("tagline", tag_bbox))
 
+    # CHIP IN + polygon down-arrow (Montserrat lacks U+2193)
     chip_top = tag_bbox[3] + 24
     chip_bbox = draw_centered_text(
         draw, "CHIP IN", font(48, bold=True), W // 2, chip_top,
@@ -455,6 +571,7 @@ def render_cta(well_transparent=False):
                  arrow_x + arrow_w, max(chip_bbox[3], arrow_top + arrow_h))
     elems.append(("chip_in", chip_bbox))
 
+    # ActBlue URL plate
     url_fnt = font(30, bold=True)
     ul, ut, ur, ub = draw.textbbox((0, 0), CTA_URL, font=url_fnt)
     url_tw, url_th = ur - ul, ub - ut
@@ -468,6 +585,7 @@ def render_cta(well_transparent=False):
               CTA_URL, font=url_fnt, fill=(*C["deep_magenta"], 255))
     elems.append(("actblue_plate", (plate_x, plate_y, plate_x + plate_w, plate_y + plate_h)))
 
+    # Handle / link-in-bio
     cap_top = plate_y + plate_h + 24
     cap_bbox = draw_centered_text(
         draw, "Link in bio  •  @michiganprogressive",
@@ -481,33 +599,86 @@ def render_cta(well_transparent=False):
 
 
 # --------------------------------------------------------------------------- #
-# Audio: harmonic hum + narration + source-audio + ducking
+# Audio: harmonic hum chord per scene (crossfaded) + ElevenLabs narration
 # --------------------------------------------------------------------------- #
 
-def harmonic_hum():
-    """Build the full hum track. Romulus uses overlap=0.5 (vs lib default
-    0.35) — the synthetic BEATS list (slug == chord_key) lets the lib
-    resolve every scene's slug straight back to SCENE_CHORDS.
+def render_chord_window(notes_hz, t_start, t_end, fade_in=0.5, fade_out=0.5):
     """
-    scenes_3tup = [(t0, t1, slug) for t0, t1, slug, _ in SCENES]
-    beats_for_hum = [
-        (slug, t1 - t0, slug, "", {})
-        for t0, t1, slug, _ in SCENES
-    ]
-    return cvs_audio.harmonic_hum(
-        scenes_3tup, beats_for_hum, SCENE_CHORDS,
-        duration=DURATION, sr=SR, overlap=0.5,
-    )
+    Sustained harmonic hum from t_start..t_end. Each voice is a sine
+    fundamental + softer 2nd/3rd harmonics, with subtle vibrato + slow
+    tremolo for breath. Lowpassed for warmth.
+    """
+    out = np.zeros(N, dtype=np.float32)
+    i0 = int(t_start * SR)
+    i1 = min(N, int(t_end * SR))
+    if i0 >= N or i1 <= i0:
+        return out
+    n = i1 - i0
+    t_local = np.linspace(0, n / SR, n, endpoint=False)
+
+    chord = np.zeros(n, dtype=np.float32)
+    # Vibrato (5.5Hz, 0.4% pitch wobble) and slow breath (0.3Hz tremolo, 18%)
+    vib = 0.004 * np.sin(2 * np.pi * 5.5 * t_local)
+    breath = 1.0 - 0.18 * (0.5 - 0.5 * np.cos(2 * np.pi * 0.3 * t_local))
+
+    for k, f in enumerate(notes_hz):
+        amp = max(0.04, 0.13 - 0.025 * k)
+        # Fundamental with vibrato — phase = 2*pi * cumsum(f_inst)/SR
+        phase1 = 2 * np.pi * np.cumsum(f * (1 + vib)) / SR
+        chord += amp * np.sin(phase1)
+        # 2nd harmonic (octave) at 30% — adds body
+        phase2 = 2 * np.pi * np.cumsum(2 * f * (1 + vib * 0.6)) / SR
+        chord += amp * 0.30 * np.sin(phase2)
+        # 3rd harmonic at 12% — colour
+        phase3 = 2 * np.pi * np.cumsum(3 * f * (1 + vib * 0.3)) / SR
+        chord += amp * 0.12 * np.sin(phase3)
+
+    chord *= breath
+
+    fi_n = min(int(fade_in * SR), n // 2)
+    fo_n = min(int(fade_out * SR), n // 2)
+    if fi_n > 0:
+        chord[:fi_n] *= np.linspace(0, 1, fi_n) ** 2
+    if fo_n > 0:
+        chord[-fo_n:] *= np.linspace(1, 0, fo_n) ** 2
+
+    b, a = butter(4, 3500 / (SR / 2), btype="low")
+    chord = lfilter(b, a, chord).astype(np.float32)
+
+    out[i0:i1] = chord
+    return out
+
+
+def harmonic_hum():
+    """Build the full hum track. Adjacent scenes overlap by `overlap` for a smooth chord change."""
+    bed = np.zeros(N, dtype=np.float32)
+    overlap = 0.5
+    for idx, (t0, t1, slug, _) in enumerate(SCENES):
+        notes = SCENE_CHORDS[slug]
+        is_first = idx == 0
+        is_last = idx == len(SCENES) - 1
+        ws = max(0.0, t0 - (0 if is_first else overlap))
+        we = min(DURATION, t1 + (0 if is_last else overlap))
+        fi = 0.25 if is_first else overlap
+        fo = 0.6 if is_last else overlap
+        bed += render_chord_window(notes, ws, we, fade_in=fi, fade_out=fo)
+    return bed
+
+
+def load_env(path=ENV_PATH):
+    if not path.exists():
+        return {}
+    out = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, _, v = line.partition("=")
+        out[k.strip()] = v.strip().strip('"').strip("'")
+    return out
 
 
 def synthesize_narration(env):
-    """Synth (or load cached) narration + place at absolute "start" times.
-
-    Romulus's NARRATION_LINES use absolute timeline t (not start_in_beat),
-    so cvs_tts.synthesize_narration's scene_start callback doesn't apply.
-    We use cvs_tts.generate_tts for the HTTP/cache layer and place the
-    decoded samples ourselves.
-    """
     api_key = env.get("ELEVENLABS_API_KEY")
     voice = env.get("ELEVENLABS_VOICE")
     model = env.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
@@ -515,6 +686,7 @@ def synthesize_narration(env):
         print("[narration] no ELEVENLABS_API_KEY — skipping TTS")
         return None
     try:
+        import requests
         from pydub import AudioSegment
     except ImportError as e:
         print(f"[narration] missing dep: {e}")
@@ -522,15 +694,24 @@ def synthesize_narration(env):
 
     track = np.zeros(N, dtype=np.float32)
     for i, line in enumerate(NARRATION_LINES):
-        cache_path = TTS_CACHE / f"{TTS_PREFIX}_{line['slug']}.mp3"
+        # Cache key by slug so dropping/reordering NARRATION_LINES doesn't
+        # invalidate cached MP3s for the lines that didn't change.
+        cache_path = TTS_CACHE / f"romulus_{line['slug']}.mp3"
         if not cache_path.exists():
             print(f"[narration] generating line {i}: {line['text'][:60]!r}")
-            ok = cvs_tts.generate_tts(
-                text=line["text"], api_key=api_key,
-                voice_id=voice, model=model, cache_path=cache_path,
+            r = requests.post(
+                f"https://api.elevenlabs.io/v1/text-to-speech/{voice}",
+                headers={"xi-api-key": api_key,
+                         "Content-Type": "application/json",
+                         "Accept": "audio/mpeg"},
+                json={"text": line["text"], "model_id": model,
+                      "voice_settings": {"stability": 0.55, "similarity_boost": 0.75}},
+                timeout=60,
             )
-            if not ok:
+            if r.status_code != 200:
+                print(f"  ERROR {r.status_code}: {r.text[:200]}")
                 return None
+            cache_path.write_bytes(r.content)
         else:
             print(f"[narration] cached line {i}")
         seg = AudioSegment.from_mp3(cache_path).set_frame_rate(SR).set_channels(1)
@@ -542,24 +723,53 @@ def synthesize_narration(env):
     return track
 
 
+def sidechain_duck(bed, voice, threshold=0.025, ratio=0.30,
+                   attack_ms=20.0, release_ms=180.0):
+    """Drop the hum where voice is loud so VO sits cleanly on top."""
+    if voice is None:
+        return bed
+    env = np.abs(voice)
+    a_atk = math.exp(-1 / (SR * attack_ms / 1000))
+    a_rel = math.exp(-1 / (SR * release_ms / 1000))
+    smoothed = np.zeros_like(env)
+    s = 0.0
+    for i in range(len(env)):
+        coef = a_atk if env[i] > s else a_rel
+        s = coef * s + (1 - coef) * env[i]
+        smoothed[i] = s
+    duck = 1.0 - np.clip((smoothed - threshold) / threshold, 0, 1) * (1 - ratio)
+    return bed * duck.astype(np.float32)
+
+
+def to_int16_stereo(mono):
+    mono = np.clip(mono, -1.0, 1.0)
+    L = (mono * 32767).astype(np.int16)
+    R = L.copy()
+    return np.column_stack([L, R]).flatten()
+
+
 def build_voice_track():
-    env = load_env(ENV_PATH)
+    """Synth TTS narration only, aligned to the master timeline."""
+    env = load_env()
     voice = synthesize_narration(env)
     return voice if voice is not None else np.zeros(N, dtype=np.float32)
 
 
 def _shot_audio_range(shot):
+    """Audio in/out for a shot — defaults to video in_t/out_t."""
     return float(shot.get("audio_in", shot["in_t"])), \
            float(shot.get("audio_out", shot["out_t"]))
 
 
 def build_source_audio_track():
-    """Per-clip native audio aligned to scene timelines. For multi-shot
-    scenes, each shot's audio is placed back-to-back at the scene's start.
+    """
+    Per-clip native audio aligned to scene timelines. For multi-shot scenes,
+    each shot's audio is placed back-to-back at the scene's start. A small
+    fade-in/out at every shot boundary kills click/pop.
     """
     track = np.zeros(N, dtype=np.float32)
     scene_starts = {s[2]: s[0] for s in SCENES}
-    fade_n = int(0.05 * SR)
+    fade_n = int(0.05 * SR)  # 50ms edge fade
     for slug, spec in FOOTAGE.items():
         if spec is None:
             continue
@@ -568,8 +778,7 @@ def build_source_audio_track():
         for shot in shots:
             video_dur = float(shot["out_t"]) - float(shot["in_t"])
             a0, a1 = _shot_audio_range(shot)
-            src = cvs_movie.rotation_baked_path(shot["path"], cache_dir=_ROT_CACHE_DIR)
-            seg = cvs_audio.extract_audio_segment(src, a0, a1, sr=SR)
+            seg = extract_audio_segment(_rotation_baked_path(shot["path"]), a0, a1)
             if seg is None:
                 offset_s += video_dur
                 continue
@@ -587,6 +796,29 @@ def build_source_audio_track():
     return track
 
 
+def vo_duck_envelope(voice, threshold=0.02, low_gain=0.5,
+                     attack_ms=10.0, release_ms=200.0):
+    """
+    Returns an N-length curve in [low_gain, 1.0]: drops to `low_gain` where
+    `voice` is loud, returns to 1.0 where voice is quiet. Used to duck the
+    source-audio track to 50% under synth VO without affecting parts of the
+    timeline where there's no VO at all.
+    """
+    if voice is None or float(np.max(np.abs(voice))) < 1e-5:
+        return np.ones(N, dtype=np.float32)
+    env = np.abs(voice)
+    a_atk = math.exp(-1 / (SR * attack_ms / 1000))
+    a_rel = math.exp(-1 / (SR * release_ms / 1000))
+    smoothed = np.zeros_like(env)
+    s = 0.0
+    for i in range(len(env)):
+        coef = a_atk if env[i] > s else a_rel
+        s = coef * s + (1 - coef) * env[i]
+        smoothed[i] = s
+    duck = 1.0 - np.clip((smoothed - threshold) / threshold, 0, 1) * (1.0 - low_gain)
+    return duck.astype(np.float32)
+
+
 def build_audio():
     print("[audio] rendering harmonic hum (chord per scene)...")
     bed = harmonic_hum()
@@ -595,15 +827,18 @@ def build_audio():
     print("[audio] building source-audio track from clips...")
     source = build_source_audio_track()
 
+    # Duck source audio to 50% only where synth VO is active
     print("[audio] ducking source audio under VO (50% during VO, 100% otherwise)...")
-    source = source * cvs_audio.vo_duck_envelope(voice, total_n=N, sr=SR, low_gain=0.5)
+    source = source * vo_duck_envelope(voice, low_gain=0.5)
 
+    # Sidechain bed under voice + source so the chord retreats during any speech
     speech = voice + source
     has_speech = float(np.max(np.abs(speech))) > 1e-4
     if has_speech:
         print("[audio] sidechain ducking hum under voice + source...")
-        bed = cvs_audio.sidechain_duck(bed, speech, sr=SR)
+        bed = sidechain_duck(bed, speech)
 
+    # Chord bed at 50% of previous level (user request)
     mix = bed * 0.5 + voice * 1.0 + source * 1.0
     peak = float(np.max(np.abs(mix)))
     if peak > 0:
@@ -612,41 +847,137 @@ def build_audio():
 
 
 def write_wav(mono, path=AUDIO_PATH):
-    cvs_audio.write_wav(mono, path, sr=SR)
+    stereo = to_int16_stereo(mono)
+    with wave.open(str(path), "w") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes(stereo.tobytes())
     print(f"[audio] wrote {path}")
     return path
 
 
 # --------------------------------------------------------------------------- #
-# Footage compositor
+# Footage compositor — load source MP4s, scale-and-crop into the well, then
+# overlay the chrome (RGBA with the well rectangle punched out).
 # --------------------------------------------------------------------------- #
 
 _ROT_CACHE_DIR = OUTPUT_DIR / "_rot_cache"
 
 
+def _get_rotation(path):
+    """Read display-rotation metadata (degrees, signed) from a video file.
+    Returns 0 when no rotation tag is present."""
+    import subprocess
+    try:
+        out = subprocess.check_output(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0",
+             "-show_entries", "stream_side_data=rotation",
+             "-of", "default=nw=1:nk=1", str(path)],
+            stderr=subprocess.STDOUT,
+        ).decode().strip()
+        return int(float(out)) if out else 0
+    except Exception:
+        return 0
+
+
+def _rotation_baked_path(path):
+    """If `path` has rotation metadata, return a cached re-encoded copy with
+    rotation baked into pixels (and cleared from metadata) so MoviePy 1.0.3,
+    which silently ignores rotation, sees the correct aspect.
+
+    MoviePy 1.0.3 distorts rotated phone videos: it applies rotation to the
+    frame contents but keeps the original (un-rotated) buffer dimensions,
+    visibly squashing portrait clips into landscape. Pre-baking with ffmpeg's
+    default autorotate sidesteps the bug entirely.
+    """
+    if _get_rotation(path) == 0:
+        return Path(path)
+    _ROT_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    out = _ROT_CACHE_DIR / f"{Path(path).stem}_rot.mp4"
+    if out.exists() and out.stat().st_mtime >= Path(path).stat().st_mtime:
+        return out
+    import subprocess
+    cmd = ["ffmpeg", "-y", "-loglevel", "error",
+           "-i", str(path),
+           "-metadata:s:v", "rotate=0",
+           "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
+           "-c:a", "aac", "-b:a", "192k",
+           str(out)]
+    print(f"[rotate] baking {Path(path).name} -> {out.name}")
+    subprocess.run(cmd, check=True)
+    return out
+
+
+def prepare_one_clip(spec, well_h):
+    """
+    Load `spec["path"]` from in_t..out_t, scale to fill `well_h`, crop to W.
+    `spec["crop_x_frac"]` (default 0.5) shifts the horizontal crop center.
+    """
+    src = _rotation_baked_path(spec["path"])
+    clip = VideoFileClip(str(src)).subclip(spec["in_t"], spec["out_t"])
+    clip = clip.without_audio()
+    scaled = clip.resize(height=well_h)
+    crop_frac = float(spec.get("crop_x_frac", 0.5))
+    if scaled.w > W:
+        x_center = scaled.w * crop_frac
+        x_center = max(W / 2, min(scaled.w - W / 2, x_center))
+        return scaled.crop(x_center=x_center, width=W, height=well_h)
+    if scaled.w < W:
+        widened = clip.resize(width=W)
+        if widened.h > well_h:
+            return widened.crop(y_center=widened.h / 2, width=W, height=well_h)
+        return widened
+    return scaled
+
+
 def _spec_well(spec):
+    """Returns (well_top, well_h) for a spec, defaulting to scene's well."""
     s = spec[0] if isinstance(spec, list) else spec
     return int(s.get("well_top", WELL_TOP)), int(s.get("well_h", WELL_H))
 
 
 def prepare_footage(spec, duration):
+    """
+    Build the well-sized footage clip. `spec` may be a single dict or a list.
+    Per-shot well dimensions (well_top, well_h) come from the first shot.
+    """
+    specs = spec if isinstance(spec, list) else [spec]
     _, well_h = _spec_well(spec)
-    return cvs_movie.prepare_footage(
-        spec, target_w=W, well_h=well_h, duration=duration,
-        rotation_cache_dir=_ROT_CACHE_DIR,
-    )
+    sub_clips = [prepare_one_clip(s, well_h) for s in specs]
+    if len(sub_clips) == 1:
+        out = sub_clips[0]
+    else:
+        out = concatenate_videoclips(sub_clips, method="compose")
+    return out.set_duration(duration)
+
+
+def split_chrome_alpha(rgba):
+    """Split an HxWx4 RGBA numpy array into (rgb, alpha_float)."""
+    rgb = rgba[:, :, :3]
+    alpha = rgba[:, :, 3].astype(np.float32) / 255.0
+    return rgb, alpha
+
+
+def make_chrome_clip(rgba, duration):
+    """Build an ImageClip with mask from a 4-channel RGBA numpy array."""
+    rgb, alpha = split_chrome_alpha(rgba)
+    chrome = ImageClip(rgb).set_duration(duration)
+    mask = ImageClip(alpha, ismask=True).set_duration(duration)
+    return chrome.set_mask(mask)
 
 
 def build_scene_clip(render_fn, footage_spec, duration, fadein=0.0, fadeout=0.0):
-    """Scene = [black bg] + [footage in well, if any] + [chrome on top].
-    None footage → chrome-only full-frame.
+    """
+    Build a scene as: [black bg] + [footage in well, if any] + [chrome on top].
+    If footage_spec is None, skip the footage layer (chrome covers full frame).
     """
     if footage_spec is None:
         rgba = render_fn(well_transparent=False)
         clip = ImageClip(rgba[:, :, :3]).set_duration(duration)
     else:
         chrome_rgba = render_fn(well_transparent=True)
-        chrome = cvs_movie.make_chrome_clip(chrome_rgba, duration)
+        chrome = make_chrome_clip(chrome_rgba, duration)
 
         well_top, _ = _spec_well(footage_spec)
         footage = prepare_footage(footage_spec, duration)
@@ -663,26 +994,34 @@ def build_scene_clip(render_fn, footage_spec, duration, fadein=0.0, fadeout=0.0)
     return clip
 
 
-# --------------------------------------------------------------------------- #
-# Captions
-# --------------------------------------------------------------------------- #
+def measure_tts_duration(slug):
+    """Read the cached TTS mp3's duration so caption events match audio length."""
+    try:
+        from pydub import AudioSegment
+    except ImportError:
+        return 0.0
+    p = TTS_CACHE / f"romulus_{slug}.mp3"
+    if not p.exists():
+        return 0.0
+    try:
+        return AudioSegment.from_mp3(str(p)).duration_seconds
+    except Exception:
+        return 0.0
+
 
 # Wigella's Whisper-segmented quote, offset by FIGHT scene start at runtime.
+# Lifted from E:/AI/CVS/mpc/index/clips/20260425_170500.json (large-v3 model).
 WIGELLA_SEGMENTS = [
     (0.00, 2.48, "Legislation that would take masks off ICE."),
     (2.48, 9.04, "We've stood with Dana Nessel, suing the federal government."),
 ]
 
 
-def measure_tts_duration(slug):
-    return cvs_tts.measure_tts_duration(
-        slug, cache_dir=TTS_CACHE, cache_prefix=TTS_PREFIX,
-    )
-
-
 def build_caption_events():
-    """Synth-VO captions from NARRATION_LINES (absolute t) +
-    Wigella native-segment captions offset by FIGHT scene start.
+    """
+    Build (start, end, text) events for the transcript layer.
+    - HOOK / STAKES / CTA: synth-VO line, duration = cached TTS file length.
+    - FIGHT: Wigella's Whisper segments, offset to FIGHT scene start.
     """
     events = []
     fight_start = next(s[0] for s in SCENES if s[2] == "fight")
@@ -703,23 +1042,115 @@ def build_caption_events():
     return events
 
 
+def render_caption_strip(text, size=66, max_w=1000,
+                         fill=(255, 255, 255, 255),
+                         stroke_fill=(0, 0, 0, 255), stroke_w=5,
+                         pad_y=16):
+    """
+    TikTok-style transcript strip — stroked white text on transparent bg.
+    Strip height is sized dynamically to fit the wrapped text plus padding,
+    so multi-line captions don't clip at the top edge.
+    """
+    # Pre-measure to determine line count
+    measure = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    fnt = font(size, bold=True)
+    lines = wrap(measure, text, fnt, max_w)
+    line_h = int(size * 1.18)
+    block_h = line_h * len(lines)
+    strip_h = block_h + 2 * (pad_y + stroke_w)
+
+    img = Image.new("RGBA", (W, strip_h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    y0 = pad_y + stroke_w
+    for i, line in enumerate(lines):
+        l, t, r, b = draw.textbbox((0, 0), line, font=fnt)
+        draw_x = (W - (r - l)) // 2 - l
+        draw_y = y0 + i * line_h - t
+        draw.text((draw_x, draw_y), line, font=fnt, fill=fill,
+                  stroke_width=stroke_w, stroke_fill=stroke_fill)
+    return np.array(img)
+
+
 def make_caption_clips(events):
-    return cvs_captions.make_caption_clips(
-        events, width=W, caption_bottom=CAPTION_BOTTOM,
-        font_path=FONT_HEADLINE, size=66, max_w=1000,
-    )
+    """
+    Timeline-positioned caption ImageClips composited as the top layer.
+    Strips are anchored to CAPTION_BOTTOM so multi-line captions push UPWARD
+    into the video well rather than clipping at the top of a fixed strip.
+    """
+    clips = []
+    for ev in events:
+        rgba = render_caption_strip(ev["text"])
+        rgb = rgba[:, :, :3]
+        alpha = rgba[:, :, 3].astype(np.float32) / 255.0
+        dur = max(0.05, ev["end"] - ev["start"])
+        clip = ImageClip(rgb).set_duration(dur)
+        clip = clip.set_mask(ImageClip(alpha, ismask=True).set_duration(dur))
+        y_pos = CAPTION_BOTTOM - rgba.shape[0]
+        clip = clip.set_start(ev["start"]).set_position((0, y_pos))
+        clip = clip.crossfadein(min(0.12, dur / 4))
+        clips.append(clip)
+    return clips
+
+
+def extract_audio_segment(path, t0, t1):
+    """
+    Extract `t0..t1` seconds of audio from `path`, downmix to mono at SR,
+    return float32 numpy array. Returns None if the file has no audio or
+    the range is empty.
+
+    Uses ffmpeg directly because MoviePy 1.0.3's `audio.to_soundarray()`
+    breaks against modern NumPy (the generator/sequence stack TypeError).
+    """
+    import subprocess
+    import tempfile
+
+    dur = float(t1 - t0)
+    if dur <= 0:
+        return None
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tf:
+        tmp = tf.name
+    try:
+        cmd = [
+            "ffmpeg", "-y", "-loglevel", "error",
+            "-ss", f"{float(t0):.3f}", "-t", f"{dur:.3f}",
+            "-i", str(path),
+            "-vn", "-ac", "1", "-ar", str(SR),
+            "-acodec", "pcm_s16le",
+            tmp,
+        ]
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError:
+            return None
+        with wave.open(tmp, "rb") as w:
+            n = w.getnframes()
+            if n == 0:
+                return None
+            raw = w.readframes(n)
+        arr = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+    finally:
+        try:
+            Path(tmp).unlink()
+        except OSError:
+            pass
+    return arr
 
 
 # --------------------------------------------------------------------------- #
 # Main
 # --------------------------------------------------------------------------- #
 
+
 def main():
     print("Building MPC Romulus Rapid Response (30s)...")
 
+    # Pre-warm the TTS cache so caption durations can be read from disk.
+    # build_caption_events() reads each cached mp3 to size each caption to its
+    # actual VO length, so the synth must run before captions are built.
     print("\n[pre-warm] generating any missing TTS now...")
-    synthesize_narration(load_env(ENV_PATH))
+    synthesize_narration(load_env())
 
+    # (slug, render_fn, duration, fadein, fadeout)
     scene_specs = [
         ("hook",   render_hook,   4.0,  0.0, 0.0),
         ("stakes", render_stakes, 10.5, 0.4, 0.0),
@@ -741,6 +1172,7 @@ def main():
         clips.append(build_scene_clip(fn, spec, dur, fadein=fadein, fadeout=fadeout))
     video = concatenate_videoclips(clips, method="compose").set_duration(DURATION)
 
+    # Transcript caption layer composited over the entire timeline
     print("\n[captions] building transcript events...")
     events = build_caption_events()
     for ev in events:

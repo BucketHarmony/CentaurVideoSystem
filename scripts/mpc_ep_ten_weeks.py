@@ -1,24 +1,26 @@
 """
-MPC "Detroit Knows ICE" — 30s vertical reel, Donovan McKinney identity reel.
+MPC "Ten Weeks" — 30s vertical reel, the endurance angle.
 
-Localizes the ICE fight to Detroit / Black neighborhoods. A state rep
-(MI-11) names himself, names his district, and grounds the fight in
-local memory: "ICE is not new to our community."
+Different lever from the other reels in the suite: neither rapid response
+(Romulus / We Don't Back Down) nor receipts (Follow the Money) nor
+identity (Detroit Knows) nor authority (Abolish ICE Congress) nor raw
+energy (People Power). This one names *why we keep showing up*: ten
+weeks of organized protest as proof of staying power.
 
 Beats (30s):
-  0:00-0:09  HOOK    — C  — McKinney intro + 11th House District + 8 Mile .
-                       (163747 1.5-10.5)
-  0:09-0:19  STAKES  — Dm — "Let me tell you why I'm here. ICE is not new" .
-                       (163747 21.0-30.0)
-  0:19-0:24  CALL    — A  — "We're stronger together. Say it with me."  ...
-                       (164056 0.0-5.0; audio truncated at 4.72)
-  0:24-0:30  CTA     — A  — chant b-roll + tagline + synth VO .............
-                       "Detroit knows. Stronger together. Link in bio."
+  0:00-0:07  HOOK     — Am — "this is our tenth week protesting"  ........
+                        (154736 12.0-19.0)
+  0:07-0:16  STAKES   — Dm — "Our democracy is at test right now"  ......
+                        (165207 6.0-15.0)
+  0:16-0:25  ANSWER   — C  — "build power elected officials can't ignore"
+                        (154736 0.0-9.0)
+  0:25-0:30  CTA      — A  — chrome + chant b-roll + synth VO ..........
+                        "Ten weeks. Still here. Chip in. Link in bio."
 
-Output: E:/AI/CVS/ComfyUI/output/mpc/detroit_knows.mp4
+Output: E:/AI/CVS/ComfyUI/output/mpc/ten_weeks.mp4
 
 Run:
-    python E:/AI/CVS/scripts/mpc_ep_detroit_knows.py
+    python E:/AI/CVS/scripts/mpc_ep_ten_weeks.py
 """
 
 from __future__ import annotations
@@ -61,11 +63,11 @@ BRAND = ROOT / "brand"
 ENV_PATH = Path("E:/AI/CVS/.env")
 OUTPUT_DIR = Path("E:/AI/CVS/ComfyUI/output/mpc")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-OUTPUT_PATH = OUTPUT_DIR / "detroit_knows.mp4"
-AUDIO_PATH = OUTPUT_DIR / "detroit_knows_audio.wav"
+OUTPUT_PATH = OUTPUT_DIR / "ten_weeks.mp4"
+AUDIO_PATH = OUTPUT_DIR / "ten_weeks_audio.wav"
 TTS_CACHE = OUTPUT_DIR / "tts_cache"
 TTS_CACHE.mkdir(exist_ok=True)
-TTS_PREFIX = "dki"
+TTS_PREFIX = "tnw"
 _ROT_CACHE_DIR = OUTPUT_DIR / "_rot_cache"
 
 RAW_DIR = Path("E:/AI/CVS/raw/MPC/Ice Out Romulus")
@@ -93,41 +95,49 @@ CTA_WELL_H = LAYOUT.CTA_WELL_H
 # Beats
 # --------------------------------------------------------------------------- #
 
-INTRO = RAW_DIR / "20260425_163747.mp4"
-CALL = RAW_DIR / "20260425_164056.mp4"
+NDCM = RAW_DIR / "20260425_154736.mp4"
+HASSAN = RAW_DIR / "20260425_165207.mp4"
 CHANT = RAW_DIR / "20260425_170030.mp4"
 
 BEATS = [
-    ("hook",   9.0, "build", "REP. DONOVAN McKINNEY  •  MI-11",
-     {"path": INTRO, "in_t": 1.5, "out_t": 10.5,
-      "audio_gain": 1.15,
-      "caption_lines": [
-          (0.0, 2.0, "My name is Donovan McKinney."),
-          (2.0, 5.7, "I currently serve as a state representative in the 11th House District."),
-          (5.7, 9.0, "If you know anything about 8 Mile, you heard about the 8 Mile movie?"),
-      ]}),
-    ("stakes", 10.0, "grief", "ICE IS NOT NEW HERE",
-     {"path": INTRO, "in_t": 20.5, "out_t": 30.0,
-      "audio_gain": 1.15,
-      "caption_lines": [
-          (0.5, 4.5, "Let me tell you why I'm here."),
-          (5.0, 8.0, "ICE is not new to our community."),
-          (8.0, 9.5, "How many people know that?"),
-      ]}),
-    ("call",   5.0, "resolve", "STRONGER TOGETHER",
-     {"path": CALL, "in_t": 0.0, "out_t": 5.0,
-      "audio_in": 0.0, "audio_out": 4.72,  # cut before profanity
+    # HOOK opens with the duration claim — "tenth week" is the strongest
+    # piece of evidence we have for staying power. Ends ~18.34s in source;
+    # holding through 19.0 gives 0.7s post-roll for the line to land.
+    ("hook", 7.0, "minor", "WEEK 10  •  STILL SHOWING UP",
+     {"path": NDCM, "in_t": 12.0, "out_t": 19.0,
       "audio_gain": 1.2,
       "caption_lines": [
-          (0.2, 1.6, "We're stronger together."),
-          (1.8, 4.5, "Say it with me — we're stronger together."),
+          (0.0, 6.7,
+           "We've been out here for — this is our tenth week protesting the coup out of town."),
       ]}),
-    ("cta",    6.0, "resolve", "DETROIT KNOWS",
-     {"path": CHANT, "in_t": 1.0, "out_t": 7.0,
+    # STAKES: Hassan names what's at risk. Source begins 6.0s to catch the
+    # lead-in so the "democracy at test" line reads as a conclusion, not
+    # a cold open. Speech ends 14.94 + tail.
+    ("stakes", 9.0, "grief", "WHY WE STAY",
+     {"path": HASSAN, "in_t": 6.0, "out_t": 15.0,
+      "audio_gain": 1.2,
+      "caption_lines": [
+          (0.5, 1.5, "I'm not going to take much time."),
+          (2.5, 5.0, "I am very fearful of what's going around."),
+          (5.5, 8.8, "Our democracy is at test right now."),
+      ]}),
+    # ANSWER: NDCM's strategic claim — endurance has a purpose. Source
+    # 0.0-9.0 captures the full clause "build the power that elected
+    # officials cannot ignore" with handles.
+    ("answer", 9.0, "build", "BUILD THE POWER",
+     {"path": NDCM, "in_t": 0.0, "out_t": 9.0,
+      "audio_gain": 1.2,
+      "caption_lines": [
+          (0.5, 8.8,
+           "We have to build the power that elected officials cannot ignore."),
+      ]}),
+    # CTA: brand chrome top + chant b-roll bottom. Synth VO closes.
+    ("cta", 5.0, "resolve", "STILL HERE",
+     {"path": CHANT, "in_t": 8.0, "out_t": 13.0,
       "audio_gain": 0.5,
       "well_top": CTA_WELL_TOP, "well_h": CTA_WELL_H}),
 ]
-# Sanity: 9+10+5+6 = 30 ✓
+# Sanity: 7+9+9+5 = 30 ✓
 
 def _build_scenes():
     out, t = [], 0.0
@@ -153,8 +163,8 @@ SCENE_CHORDS = {
 }
 
 NARRATION_LINES = [
-    {"slug": "cta", "start_in_beat": 0.5,
-     "text": "Detroit knows. Stronger together. Link in bio."},
+    {"slug": "cta", "start_in_beat": 0.4,
+     "text": "Ten weeks. Still here. Chip in. Link in bio."},
 ]
 
 CTA_RALLY = "ice_out_romulus"
@@ -164,19 +174,21 @@ _CTA_RALLY_CFG = _CTA_CFG["rallies"][CTA_RALLY]
 CTA_URL = _CTA_RALLY_CFG.get("url", _CTA_DEFAULTS.get("url", ""))
 CTA_HANDLE_LINE = _CTA_RALLY_CFG.get(
     "handle_line", _CTA_DEFAULTS.get("handle_line", ""))
-CTA_HEADLINE = "DETROIT KNOWS"
-CTA_HEADLINE_SIZE = 72
-CTA_SUBHEAD = "STAND WITH US"
-CTA_SUBHEAD_SIZE = 48
+CTA_HEADLINE = "STILL HERE"
+CTA_SUBHEAD = "WEEK 10  •  STAND WITH US"
+CTA_SUBHEAD_SIZE = 40
 
 # --------------------------------------------------------------------------- #
 # Brand chrome (delegates to cvs_lib.mpc_chrome.ChromeRenderer)
 # --------------------------------------------------------------------------- #
 
+# Endurance reel: sky on duration ("week 10" — institutional fact),
+# magenta on stakes (emotional weight), sky on the strategic answer
+# (forward-looking), magenta on CTA.
 CHIP_COLORS = {
     "hook":   C["sky_blue"],
     "stakes": C["deep_magenta"],
-    "call":   C["sky_blue"],
+    "answer": C["sky_blue"],
     "cta":    C["deep_magenta"],
 }
 
@@ -195,7 +207,6 @@ def render_cta_chrome(well_transparent=True):
         url=CTA_URL, handle_line=CTA_HANDLE_LINE,
         well_transparent=well_transparent,
         gradient_angle=300.0,
-        headline_size=CTA_HEADLINE_SIZE,
         subhead_size=CTA_SUBHEAD_SIZE,
     )
 
@@ -378,7 +389,7 @@ def make_caption_clips(events):
 # --------------------------------------------------------------------------- #
 
 def main():
-    print("Building MPC Detroit Knows (30s identity reel)...")
+    print("Building MPC Ten Weeks (30s endurance reel)...")
 
     print("\n[pre-warm] generating any missing TTS...")
     synthesize_narration(load_env())

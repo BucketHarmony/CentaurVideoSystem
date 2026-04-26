@@ -1,0 +1,202 @@
+{
+  "captured_utc": "2026-04-26T14:39:12.903790+00:00",
+  "frame_times_s": [
+    2.0,
+    15.0,
+    28.0
+  ],
+  "reels": {
+    "abolish_ice_congress": {
+      "script": "scripts/mpc_ep_abolish_ice_congress.py",
+      "mp4": "ComfyUI/output/mpc/abolish_ice_congress.mp4",
+      "wav": "ComfyUI/output/mpc/abolish_ice_congress_audio.wav",
+      "audio_wav_sha256": "36f7184dce3c81c4e48c675ce02fa27b111c8cb0e6484b4a4f873b0f4e230e4e",
+      "mp4_sha256": "7a486905e370e3b596452b34390896524ec7fb719281da9084134a76649bf9d5",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/abolish_ice_congress_t02.png",
+          "sha256": "8c43e7f4e938f6fab6028ac1b1ba8fcf4c0318e94d23afd77be0e21b6e8e1d54"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/abolish_ice_congress_t15.png",
+          "sha256": "712c892e2e68d12a7995170d17b09574eee8777e13a400fbedea3aeaf7832bd9"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/abolish_ice_congress_t28.png",
+          "sha256": "a1248a9680a20140d627035d477218e0b43c8045f173c8dc9f8ed8369ef445ff"
+        }
+      ]
+    },
+    "detroit_knows": {
+      "script": "scripts/mpc_ep_detroit_knows.py",
+      "mp4": "ComfyUI/output/mpc/detroit_knows.mp4",
+      "wav": "ComfyUI/output/mpc/detroit_knows_audio.wav",
+      "audio_wav_sha256": "5bf6c65bb10133feb1251a4f46ae5cb6c4709fd0de323a6be8c4a4649672ebfe",
+      "mp4_sha256": "d36ee4f4d7112040d4b9725deb19151a25797823a2a49701c81d5c7e6ce5deca",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/detroit_knows_t02.png",
+          "sha256": "9c5503170007ef983a4e928a09d0679a330429b0317d243f1121cba1a92ff8fc"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/detroit_knows_t15.png",
+          "sha256": "039bda93110a5c554226cacc3e082480d0c6de80be1beeea8b739e9f97a54f0e"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/detroit_knows_t28.png",
+          "sha256": "caffbe7de38592203f0b01b3799874ded18a4f95154e904f670c245d870d1778"
+        }
+      ]
+    },
+    "follow_the_money": {
+      "script": "scripts/mpc_ep_follow_the_money.py",
+      "mp4": "ComfyUI/output/mpc/follow_the_money.mp4",
+      "wav": "ComfyUI/output/mpc/follow_the_money_audio.wav",
+      "audio_wav_sha256": "25be45843e275dd20f57d22c1f44d9eff29799bc11551261c5a684f42eaffcfb",
+      "mp4_sha256": "2b410a494a1e9356150bedc96ddb7645e759e8772c3bbfd6c60b3955c1345775",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/follow_the_money_t02.png",
+          "sha256": "c394476bd276589014db58ae30974744fb4cf63d547e2fd99fb6b8d6b5dd0caa"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/follow_the_money_t15.png",
+          "sha256": "ef805685ab01908de95f49da3a16237dd50b225edff5530fcc21e1a336883561"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/follow_the_money_t28.png",
+          "sha256": "a5323b2805df084af19001a4bd73796fc904f52a1a85c4f28aad779d11a39cc9"
+        }
+      ]
+    },
+    "north_lake": {
+      "script": "scripts/mpc_ep_north_lake.py",
+      "mp4": "ComfyUI/output/mpc/north_lake.mp4",
+      "wav": "ComfyUI/output/mpc/north_lake_audio.wav",
+      "audio_wav_sha256": "bcb91e1a1604477f6f0536275520b9997c5c3571096e8cd8ab57ea256ce1bc31",
+      "mp4_sha256": "4634d55b7e0db9c33a5ac86e427dbf98e7677fdf6b36b256f3cb274b7148ea99",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/north_lake_t02.png",
+          "sha256": "0f0727f7c76218696e9d7c5ab5332ad421967d2199eed05ef2478a470accc551"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/north_lake_t15.png",
+          "sha256": "18d47508e17ae1f9c52f2f8ec8b98600157c46b99d269da2decef7aaa18202d2"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/north_lake_t28.png",
+          "sha256": "7d9630b6dcd354a6301d2e7bb9a55d20968a552ba1f0a204dd0b563d969a6060"
+        }
+      ]
+    },
+    "people_power": {
+      "script": "scripts/mpc_ep_people_power.py",
+      "mp4": "ComfyUI/output/mpc/people_power.mp4",
+      "wav": "ComfyUI/output/mpc/people_power_audio.wav",
+      "audio_wav_sha256": "a13b5d1c219a515ed95ff7581456b156fb58dfa247059c5d141b872059b0b5af",
+      "mp4_sha256": "99964d80097d7338942c9179b7ffbe1545f66ea2b22d8ba5b249979b42e8ab16",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/people_power_t02.png",
+          "sha256": "bd6741bb3c64dc46511ef2fd7a7ec8c3aadf0887dd5b9fdd2c9e1fe620d29762"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/people_power_t15.png",
+          "sha256": "a67a54ad224fe7cd9abcb209ae025cedf5e396ab1d7bae3b43b2c246e699b4d8"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/people_power_t28.png",
+          "sha256": "bfa573be87f89cb2db2b55ea4c9d13266d7bd8e26d924687b07a2ef8b0544170"
+        }
+      ]
+    },
+    "romulus_rapid_response": {
+      "script": "scripts/mpc_ep_romulus.py",
+      "mp4": "ComfyUI/output/mpc/romulus_rapid_response.mp4",
+      "wav": "ComfyUI/output/mpc/romulus_rapid_response_audio.wav",
+      "audio_wav_sha256": "72dbfe8f1ed9f1a35bf3d76a09c783265f73b8805a92a41f65e809e64ceb253b",
+      "mp4_sha256": "322c379c41a71d2270c56a08b493bc1275f025a06b1945dc2dd4e6975a3a48b0",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/romulus_rapid_response_t02.png",
+          "sha256": "98073da9987d6212dc12d4378204cc90b824ee560c7215a654b705c9927dc51e"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/romulus_rapid_response_t15.png",
+          "sha256": "dffd5641d7a7ac36713fbba5f8aba791c5aaf59fba008576955c50a33534d945"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/romulus_rapid_response_t28.png",
+          "sha256": "4e2d9598805af5b5a56691d87b2fb8fab101148a18e627ce4d6338f5b4b912aa"
+        }
+      ]
+    },
+    "ten_weeks": {
+      "script": "scripts/mpc_ep_ten_weeks.py",
+      "mp4": "ComfyUI/output/mpc/ten_weeks.mp4",
+      "wav": "ComfyUI/output/mpc/ten_weeks_audio.wav",
+      "audio_wav_sha256": "9baf76d1b827db7ed874a79217fb8b9d2a492d80974e56c1b8b71fc481f036b9",
+      "mp4_sha256": "1fe1077f5c209619dc58e174c4123216ff0cb078052d6a132407f382ff90665b",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/ten_weeks_t02.png",
+          "sha256": "423e1bc6c86f30c2edbf8bc1413f157892a626a645d5a7a879cfb955f0b0ceb6"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/ten_weeks_t15.png",
+          "sha256": "e2958310ee61a9031ad950a2696304c02294c291c4b5fa8dd205f74f6ff01920"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/ten_weeks_t28.png",
+          "sha256": "2c63123fbc459c9c7b554f7c7ce37348819130f541f647e3ad29073a1989c65f"
+        }
+      ]
+    },
+    "we_dont_back_down": {
+      "script": "scripts/mpc_ep_we_dont_back_down.py",
+      "mp4": "ComfyUI/output/mpc/we_dont_back_down.mp4",
+      "wav": "ComfyUI/output/mpc/we_dont_back_down_audio.wav",
+      "audio_wav_sha256": "a29b58492f442490f08d9b219ae65a4ffce2a36551c768b05a3b930d3440a558",
+      "mp4_sha256": "5ef91de81e136580b368de8e5f0c0c3133f08beeb255408a8180dce5f7c8e957",
+      "frames": [
+        {
+          "t_s": 2.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/we_dont_back_down_t02.png",
+          "sha256": "2b2e0a9332a48e082d49c3fc7c5012a52692084a7b424fc5d16e89d42a01f20b"
+        },
+        {
+          "t_s": 15.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/we_dont_back_down_t15.png",
+          "sha256": "8b1b23746d0f21822395f2f7d6440281feda6a25df58fa50fa89195d8057e4f3"
+        },
+        {
+          "t_s": 28.0,
+          "path": "tests/cvs_lib/fixtures/baselines/frames/we_dont_back_down_t28.png",
+          "sha256": "76bf98afda2327bf625c84a827d6a01e452a90d2ef75bcbd7574bee03fda042d"
+        }
+      ]
+    }
+  }
+}

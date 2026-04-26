@@ -1,0 +1,11 @@
+{
+  "_comment": "Multi-rally CTA config. Per-script: pull `url` and `handle_line` from the chosen rally (falls back to `defaults`). Headline and subhead remain script-side because they're per-reel branding. Add a new rally key when a second campaign launches.",
+  "defaults": {
+    "handle_line": "Link in bio  •  @michiganprogressive"
+  },
+  "rallies": {
+    "ice_out_romulus": {
+      "url": "secure.actblue.com/donate/michigan-progressive-caucus-1"
+    }
+  }
+}

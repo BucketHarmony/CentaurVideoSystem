@@ -26,6 +26,11 @@ demo/output/
 raw/
 mpc/index/thumbnails/
 
+# cvs_lib regression baselines — binary blobs (PNGs, WAVs).
+# Hashes live in tests/cvs_lib/fixtures/baseline_manifest.json (tracked).
+# Regenerate via tests/cvs_lib/capture_baselines.py.
+tests/cvs_lib/fixtures/baselines/
+
 # Misc
 *.log
 *.tmp
