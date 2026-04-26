@@ -1,7 +1,7 @@
 """CVS Video Pipeline shared library.
 
 Extracted from copy-pasted infrastructure across the MPC reel suite
-(scripts/mpc_ep_*.py). See E:/AI/CVS/mpc/BACKLOG.md for the migration
+(scripts/mpc_ep_*.py). See E:/AI/CVS/BACKLOG.md for the migration
 roadmap and design decisions.
 
 Public modules:

@@ -16,10 +16,10 @@ already cost time. The big-rock work is **Tier 2 — Centralize into
 `cvs_lib/`**: extract the duplicated infrastructure once so every
 future video benefits from one bug fix, one improvement.
 
-> **Backlog scope note.** This file lives at `mpc/BACKLOG.md` for
-> historical reasons (MPC was the entry point) but now covers the
-> whole repo. Move to `E:/AI/CVS/BACKLOG.md` once the cross-pipeline
-> work begins.
+> **Backlog scope note.** This file covers the whole repo (MPC,
+> cc_flora, cc_ep, cc_hookshot). Originally lived at `mpc/BACKLOG.md`
+> while MPC was the only pipeline being centralized; moved to repo
+> root 2026-04-26 with the start of the cc_flora lift.
 
 ## Status — MPC scope (2026-04-26)
 
