@@ -12,7 +12,6 @@ Usage:
 """
 
 import os
-import sys
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -23,8 +22,6 @@ import random
 import subprocess
 import wave
 from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import requests
@@ -123,23 +120,44 @@ def free_gpu():
 # Color Grading + Effects
 # ===================================================================
 
-from cvs_lib.image_filters import (  # noqa: E402
-    cottagecore_grade as _cc_grade,
-    soft_bloom as _soft_bloom,
-    creamy_vignette as _creamy_vignette,
-)
-
-
 def cottagecore_grade(img):
-    return _cc_grade(img, variant="cool")
-
+    arr = np.array(img, dtype=np.float32)
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+    red_mask = (r > 80) & (r > g * 1.2) & (r > b * 1.2)
+    red_str = np.clip((r - np.maximum(g, b)) / 120.0, 0, 1) * red_mask.astype(np.float32)
+    arr[:, :, 0] = r * (1 - red_str * 0.55) + 205 * red_str * 0.55
+    arr[:, :, 1] = g * (1 - red_str * 0.45) + 170 * red_str * 0.45
+    arr[:, :, 2] = b * (1 - red_str * 0.35) + 172 * red_str * 0.35
+    orange_mask = (r > 100) & (g > 60) & (g < r * 0.85) & (b < g * 0.8)
+    orange_str = np.clip((r - b) / 150.0, 0, 1) * orange_mask.astype(np.float32)
+    arr[:, :, 0] = arr[:, :, 0] * (1 - orange_str * 0.15) + 220 * orange_str * 0.15
+    arr[:, :, 1] = arr[:, :, 1] * (1 - orange_str * 0.1) + 195 * orange_str * 0.1
+    arr = 128 + (arr - 128) * 0.92
+    arr[:, :, 0] *= 1.03; arr[:, :, 1] *= 1.01; arr[:, :, 2] *= 0.91
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    img = Image.fromarray(arr)
+    img = ImageEnhance.Color(img).enhance(0.75)
+    img = ImageEnhance.Brightness(img).enhance(0.92)
+    img = ImageEnhance.Contrast(img).enhance(1.12)
+    return img
 
 def soft_bloom(img, strength=0.05):
-    return _soft_bloom(img, strength=strength)
-
+    bright = ImageEnhance.Brightness(img).enhance(1.3)
+    bloom = bright.filter(ImageFilter.GaussianBlur(radius=40))
+    arr = np.array(img, dtype=np.float32) + np.array(bloom, dtype=np.float32) * strength
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
 def creamy_vignette(img, strength=0.55):
-    return _creamy_vignette(img, strength=strength, variant="cool")
+    w, h = img.size
+    arr = np.array(img, dtype=np.float32)
+    Y, X = np.ogrid[:h, :w]
+    dist = np.sqrt((X - w / 2) ** 2 + (Y - h / 2) ** 2)
+    max_dist = np.sqrt((w / 2) ** 2 + (h / 2) ** 2)
+    vig = np.clip((dist / max_dist - 0.25) / 0.55, 0, 1) ** 1.4
+    vig = vig[:, :, np.newaxis] * strength
+    shadow = np.array((55, 48, 42), dtype=np.float32)
+    arr = arr * (1 - vig) + shadow * vig
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
 def film_grain(img, intensity=5.0):
     arr = np.array(img, dtype=np.float32)
