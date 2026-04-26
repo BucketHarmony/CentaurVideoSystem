@@ -21,6 +21,42 @@ future video benefits from one bug fix, one improvement.
 > while MPC was the only pipeline being centralized; moved to repo
 > root 2026-04-26 with the start of the cc_flora lift.
 
+## Status — cc_flora + cc_hookshot scope (2026-04-26)
+
+**cc_flora + cc_hookshot lift shipped** in `cvs_lib/image_filters.py`.
+All 12 cc_flora scripts (ep01-ep10 + 30s + masterpiece) and all 6
+cc_hookshot scripts now import canonical filter implementations.
+Two additional scripts (`cc_midnight_final.py`, `dream_sequence.py`)
+migrated as filter-only stragglers.
+
+Filter API:
+- `cottagecore_grade(img, variant="cool"|"warm")` — cool default
+  (ep05-ep10); warm matches ep02-ep04 + 30s + masterpiece + dream_sequence
+- `soft_bloom(img, strength=0.05)` — strength controls bloom intensity
+- `creamy_vignette(img, strength=None, variant="cool"|"warm")` —
+  variant defaults: cool=0.55, warm=0.28
+- `hookshot_cottagecore_grade(img)` / `hookshot_soft_bloom(img, ...)` /
+  `hookshot_vignette(img, strength=0.55)` — sibling formulas for the
+  hookshot dialect (no red/orange masking, contrast-based)
+
+TTS migration: cc_flora scripts now route through `cvs_lib.elevenlabs_tts`
+with style param. ep01 stability moved 0.6 → 0.65 (deliberate, signed off).
+ep04 preserves cool TTS (0.55/0.72/0.15) as documented warm-grade-cool-TTS
+outlier. ElevenLabs `style` parameter pass-through added to lib.
+
+Skipped from straggler scope: `bluesky_template.py` and `demo/run_demo.py`
+each use a 4th/5th filter dialect that doesn't match the lib's three
+documented variants. Preserving inline avoids forcing visual changes
+on out-of-scope outputs.
+
+Test coverage: 64 tests in `tests/cvs_lib/` (17 in `test_image_filters.py`).
+
+Out of scope, deferred to separate plans:
+- cc_ep migration (6 untracked scripts: beetle, catdoor, ghost,
+  sommelier, toast15, underworld)
+- Audio overhaul (cc_flora's TTS+ambient pad vs MPC's sidechain
+  ducking are deliberately different audio philosophies)
+
 ## Status — MPC scope (2026-04-26)
 
 **Tier 1 + Tier 2 (MPC scope) shipped** in `cvs_lib/` lift. All 8 MPC
