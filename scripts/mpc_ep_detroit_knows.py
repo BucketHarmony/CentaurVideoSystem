@@ -24,6 +24,11 @@ Run:
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path as _Path
+
+# Make `import cvs_lib` work when running this script directly.
+sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
 from pathlib import Path
 
 import numpy as np
@@ -42,6 +47,8 @@ from cvs_lib.env import load_env as _lib_load_env
 from cvs_lib.mpc_chrome import ChromeRenderer, Layout, load_palette
 from cvs_lib.moviepy_helpers import build_beat_clip as _lib_build_beat_clip
 from cvs_lib.moviepy_helpers import spec_well as _lib_spec_well
+from cvs_lib.preflight import run_or_exit as _preflight
+from cvs_lib.preview import render_beat_stills as _render_beat_stills
 
 # --------------------------------------------------------------------------- #
 # Paths + brand
@@ -377,8 +384,29 @@ def make_caption_clips(events):
 # Main
 # --------------------------------------------------------------------------- #
 
+def _chrome_for_preview(slug, chip_label, spec):
+    if slug == "cta":
+        return render_cta_chrome(well_transparent=True)
+    return render_beat_chrome(slug, chip_label, well_transparent=True)
+
+
+def _spec_well_for_preview(spec):
+    return _spec_well(spec) if spec else (WELL_TOP, WELL_H)
+
+
 def main():
     print("Building MPC Detroit Knows (30s identity reel)...")
+
+    if "--preview" in sys.argv:
+        out = OUTPUT_DIR / "_preview" / "detroit_knows"
+        _render_beat_stills(
+            beats=BEATS, out_dir=out,
+            chrome_for=_chrome_for_preview, spec_well=_spec_well_for_preview,
+            W=W, H=H, rotation_cache_dir=_ROT_CACHE_DIR,
+        )
+        return
+
+    _preflight(BEATS, DURATION, rotation_cache_dir=_ROT_CACHE_DIR)
 
     print("\n[pre-warm] generating any missing TTS...")
     synthesize_narration(load_env())

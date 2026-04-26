@@ -28,7 +28,11 @@ from __future__ import annotations
 
 import json
 import math
+import sys
 from pathlib import Path
+
+# Make `import cvs_lib` work when running this script directly.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -46,6 +50,8 @@ from cvs_lib import captions as cvs_captions
 from cvs_lib import elevenlabs_tts as cvs_tts
 from cvs_lib import moviepy_helpers as cvs_movie
 from cvs_lib.env import load_env
+from cvs_lib.preflight import run_or_exit as _preflight
+from cvs_lib.preview import render_beat_stills as _render_beat_stills
 
 # --------------------------------------------------------------------------- #
 # Paths + brand
@@ -714,8 +720,45 @@ def make_caption_clips(events):
 # Main
 # --------------------------------------------------------------------------- #
 
+def _preview_beats():
+    """Synthesize a BEATS-shaped list from SCENES + FOOTAGE so the
+    preview helper can iterate it like the other reels."""
+    chip_for_slug = {"hook": "ROMULUS", "stakes": "DHS WAREHOUSE",
+                     "fight": "MAY 18", "cta": "CHIP IN"}
+    out = []
+    for t0, t1, slug, _ in SCENES:
+        spec = FOOTAGE.get(slug)
+        out.append((slug, t1 - t0, slug, chip_for_slug.get(slug, ""), spec))
+    return out
+
+
+def _chrome_for_preview(slug, chip_label, spec):
+    return {
+        "hook": render_hook,
+        "stakes": render_stakes,
+        "fight": render_fight,
+        "cta": render_cta,
+    }[slug](well_transparent=True)
+
+
+def _spec_well_for_preview(spec):
+    return _spec_well(spec) if spec is not None else (WELL_TOP, WELL_H)
+
+
 def main():
     print("Building MPC Romulus Rapid Response (30s)...")
+
+    if "--preview" in sys.argv:
+        out = OUTPUT_DIR / "_preview" / "romulus"
+        _render_beat_stills(
+            beats=_preview_beats(), out_dir=out,
+            chrome_for=_chrome_for_preview, spec_well=_spec_well_for_preview,
+            W=W, H=H, rotation_cache_dir=_ROT_CACHE_DIR,
+        )
+        return
+
+    # Preflight: validate sources + scene-sum, on a synthetic BEATS list.
+    _preflight(_preview_beats(), DURATION, rotation_cache_dir=_ROT_CACHE_DIR)
 
     print("\n[pre-warm] generating any missing TTS now...")
     synthesize_narration(load_env(ENV_PATH))

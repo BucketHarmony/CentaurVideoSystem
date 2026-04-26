@@ -44,14 +44,31 @@ def _spec_path(spec: dict) -> Path:
     return Path(spec["path"])
 
 
+def _iter_specs(beats: Sequence[Beat]):
+    """Yield (slug, single_spec_dict) pairs. Multi-shot specs (list of
+    dicts) are flattened. None specs are skipped."""
+    for slug, _dur, _chord, _label, spec in beats:
+        if spec is None:
+            continue
+        if isinstance(spec, list):
+            for sub in spec:
+                yield slug, sub
+        else:
+            yield slug, spec
+
+
 def assert_sources_exist(beats: Sequence[Beat]) -> List[Issue]:
     """Every beat's source file must exist on disk."""
     issues: List[Issue] = []
     seen = set()
-    for slug, _dur, _chord, _label, spec in beats:
-        if spec is None:
+    for slug, spec in _iter_specs(beats):
+        if "path" not in spec:
+            issues.append(Issue(
+                ERROR, "spec_missing_path",
+                f"beat '{slug}': spec has no 'path' key"
+            ))
             continue
-        path = _spec_path(spec)
+        path = Path(spec["path"])
         if path in seen:
             continue
         seen.add(path)
@@ -80,11 +97,11 @@ def assert_beats_sum_to_duration(
 def assert_in_out_ordering(beats: Sequence[Beat]) -> List[Issue]:
     """For every beat, in_t < out_t and both are non-negative."""
     issues: List[Issue] = []
-    for slug, _dur, _chord, _label, spec in beats:
-        if spec is None:
+    for slug, spec in _iter_specs(beats):
+        if "in_t" not in spec or "out_t" not in spec:
             continue
-        in_t = float(spec.get("in_t", 0.0))
-        out_t = float(spec.get("out_t", 0.0))
+        in_t = float(spec["in_t"])
+        out_t = float(spec["out_t"])
         if in_t < 0 or out_t < 0:
             issues.append(Issue(
                 ERROR, "negative_time",
