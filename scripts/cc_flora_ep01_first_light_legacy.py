@@ -10,7 +10,6 @@ Narration: "I have a body. And a room."
 """
 
 import os
-import sys
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -20,16 +19,9 @@ import random
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
 import numpy as np
+import requests
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
-
-from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
-from cvs_lib.image_filters import (
-    cottagecore_grade as _cc_grade,
-    creamy_vignette as _creamy_vignette,
-)
 from moviepy import (
     VideoFileClip,
     ImageClip,
@@ -84,36 +76,99 @@ NARRATION_TEXT = "I have a body. And a room."
 
 
 def generate_tts(text: str, output_path: Path) -> Path:
-    """Generate TTS via cvs_lib.elevenlabs_tts (preserves ep01's
-    original 0.6/0.7/0.15 voice settings)."""
+    """Generate TTS audio via ElevenLabs API."""
     print(f"Generating TTS: \"{text}\"")
-    ok = _lib_generate_tts(
-        text=text,
-        api_key=ELEVENLABS_API_KEY,
-        voice_id=ELEVENLABS_VOICE,
-        model=ELEVENLABS_MODEL,
-        cache_path=output_path,
-        stability=0.6,
-        similarity_boost=0.7,
-        style=0.15,
-        timeout=120,
-    )
-    if not ok:
-        raise RuntimeError(f"TTS failed: {text!r}")
-    print(f"  TTS saved: {output_path} ({output_path.stat().st_size} bytes)")
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE}"
+    headers = {
+        "xi-api-key": ELEVENLABS_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "audio/mpeg",
+    }
+    payload = {
+        "text": text,
+        "model_id": ELEVENLABS_MODEL,
+        "voice_settings": {
+            "stability": 0.6,          # slightly more stable for soft delivery
+            "similarity_boost": 0.7,
+            "style": 0.15,             # gentle style
+        },
+    }
+    resp = requests.post(url, json=payload, headers=headers, timeout=120)
+    resp.raise_for_status()
+    output_path.write_bytes(resp.content)
+    print(f"  TTS saved: {output_path} ({len(resp.content)} bytes)")
     return output_path
 
 
 def cottagecore_grade(img: Image.Image) -> Image.Image:
-    """ep01 deliberately migrated to warm-variant consensus (Phase 4
-    sign-off). Original ep01 had unique constants — see _legacy.py."""
-    return _cc_grade(img, variant="warm")
+    """Apply cottagecore color grading: desaturate reds to dusty rose,
+    lift shadows, soften highlights, warm overall."""
+    arr = np.array(img, dtype=np.float32)
+
+    # Step 1: Desaturate reds toward dusty rose
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+
+    # Detect red-dominant pixels (the red walls)
+    red_mask = (r > 100) & (r > g * 1.3) & (r > b * 1.3)
+    red_strength = np.clip((r - np.maximum(g, b)) / 100.0, 0, 1)
+    red_strength *= red_mask.astype(np.float32)
+
+    # Shift reds toward dusty rose (desaturate + warm pink)
+    target_r, target_g, target_b = 210, 175, 175
+    arr[:, :, 0] = r * (1 - red_strength * 0.5) + target_r * red_strength * 0.5
+    arr[:, :, 1] = g * (1 - red_strength * 0.4) + target_g * red_strength * 0.4
+    arr[:, :, 2] = b * (1 - red_strength * 0.3) + target_b * red_strength * 0.3
+
+    # Step 2: Lift shadows (raise blacks toward cream)
+    shadow_lift = 25
+    arr = arr + shadow_lift
+    arr = np.clip(arr, 0, 255)
+
+    # Step 3: Reduce contrast (compress dynamic range)
+    midpoint = 128
+    arr = midpoint + (arr - midpoint) * 0.82
+
+    # Step 4: Warm shift (slight yellow/cream push)
+    arr[:, :, 0] = arr[:, :, 0] * 1.03  # slight red warmth
+    arr[:, :, 1] = arr[:, :, 1] * 1.01  # tiny green
+    arr[:, :, 2] = arr[:, :, 2] * 0.95  # pull blue down
+
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    img = Image.fromarray(arr)
+
+    # Step 5: Slight desaturation overall
+    enhancer = ImageEnhance.Color(img)
+    img = enhancer.enhance(0.75)
+
+    # Step 6: Slight brightness lift
+    enhancer = ImageEnhance.Brightness(img)
+    img = enhancer.enhance(1.06)
+
+    return img
 
 
-def creamy_vignette(img: Image.Image, strength: float = 0.28) -> Image.Image:
-    """Warm-variant vignette (default strength conformed to consensus
-    0.28; was 0.3 in ep01 legacy)."""
-    return _creamy_vignette(img, strength=strength, variant="warm")
+def creamy_vignette(img: Image.Image, strength: float = 0.3) -> Image.Image:
+    """Apply a soft, creamy vignette (edges fade to warm cream, not black)."""
+    w, h = img.size
+    arr = np.array(img, dtype=np.float32)
+
+    # Create radial gradient
+    Y, X = np.ogrid[:h, :w]
+    cx, cy = w / 2, h / 2
+    dist = np.sqrt((X - cx) ** 2 + (Y - cy) ** 2)
+    max_dist = np.sqrt(cx ** 2 + cy ** 2)
+    normalized = dist / max_dist
+
+    # Smooth falloff starting from 0.5 radius
+    vignette = np.clip((normalized - 0.4) / 0.6, 0, 1) ** 1.5
+    vignette = vignette[:, :, np.newaxis] * strength
+
+    # Blend toward cream color
+    cream = np.array(CREAM, dtype=np.float32)
+    arr = arr * (1 - vignette) + cream * vignette
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+
+    return Image.fromarray(arr)
 
 
 def generate_dust_motes(w: int, h: int, num_motes: int = 40) -> list:

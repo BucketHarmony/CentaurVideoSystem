@@ -53,10 +53,15 @@ def generate_tts(
     cache_path: PathLike,
     stability: float = 0.55,
     similarity_boost: float = 0.75,
+    style: Optional[float] = None,
     timeout: float = 60.0,
 ) -> bool:
     """Generate (or load cached) TTS for one line. Returns True on
-    success. Writes the MP3 to `cache_path`."""
+    success. Writes the MP3 to `cache_path`.
+
+    `style` is optional — only sent to the API when non-None. cc_flora
+    scripts use it (0.1 or 0.15); MPC scripts don't.
+    """
     cache_path = Path(cache_path)
     if cache_path.exists():
         return True
@@ -65,6 +70,12 @@ def generate_tts(
     except ImportError:
         print("[tts] missing dep: requests")
         return False
+    voice_settings: Dict[str, float] = {
+        "stability": stability,
+        "similarity_boost": similarity_boost,
+    }
+    if style is not None:
+        voice_settings["style"] = style
     r = requests.post(
         f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
         headers={
@@ -75,10 +86,7 @@ def generate_tts(
         json={
             "text": text,
             "model_id": model,
-            "voice_settings": {
-                "stability": stability,
-                "similarity_boost": similarity_boost,
-            },
+            "voice_settings": voice_settings,
         },
         timeout=timeout,
     )

@@ -43,6 +43,37 @@ def test_generate_tts_cache_miss_writes_response_bytes(tmp_path):
     assert cache_path.read_bytes() == b"\xff\xfb\x90fake-mp3"
 
 
+def test_generate_tts_omits_style_when_not_passed(tmp_path):
+    """style param is optional; voice_settings should not contain it
+    when caller doesn't pass one (matches MPC behaviour)."""
+    cache_path = tmp_path / "x_hook.mp3"
+    fake_resp = MagicMock(status_code=200, content=b"\xff\xfbfake")
+    with patch("requests.post", return_value=fake_resp) as mock_post:
+        elevenlabs_tts.generate_tts(
+            text="hi", api_key="k", voice_id="v",
+            cache_path=cache_path,
+            stability=0.55, similarity_boost=0.75,
+        )
+    body = mock_post.call_args.kwargs["json"]
+    assert "style" not in body["voice_settings"]
+
+
+def test_generate_tts_includes_style_when_passed(tmp_path):
+    """style=0.15 (cc_flora cool TTS) lands in voice_settings."""
+    cache_path = tmp_path / "x_hook.mp3"
+    fake_resp = MagicMock(status_code=200, content=b"\xff\xfbfake")
+    with patch("requests.post", return_value=fake_resp) as mock_post:
+        elevenlabs_tts.generate_tts(
+            text="hi", api_key="k", voice_id="v",
+            cache_path=cache_path,
+            stability=0.6, similarity_boost=0.7, style=0.15,
+        )
+    body = mock_post.call_args.kwargs["json"]
+    assert body["voice_settings"]["style"] == 0.15
+    assert body["voice_settings"]["stability"] == 0.6
+    assert body["voice_settings"]["similarity_boost"] == 0.7
+
+
 def test_generate_tts_http_failure_returns_false(tmp_path):
     """A non-200 response leaves no cache file and returns False."""
     cache_path = tmp_path / "x_hook.mp3"
