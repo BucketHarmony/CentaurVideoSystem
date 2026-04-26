@@ -48,6 +48,13 @@ import scipy.signal
 import torch
 import torchaudio
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from cvs_lib.image_filters import (
+    cottagecore_grade as _cc_grade,
+    soft_bloom as _soft_bloom,
+    creamy_vignette as _creamy_vignette,
+)
 from moviepy import (
     ImageSequenceClip,
     AudioFileClip,
@@ -514,61 +521,15 @@ def unload_upscale_model():
 # ═══════════════════════════════════════════════════════════════════════════
 
 def cottagecore_grade(img: Image.Image) -> Image.Image:
-    """Rich cottagecore grade: desaturate reds to dusty rose, lift shadows,
-    compress highlights, add warmth."""
-    arr = np.array(img, dtype=np.float32)
-    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
-
-    # Desaturate reds toward dusty rose
-    red_mask = (r > 80) & (r > g * 1.2) & (r > b * 1.2)
-    red_strength = np.clip((r - np.maximum(g, b)) / 120.0, 0, 1)
-    red_strength *= red_mask.astype(np.float32)
-    arr[:, :, 0] = r * (1 - red_strength * 0.55) + 205 * red_strength * 0.55
-    arr[:, :, 1] = g * (1 - red_strength * 0.45) + 170 * red_strength * 0.45
-    arr[:, :, 2] = b * (1 - red_strength * 0.35) + 172 * red_strength * 0.35
-
-    # Warm the wood tones
-    orange_mask = (r > 100) & (g > 60) & (g < r * 0.85) & (b < g * 0.8)
-    orange_str = np.clip((r - b) / 150.0, 0, 1) * orange_mask.astype(np.float32)
-    arr[:, :, 0] = arr[:, :, 0] * (1 - orange_str * 0.15) + 220 * orange_str * 0.15
-    arr[:, :, 1] = arr[:, :, 1] * (1 - orange_str * 0.1) + 195 * orange_str * 0.1
-
-    # Lift shadows + compress range
-    arr = arr + 20
-    arr = np.clip(arr, 0, 255)
-    arr = 128 + (arr - 128) * 0.78
-
-    # Warm shift
-    arr[:, :, 0] *= 1.03
-    arr[:, :, 1] *= 1.01
-    arr[:, :, 2] *= 0.93
-    arr = np.clip(arr, 0, 255).astype(np.uint8)
-    img = Image.fromarray(arr)
-    img = ImageEnhance.Color(img).enhance(0.70)
-    img = ImageEnhance.Brightness(img).enhance(1.08)
-    return img
+    return _cc_grade(img, variant="warm")
 
 
 def soft_bloom(img: Image.Image, strength: float = 0.12) -> Image.Image:
-    bright = ImageEnhance.Brightness(img).enhance(1.3)
-    bloom = bright.filter(ImageFilter.GaussianBlur(radius=40))
-    arr = np.array(img, dtype=np.float32)
-    bloom_arr = np.array(bloom, dtype=np.float32)
-    result = arr + bloom_arr * strength
-    return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
+    return _soft_bloom(img, strength=strength)
 
 
 def creamy_vignette(img: Image.Image, strength: float = 0.28) -> Image.Image:
-    w, h = img.size
-    arr = np.array(img, dtype=np.float32)
-    Y, X = np.ogrid[:h, :w]
-    dist = np.sqrt((X - w / 2) ** 2 + (Y - h / 2) ** 2)
-    max_dist = np.sqrt((w / 2) ** 2 + (h / 2) ** 2)
-    vignette = np.clip((dist / max_dist - 0.35) / 0.65, 0, 1) ** 1.8
-    vignette = vignette[:, :, np.newaxis] * strength
-    cream = np.array(CREAM, dtype=np.float32)
-    arr = arr * (1 - vignette) + cream * vignette
-    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
+    return _creamy_vignette(img, strength=strength, variant="warm")
 
 
 def film_grain(img: Image.Image, intensity: float = 6.0) -> Image.Image:

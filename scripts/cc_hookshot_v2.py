@@ -46,6 +46,13 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from dotenv import load_dotenv
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from cvs_lib.image_filters import (
+    hookshot_cottagecore_grade as _hk_grade,
+    hookshot_soft_bloom as _hk_bloom,
+    hookshot_vignette as _hk_vignette,
+)
+
 load_dotenv()
 
 # ── Paths ───────────────────────────────────────────────────────────────────
@@ -181,20 +188,11 @@ def generate_tts(text, output_path):
 # ── Visual Pipeline ─────────────────────────────────────────────────────────
 
 def cottagecore_grade(img):
-    arr = np.array(img, dtype=np.float32)
-    arr = 128 + (arr - 128) * 0.92
-    arr[:, :, 0] *= 1.04
-    arr[:, :, 1] *= 1.01
-    arr[:, :, 2] *= 0.91
-    arr = np.clip(arr, 0, 255).astype(np.uint8)
-    img = Image.fromarray(arr)
-    img = ImageEnhance.Contrast(img).enhance(1.12)
-    img = ImageEnhance.Brightness(img).enhance(0.92)
-    return img
+    return _hk_grade(img)
 
 
 def soft_bloom(img, radius=15, blend=0.05):
-    return Image.blend(img, img.filter(ImageFilter.GaussianBlur(radius)), blend)
+    return _hk_bloom(img, radius=radius, blend=blend)
 
 
 def film_grain(img, intensity=0.02):
@@ -203,14 +201,7 @@ def film_grain(img, intensity=0.02):
 
 
 def vignette(img, strength=0.55):
-    w, h = img.size
-    arr = np.array(img, dtype=np.float32) / 255.0
-    Y, X = np.ogrid[:h, :w]
-    dist = np.sqrt((X - w/2)**2 + (Y - h/2)**2) / math.sqrt((w/2)**2 + (h/2)**2)
-    mask = (np.clip((dist - 0.25) / 0.75, 0, 1) ** 2 * strength)[:, :, np.newaxis]
-    tint = np.array([55, 48, 42], dtype=np.float32) / 255.0
-    arr = arr * (1 - mask) + tint * mask
-    return Image.fromarray((np.clip(arr, 0, 1) * 255).astype(np.uint8))
+    return _hk_vignette(img, strength=strength)
 
 
 def make_vertical(frame, y_offset=-60):

@@ -25,13 +25,6 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from dotenv import load_dotenv
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from cvs_lib.image_filters import (
-    hookshot_cottagecore_grade as _hk_grade,
-    hookshot_soft_bloom as _hk_bloom,
-    hookshot_vignette as _hk_vignette,
-)
-
 load_dotenv()
 
 KOMBUCHA_DIR = Path(os.getenv("KOMBUCHA_DIR", "E:/AI/Kombucha"))
@@ -64,17 +57,27 @@ def load_font(path, size):
 # ── Visual (same as before) ────────────────────────────────────────────────
 
 def cottagecore_grade(img):
-    return _hk_grade(img)
+    arr = np.array(img, dtype=np.float32)
+    arr = 128 + (arr - 128) * 0.92
+    arr[:, :, 0] *= 1.04; arr[:, :, 1] *= 1.01; arr[:, :, 2] *= 0.91
+    img = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
+    return ImageEnhance.Brightness(ImageEnhance.Contrast(img).enhance(1.12)).enhance(0.92)
 
 def soft_bloom(img):
-    return _hk_bloom(img)
+    return Image.blend(img, img.filter(ImageFilter.GaussianBlur(15)), 0.05)
 
 def film_grain(img):
     arr = np.array(img, dtype=np.float32) / 255.0
     return Image.fromarray((np.clip(arr + np.random.normal(0, 0.02, arr.shape), 0, 1) * 255).astype(np.uint8))
 
 def vignette(img):
-    return _hk_vignette(img)
+    w, h = img.size
+    arr = np.array(img, dtype=np.float32) / 255.0
+    Y, X = np.ogrid[:h, :w]
+    dist = np.sqrt((X - w/2)**2 + (Y - h/2)**2) / math.sqrt((w/2)**2 + (h/2)**2)
+    mask = (np.clip((dist - 0.25) / 0.75, 0, 1) ** 2 * 0.55)[:, :, np.newaxis]
+    tint = np.array([55, 48, 42], dtype=np.float32) / 255.0
+    return Image.fromarray((np.clip(arr * (1 - mask) + tint * mask, 0, 1) * 255).astype(np.uint8))
 
 def make_vertical(frame, y_offset=-60):
     fw, fh = frame.size
