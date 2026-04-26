@@ -128,6 +128,7 @@ from cvs_lib.image_filters import (  # noqa: E402
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
 )
+from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts  # noqa: E402
 
 
 def cottagecore_grade(img):
@@ -429,15 +430,13 @@ def generate_tts(text, output_path):
         if bracket_end != -1:
             clean = clean[bracket_end + 1:].strip()
     print(f'  TTS: "{clean[:70]}"')
-    resp = requests.post(
-        f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE}",
-        json={"text": clean, "model_id": ELEVENLABS_MODEL,
-              "voice_settings": {"stability": 0.55, "similarity_boost": 0.72, "style": 0.15}},
-        headers={"xi-api-key": ELEVENLABS_API_KEY, "Content-Type": "application/json",
-                 "Accept": "audio/mpeg"},
-        timeout=120)
-    resp.raise_for_status()
-    output_path.write_bytes(resp.content)
+    ok = _lib_generate_tts(
+        text=clean, api_key=ELEVENLABS_API_KEY, voice_id=ELEVENLABS_VOICE,
+        model=ELEVENLABS_MODEL, cache_path=output_path,
+        stability=0.55, similarity_boost=0.72, style=0.15, timeout=120,
+    )
+    if not ok:
+        raise RuntimeError(f"TTS failed: {clean!r}")
     return output_path
 
 def build_audio():

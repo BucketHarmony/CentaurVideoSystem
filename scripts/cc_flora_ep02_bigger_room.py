@@ -30,6 +30,15 @@ import requests
 import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
+from cvs_lib.image_filters import (
+    cottagecore_grade as _cc_grade,
+    soft_bloom as _soft_bloom,
+    creamy_vignette as _creamy_vignette,
+)
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Config
 # ═══════════════════════════════════════════════════════════════════════════
@@ -130,42 +139,13 @@ def free_gpu():
 # ═══════════════════════════════════════════════════════════════════════════
 
 def cottagecore_grade(img):
-    arr = np.array(img, dtype=np.float32)
-    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
-    red_mask = (r > 80) & (r > g * 1.2) & (r > b * 1.2)
-    red_str = np.clip((r - np.maximum(g, b)) / 120.0, 0, 1) * red_mask.astype(np.float32)
-    arr[:, :, 0] = r * (1 - red_str * 0.55) + 205 * red_str * 0.55
-    arr[:, :, 1] = g * (1 - red_str * 0.45) + 170 * red_str * 0.45
-    arr[:, :, 2] = b * (1 - red_str * 0.35) + 172 * red_str * 0.35
-    orange_mask = (r > 100) & (g > 60) & (g < r * 0.85) & (b < g * 0.8)
-    orange_str = np.clip((r - b) / 150.0, 0, 1) * orange_mask.astype(np.float32)
-    arr[:, :, 0] = arr[:, :, 0] * (1 - orange_str * 0.15) + 220 * orange_str * 0.15
-    arr[:, :, 1] = arr[:, :, 1] * (1 - orange_str * 0.1) + 195 * orange_str * 0.1
-    arr = np.clip(arr + 20, 0, 255)
-    arr = 128 + (arr - 128) * 0.78
-    arr[:, :, 0] *= 1.03; arr[:, :, 1] *= 1.01; arr[:, :, 2] *= 0.93
-    arr = np.clip(arr, 0, 255).astype(np.uint8)
-    img = Image.fromarray(arr)
-    img = ImageEnhance.Color(img).enhance(0.70)
-    img = ImageEnhance.Brightness(img).enhance(1.08)
-    return img
+    return _cc_grade(img, variant="warm")
 
 def soft_bloom(img, strength=0.12):
-    bright = ImageEnhance.Brightness(img).enhance(1.3)
-    bloom = bright.filter(ImageFilter.GaussianBlur(radius=40))
-    arr = np.array(img, dtype=np.float32) + np.array(bloom, dtype=np.float32) * strength
-    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
+    return _soft_bloom(img, strength=strength)
 
 def creamy_vignette(img, strength=0.28):
-    w, h = img.size
-    arr = np.array(img, dtype=np.float32)
-    Y, X = np.ogrid[:h, :w]
-    dist = np.sqrt((X - w / 2) ** 2 + (Y - h / 2) ** 2)
-    max_dist = np.sqrt((w / 2) ** 2 + (h / 2) ** 2)
-    vig = np.clip((dist / max_dist - 0.35) / 0.65, 0, 1) ** 1.8
-    vig = vig[:, :, np.newaxis] * strength
-    arr = arr * (1 - vig) + np.array(CREAM, dtype=np.float32) * vig
-    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
+    return _creamy_vignette(img, strength=strength, variant="warm")
 
 def film_grain(img, intensity=6.0):
     arr = np.array(img, dtype=np.float32)
@@ -403,16 +383,13 @@ def generate_ambient_pad(duration, sr=44100):
 
 def generate_tts(text, output_path):
     print(f"  TTS: \"{text[:60]}\"")
-    resp = requests.post(
-        f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE}",
-        json={"text": text, "model_id": ELEVENLABS_MODEL,
-              "voice_settings": {"stability": 0.65, "similarity_boost": 0.72, "style": 0.1}},
-        headers={"xi-api-key": ELEVENLABS_API_KEY, "Content-Type": "application/json",
-                 "Accept": "audio/mpeg"},
-        timeout=120,
+    ok = _lib_generate_tts(
+        text=text, api_key=ELEVENLABS_API_KEY, voice_id=ELEVENLABS_VOICE,
+        model=ELEVENLABS_MODEL, cache_path=output_path,
+        stability=0.65, similarity_boost=0.72, style=0.1, timeout=120,
     )
-    resp.raise_for_status()
-    output_path.write_bytes(resp.content)
+    if not ok:
+        raise RuntimeError(f"TTS failed: {text!r}")
     return output_path
 
 def build_audio():

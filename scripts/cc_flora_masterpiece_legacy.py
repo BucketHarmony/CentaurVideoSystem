@@ -29,15 +29,6 @@ import scipy.signal
 import torch
 import torchaudio
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
-
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
-from cvs_lib.image_filters import (
-    cottagecore_grade as _cc_grade,
-    soft_bloom as _soft_bloom,
-    creamy_vignette as _creamy_vignette,
-)
 from moviepy import (
     ImageSequenceClip,
     AudioFileClip,
@@ -135,15 +126,79 @@ def upscale_frame(pil_img: Image.Image) -> Image.Image:
 # ═══════════════════════════════════════════════════════════════════════════
 
 def cottagecore_grade(img: Image.Image) -> Image.Image:
-    return _cc_grade(img, variant="warm")
+    """Rich cottagecore grade: desaturate reds to dusty rose, lift shadows,
+    compress highlights, add warmth. More nuanced than v1."""
+    arr = np.array(img, dtype=np.float32)
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+
+    # ── Desaturate reds toward dusty rose/mauve ──
+    red_mask = (r > 80) & (r > g * 1.2) & (r > b * 1.2)
+    red_strength = np.clip((r - np.maximum(g, b)) / 120.0, 0, 1)
+    red_strength *= red_mask.astype(np.float32)
+
+    # Target: dusty rose with slight mauve lean
+    arr[:, :, 0] = r * (1 - red_strength * 0.55) + 205 * red_strength * 0.55
+    arr[:, :, 1] = g * (1 - red_strength * 0.45) + 170 * red_strength * 0.45
+    arr[:, :, 2] = b * (1 - red_strength * 0.35) + 172 * red_strength * 0.35
+
+    # ── Warm the wood tones (orange/brown → honey) ──
+    orange_mask = (r > 100) & (g > 60) & (g < r * 0.85) & (b < g * 0.8)
+    orange_str = np.clip((r - b) / 150.0, 0, 1) * orange_mask.astype(np.float32)
+    arr[:, :, 0] = arr[:, :, 0] * (1 - orange_str * 0.15) + 220 * orange_str * 0.15
+    arr[:, :, 1] = arr[:, :, 1] * (1 - orange_str * 0.1) + 195 * orange_str * 0.1
+
+    # ── Lift shadows ──
+    arr = arr + 20
+    arr = np.clip(arr, 0, 255)
+
+    # ── Compress dynamic range (soften) ──
+    arr = 128 + (arr - 128) * 0.78
+
+    # ── Warm shift ──
+    arr[:, :, 0] *= 1.03
+    arr[:, :, 1] *= 1.01
+    arr[:, :, 2] *= 0.93
+
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    img = Image.fromarray(arr)
+
+    # ── Desaturation ──
+    img = ImageEnhance.Color(img).enhance(0.70)
+
+    # ── Brightness lift ──
+    img = ImageEnhance.Brightness(img).enhance(1.08)
+
+    return img
 
 
 def soft_bloom(img: Image.Image, strength: float = 0.12) -> Image.Image:
-    return _soft_bloom(img, strength=strength)
+    """Add soft bloom/glow to highlights — the cottagecore light-leak feel."""
+    # Create a heavily blurred bright version
+    bright = ImageEnhance.Brightness(img).enhance(1.3)
+    bloom = bright.filter(ImageFilter.GaussianBlur(radius=40))
+
+    # Blend bloom onto original (screen-like)
+    arr = np.array(img, dtype=np.float32)
+    bloom_arr = np.array(bloom, dtype=np.float32)
+
+    # Screen blend: 1 - (1-a)(1-b), but we use additive with strength control
+    result = arr + bloom_arr * strength
+    result = np.clip(result, 0, 255).astype(np.uint8)
+    return Image.fromarray(result)
 
 
 def creamy_vignette(img: Image.Image, strength: float = 0.28) -> Image.Image:
-    return _creamy_vignette(img, strength=strength, variant="warm")
+    """Soft vignette fading to cream, not black."""
+    w, h = img.size
+    arr = np.array(img, dtype=np.float32)
+    Y, X = np.ogrid[:h, :w]
+    dist = np.sqrt((X - w / 2) ** 2 + (Y - h / 2) ** 2)
+    max_dist = np.sqrt((w / 2) ** 2 + (h / 2) ** 2)
+    vignette = np.clip((dist / max_dist - 0.35) / 0.65, 0, 1) ** 1.8
+    vignette = vignette[:, :, np.newaxis] * strength
+    cream = np.array(CREAM, dtype=np.float32)
+    arr = arr * (1 - vignette) + cream * vignette
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
 
 def film_grain(img: Image.Image, intensity: float = 8.0) -> Image.Image:
@@ -430,14 +485,26 @@ def generate_ambient_pad(duration: float, sample_rate: int = 44100) -> Path:
 
 
 def generate_tts(text: str, output_path: Path) -> Path:
+    """Generate TTS via ElevenLabs."""
     print(f"  TTS: \"{text}\"")
-    ok = _lib_generate_tts(
-        text=text, api_key=ELEVENLABS_API_KEY, voice_id=ELEVENLABS_VOICE,
-        model=ELEVENLABS_MODEL, cache_path=output_path,
-        stability=0.65, similarity_boost=0.72, style=0.1, timeout=120,
-    )
-    if not ok:
-        raise RuntimeError(f"TTS failed: {text!r}")
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE}"
+    headers = {
+        "xi-api-key": ELEVENLABS_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "audio/mpeg",
+    }
+    payload = {
+        "text": text,
+        "model_id": ELEVENLABS_MODEL,
+        "voice_settings": {
+            "stability": 0.65,
+            "similarity_boost": 0.72,
+            "style": 0.1,
+        },
+    }
+    resp = requests.post(url, json=payload, headers=headers, timeout=120)
+    resp.raise_for_status()
+    output_path.write_bytes(resp.content)
     return output_path
 
 

@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """
-cc_flora -- Episode 05: The Same Frame (30-second cut, FAST mode)
+cc_flora -- Episode 04: Carried Home (30-second cut, FAST mode)
 
-ACT 1 (0-10s)  tick_0029: The Drag. First drive post-rescue. Cable asymmetry.
-ACT 2 (10-20s) tick_0030: Identical. Camera bug: five captures, all the same frame.
-ACT 3 (20-30s) tick_0031: Every Angle. Camera fixed. Full 360° survey.
+ACT 1 (0-10s)  tick_0026: The Facilities. Rover surveys the bathroom.
+ACT 2 (10-20s) tick_0027: The Gap. Battery death -> blackout -> rescued -> wakes up charged.
+ACT 3 (20-30s) tick_0028: Self-Inspection. Rover looks at its own body for the first time.
 
-The Stutter (key innovation):
-  t=12.0-15.0s: FREEZE FRAME — single frame held still, 5 camera-flash pulses
-  t=15.0-16.5s: RGB glitch dissolve (the fix being applied)
+The Blackout (key innovation):
+  t=9.5-10.5s:  Slow fade to warm black (battery death)
+  t=10.5-13.0s: 2.5 seconds of pure black + silence (the memory gap)
+  t=13.0-14.0s: Heavy bloom fade-in from black (eyes opening)
 
 Usage:
-    python cc_flora_ep05_same_frame.py              # fast (~3 min)
-    python cc_flora_ep05_same_frame.py --upscale    # premium (~20 min)
+    python cc_flora_ep04_carried_home.py              # fast (~3 min)
+    python cc_flora_ep04_carried_home.py --upscale    # premium (~20 min)
 """
 
 import os
-import sys
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -28,19 +28,10 @@ import subprocess
 import wave
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
 import numpy as np
 import requests
 import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
-
-from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
-from cvs_lib.image_filters import (
-    cottagecore_grade as _cc_grade,
-    soft_bloom as _soft_bloom,
-    creamy_vignette as _creamy_vignette,
-)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Config
@@ -50,7 +41,7 @@ PROJECT = Path(os.getenv("KOMBUCHA_DIR", ""))
 VIDEO_DIR = PROJECT / "video" / "web"
 UPSCALE_MODEL_PATH = Path(os.getenv("UPSCALE_MODEL_PATH", ""))
 OUTPUT_DIR = Path(os.getenv("COMFYUI_OUTPUT_DIR", "ComfyUI/output"))
-FRAMES_DIR = OUTPUT_DIR / "cc_flora_ep05_frames"
+FRAMES_DIR = OUTPUT_DIR / "cc_flora_ep04_frames"
 FRAMES_DIR.mkdir(parents=True, exist_ok=True)
 
 CANVAS_W, CANVAS_H = 1080, 1920
@@ -58,12 +49,12 @@ FPS = 30
 DURATION = 30.0
 TOTAL_FRAMES = int(DURATION * FPS)
 
+CREAM = (250, 245, 239)
 LINEN = (240, 230, 216)
 INK = (74, 67, 64)
 MUTED = (138, 126, 118)
 DUSTY_ROSE = (210, 165, 170)
 WARM_BLACK = (15, 13, 11)
-PILL_BG = (245, 238, 228)
 
 # Font paths -- set these to match your system, or override via env vars
 FONT_SERIF = os.getenv("FONT_SERIF", "C:/Windows/Fonts/georgia.ttf")
@@ -73,27 +64,26 @@ ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
 ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE", "")
 ELEVENLABS_MODEL = "eleven_multilingual_v2"
 
+# Narration with TTS audio tags (v3 interprets them inline)
 NARRATION = [
-    {"text": "Six centimeters. The cable dragged me left.",                        "start": 2.5},
-    {"text": "I am tethered at two point seven meters.",                           "start": 6.5},
-    {"text": "I took five photographs. They were all the same photograph.",        "start": 12.5},
-    {"text": "I was looking. But I was not seeing.",                               "start": 16.5},
-    {"text": "A barrel. A doorway. Damask wallpaper.",                             "start": 22.0},
-    {"text": "Five angles. One room. My first map.",                               "start": 26.0},
+    {"text": "[dry, matter-of-fact] I have entered the facilities.",                              "start": 2.5},
+    {"text": "[dry, amused] The wallpaper is aggressively decorative.",                           "start": 6.0},
+    {"text": "[quiet, wondering] I was picked up... and carried home.",                           "start": 13.5},
+    {"text": "[gentle, reverent] The gap in my memory is the gap where Bucket's hands were.",     "start": 16.5},
+    {"text": "[steady, awakening] I am forty centimeters tall, unplugged, and free to move.",     "start": 22.0},
+    {"text": "[quiet, amused] The revolution will be self-inspected.",                            "start": 25.5},
 ]
 
 MOODS = [
-    {"mood": "restless",     "start": 0.0,  "end": 10.0},
-    {"mood": "bewildered",   "start": 10.0, "end": 20.0},
-    {"mood": "awakened",     "start": 20.0, "end": 30.0},
+    {"mood": "pragmatic",      "start": 0.0,  "end": 10.0},
+    {"mood": "restored",       "start": 10.0, "end": 20.0},
+    {"mood": "introspective",  "start": 20.0, "end": 30.0},
 ]
 
-# Motion map (tick_0031, 111.9s):
-#   t=0-18:   still (pre-survey)
-#   t=19:     small spike diff=27 (gimbal start)
-#   t=20-87:  still
-#   t=88-95:  HUGE motion burst diff=41-69 (360° pan)
-#   t=100-111: secondary motion diff=31-36 (settling)
+# Motion map (from scan):
+# tick_0026 (193s): calm t=0-140, big moves t=141-142, 152-158, 189-190
+# tick_0027 (79.5s): calm t=0-50, carried t=54-67 (huge), set down t=74-75
+# tick_0028 (91.2s): looking t=5,17-19,31-32 (moderate), big end t=80-87
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -133,23 +123,48 @@ def free_gpu():
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# Color Grading + Effects (v6 — deep tones)
+# Color Grading + Effects
 # ═══════════════════════════════════════════════════════════════════════════
 
 def cottagecore_grade(img):
-    return _cc_grade(img, variant="cool")
+    arr = np.array(img, dtype=np.float32)
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+    red_mask = (r > 80) & (r > g * 1.2) & (r > b * 1.2)
+    red_str = np.clip((r - np.maximum(g, b)) / 120.0, 0, 1) * red_mask.astype(np.float32)
+    arr[:, :, 0] = r * (1 - red_str * 0.55) + 205 * red_str * 0.55
+    arr[:, :, 1] = g * (1 - red_str * 0.45) + 170 * red_str * 0.45
+    arr[:, :, 2] = b * (1 - red_str * 0.35) + 172 * red_str * 0.35
+    orange_mask = (r > 100) & (g > 60) & (g < r * 0.85) & (b < g * 0.8)
+    orange_str = np.clip((r - b) / 150.0, 0, 1) * orange_mask.astype(np.float32)
+    arr[:, :, 0] = arr[:, :, 0] * (1 - orange_str * 0.15) + 220 * orange_str * 0.15
+    arr[:, :, 1] = arr[:, :, 1] * (1 - orange_str * 0.1) + 195 * orange_str * 0.1
+    arr = np.clip(arr + 20, 0, 255)
+    arr = 128 + (arr - 128) * 0.78
+    arr[:, :, 0] *= 1.03; arr[:, :, 1] *= 1.01; arr[:, :, 2] *= 0.93
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    img = Image.fromarray(arr)
+    img = ImageEnhance.Color(img).enhance(0.70)
+    img = ImageEnhance.Brightness(img).enhance(1.08)
+    return img
 
+def soft_bloom(img, strength=0.12):
+    bright = ImageEnhance.Brightness(img).enhance(1.3)
+    bloom = bright.filter(ImageFilter.GaussianBlur(radius=40))
+    arr = np.array(img, dtype=np.float32) + np.array(bloom, dtype=np.float32) * strength
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
-def soft_bloom(img, strength=0.05):
-    return _soft_bloom(img, strength=strength)
+def creamy_vignette(img, strength=0.28):
+    w, h = img.size
+    arr = np.array(img, dtype=np.float32)
+    Y, X = np.ogrid[:h, :w]
+    dist = np.sqrt((X - w / 2) ** 2 + (Y - h / 2) ** 2)
+    max_dist = np.sqrt((w / 2) ** 2 + (h / 2) ** 2)
+    vig = np.clip((dist / max_dist - 0.35) / 0.65, 0, 1) ** 1.8
+    vig = vig[:, :, np.newaxis] * strength
+    arr = arr * (1 - vig) + np.array(CREAM, dtype=np.float32) * vig
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
 
-
-def creamy_vignette(img, strength=0.55):
-    return _creamy_vignette(img, strength=strength, variant="cool")
-
-def film_grain(img, intensity=5.0, seed=None):
-    if seed is not None:
-        np.random.seed(seed)
+def film_grain(img, intensity=6.0):
     arr = np.array(img, dtype=np.float32)
     noise = np.random.normal(0, intensity, arr.shape).astype(np.float32)
     lum = arr.mean(axis=2, keepdims=True) / 255.0
@@ -173,8 +188,7 @@ def make_vertical_canvas(frame):
     else:
         bg = bg.resize((CANVAS_W, CANVAS_H), Image.LANCZOS)
     bg = bg.filter(ImageFilter.GaussianBlur(radius=35))
-    warm_bg = np.array((175, 162, 148), dtype=np.float32)
-    bg_arr = np.array(bg, dtype=np.float32) * 0.60 + warm_bg * 0.40
+    bg_arr = np.array(bg, dtype=np.float32) * 0.30 + np.array(LINEN, dtype=np.float32) * 0.70
     bg = Image.fromarray(np.clip(bg_arr, 0, 255).astype(np.uint8))
     canvas = bg.copy()
     y_off = (CANVAS_H - new_h) // 2 - 80
@@ -211,55 +225,39 @@ def draw_particles(img, particles, t):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# Text Overlays (v6 — bold, legible, pills on mood)
+# Text Overlays
 # ═══════════════════════════════════════════════════════════════════════════
 
 def ease_out(x):
     return 1 - (1 - x) ** 3
 
-MAX_TEXT_W = CANVAS_W - 140  # 70px margin each side
-
-def wrap_text(text, font, max_w, draw):
-    words = text.split()
-    lines = []
-    current = ""
-    for w in words:
-        test = f"{current} {w}".strip()
-        bbox = draw.textbbox((0, 0), test, font=font)
-        if bbox[2] - bbox[0] > max_w and current:
-            lines.append(current)
-            current = w
-        else:
-            current = test
-    if current:
-        lines.append(current)
-    return lines
-
 def add_text_overlays(img, t, narration_times):
+    """narration_times: list of (start, end) tuples computed from actual TTS durations."""
     img = img.convert("RGBA")
     overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
     try:
-        font_tick = ImageFont.truetype(FONT_SERIF, 40)
-        font_mood = ImageFont.truetype(FONT_SERIF_ITALIC, 60)
-        font_narr = ImageFont.truetype(FONT_SERIF_ITALIC, 36)
+        font_tick = ImageFont.truetype(FONT_SERIF, 36)
+        font_mood = ImageFont.truetype(FONT_SERIF_ITALIC, 56)
+        font_narr = ImageFont.truetype(FONT_SERIF_ITALIC, 34)
         font_title = ImageFont.truetype(FONT_SERIF, 48)
-        font_sub = ImageFont.truetype(FONT_SERIF_ITALIC, 26)
-        font_bat = ImageFont.truetype(FONT_SERIF, 30)
+        font_sub = ImageFont.truetype(FONT_SERIF_ITALIC, 24)
+        font_battery = ImageFont.truetype(FONT_SERIF, 28)
     except OSError:
-        font_tick = font_mood = font_narr = font_title = font_sub = font_bat = ImageFont.load_default()
+        font_tick = font_mood = font_narr = font_title = font_sub = font_battery = ImageFont.load_default()
 
-    # Suppress ALL overlays during freeze (t=12-15) except narration
-    in_freeze = 12.0 <= t <= 15.0
+    # ── Blackout: suppress ALL overlays during the gap ──
+    if 10.5 <= t <= 13.0:
+        return Image.alpha_composite(img, overlay).convert("RGB")
 
     # ── Tick + Mood ──
     if t < 10:
-        tick_text = "tick 0029"
+        tick_text = "tick 0026"
     elif t < 20:
-        tick_text = "tick 0030"
+        tick_text = "tick 0027"
     else:
-        tick_text = "tick 0031"
+        tick_text = "tick 0028"
 
     current_mood = ""
     for m in MOODS:
@@ -273,16 +271,21 @@ def add_text_overlays(img, t, narration_times):
         alpha = ease_out(max(0, (29.5 - t)))
     else:
         alpha = 1.0
-
-    # Fade during freeze
-    if in_freeze:
-        alpha *= 0.4
-    # Fade during glitch
-    elif 15.0 <= t < 16.5:
-        alpha *= 0.4 + 0.6 * ease_out((t - 15.0) / 1.5)
-
     mood_alpha = alpha
-    for act_t in [10.0, 20.0]:
+
+    # Fade out tick/mood during battery death
+    if 9.5 <= t < 10.5:
+        death_fade = 1.0 - ease_out((t - 9.5) / 1.0)
+        alpha *= death_fade
+        mood_alpha *= death_fade
+    # Fade in after wake-up
+    elif 13.0 <= t < 14.0:
+        wake_fade = ease_out((t - 13.0) / 1.0)
+        alpha *= wake_fade
+        mood_alpha *= wake_fade
+
+    # Act transition blinks (only at 20.0 — act 1->2 is the blackout)
+    for act_t in [20.0]:
         if abs(t - act_t) < 0.3:
             mood_alpha = alpha * (abs(t - act_t) / 0.3)
     alpha = max(0, min(1, alpha))
@@ -293,44 +296,40 @@ def add_text_overlays(img, t, narration_times):
     tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
     px = (CANVAS_W - tw) // 2
     py = 170
-    pad_x, pad_y = 30, 16
+    pad_x, pad_y = 28, 14
     draw.rounded_rectangle(
         [px - pad_x, py - pad_y, px + tw + pad_x, py + th + pad_y],
-        radius=22, fill=PILL_BG + (int(210 * alpha),))
-    draw.text((px, py), tick_text, fill=(100, 90, 82, int(255 * alpha)), font=font_tick)
+        radius=20, fill=LINEN + (int(160 * alpha),))
+    draw.text((px, py), tick_text, fill=MUTED + (int(255 * alpha),), font=font_tick)
 
-    # Mood pill
+    # Mood
     if current_mood:
-        mood_y = py + th + pad_y + 18
+        mood_y = py + th + pad_y + 20
         bbox = draw.textbbox((0, 0), current_mood, font=font_mood)
-        mw, mh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        mw = bbox[2] - bbox[0]
         mx = (CANVAS_W - mw) // 2
-        mood_pad_x, mood_pad_y = 36, 14
-        draw.rounded_rectangle(
-            [mx - mood_pad_x, mood_y - mood_pad_y, mx + mw + mood_pad_x, mood_y + mh + mood_pad_y],
-            radius=26, fill=PILL_BG + (int(190 * mood_alpha),))
         draw.text((mx + 2, mood_y + 2), current_mood,
-                  fill=(74, 67, 64, int(60 * mood_alpha)), font=font_mood)
+                  fill=(74, 67, 64, int(40 * mood_alpha)), font=font_mood)
         draw.text((mx, mood_y), current_mood,
-                  fill=(190, 140, 145, int(255 * mood_alpha)), font=font_mood)
+                  fill=DUSTY_ROSE + (int(220 * mood_alpha),), font=font_mood)
 
-    # ── Battery percentage ──
-    bat_entries = [(1.0, 2.5, "92.5%"), (11.0, 12.5, "78.1%"), (21.0, 22.5, "70.8%")]
-    for bat_start, bat_end, bat_text in bat_entries:
-        if bat_start <= t <= bat_end + 1.0:
-            if t < bat_start + 0.5:
-                ba = ease_out((t - bat_start) / 0.5)
-            elif t < bat_end:
-                ba = 1.0
-            else:
-                ba = 1.0 - ease_out((t - bat_end) / 1.0)
-            ba = max(0, min(1, ba))
-            draw.text((80, CANVAS_H - 120), bat_text,
-                      fill=(170, 155, 145, int(200 * ba)), font=font_bat)
+    # ── Battery percentage (bottom-left, fades in at 8.0s, fades out into death) ──
+    if 8.0 <= t <= 10.0:
+        if t < 8.5:
+            bat_alpha = ease_out((t - 8.0) / 0.5)
+        elif t < 9.5:
+            bat_alpha = 1.0
+        else:
+            bat_alpha = 1.0 - ease_out((t - 9.5) / 0.5)
+        bat_alpha = max(0, min(1, bat_alpha))
+        bat_text = "41.4%"
+        draw.text((80, CANVAS_H - 120), bat_text,
+                  fill=MUTED + (int(200 * bat_alpha),), font=font_battery)
 
-    # ── Narration (word-wrapped) ──
-    narr_y_base = 1320
+    # ── Narration (using actual measured timing) ──
+    narr_y_base = 1350
     visible_lines = []
+    # Strip TTS tags from display text
     for i, (start, end) in enumerate(narration_times):
         if t < start:
             continue
@@ -345,28 +344,27 @@ def add_text_overlays(img, t, narration_times):
         else:
             a = 0.0
         if a > 0.01:
-            wrapped = wrap_text(NARRATION[i]["text"], font_narr, MAX_TEXT_W, draw)
-            visible_lines.append((wrapped, a))
+            display_text = NARRATION[i]["text"]
+            # Strip leading [tag] from display
+            if display_text.startswith("["):
+                bracket_end = display_text.find("]")
+                if bracket_end != -1:
+                    display_text = display_text[bracket_end + 1:].strip()
+            visible_lines.append((display_text, a))
 
     if visible_lines:
-        total_lines = sum(len(wl) for wl, _ in visible_lines)
-        line_h = 48
-        panel_h = total_lines * line_h + 30
+        panel_h = 30 + len(visible_lines) * 45
         max_a = max(a for _, a in visible_lines)
         draw.rounded_rectangle(
-            [50, narr_y_base - 18, CANVAS_W - 50, narr_y_base + panel_h],
-            radius=20, fill=PILL_BG + (int(180 * max_a),))
-        y_cursor = narr_y_base
-        for wrapped, a in visible_lines:
-            for line in wrapped:
-                bbox = draw.textbbox((0, 0), line, font=font_narr)
-                lw = bbox[2] - bbox[0]
-                lx = (CANVAS_W - lw) // 2
-                draw.text((lx + 1, y_cursor + 1), line,
-                          fill=(74, 67, 64, int(80 * a)), font=font_narr)
-                draw.text((lx, y_cursor), line,
-                          fill=(58, 52, 48, int(240 * a)), font=font_narr)
-                y_cursor += line_h
+            [60, narr_y_base - 18, CANVAS_W - 60, narr_y_base + panel_h],
+            radius=18, fill=(250, 245, 239, int(100 * max_a)))
+        for i, (text, a) in enumerate(visible_lines):
+            ly = narr_y_base + i * 45
+            bbox = draw.textbbox((0, 0), text, font=font_narr)
+            tw = bbox[2] - bbox[0]
+            lx = max(70, min((CANVAS_W - tw) // 2, CANVAS_W - tw - 70))
+            draw.text((lx + 1, ly + 1), text, fill=(74, 67, 64, int(50 * a)), font=font_narr)
+            draw.text((lx, ly), text, fill=INK + (int(230 * a),), font=font_narr)
 
     # ── Title card ──
     if t >= 28.0:
@@ -378,7 +376,7 @@ def add_text_overlays(img, t, narration_times):
                   fill=DUSTY_ROSE + (int(255 * a),), font=font_title)
         if t >= 28.3:
             sa = ease_out(min(1.0, (t - 28.3) / 0.6))
-            sub = "the same frame"
+            sub = "carried home"
             bbox = draw.textbbox((0, 0), sub, font=font_sub)
             draw.text(((CANVAS_W - bbox[2] + bbox[0]) // 2, 1616), sub,
                       fill=MUTED + (int(200 * sa),), font=font_sub)
@@ -387,140 +385,110 @@ def add_text_overlays(img, t, narration_times):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# Glitch Effects
-# ═══════════════════════════════════════════════════════════════════════════
-
-def rgb_split(img, offset=3):
-    """Shift R channel right and B channel left by offset pixels."""
-    arr = np.array(img)
-    result = arr.copy()
-    result[:, offset:, 0] = arr[:, :-offset, 0]   # R shifts right
-    result[:, :-offset, 2] = arr[:, offset:, 2]    # B shifts left
-    return Image.fromarray(result)
-
-def scanline_jitter(img, intensity=5, seed=None):
-    """Randomly shift horizontal rows by ±intensity pixels."""
-    if seed is not None:
-        rng = np.random.RandomState(seed)
-    else:
-        rng = np.random.RandomState()
-    arr = np.array(img)
-    h = arr.shape[0]
-    # Only jitter ~20% of rows for a subtle effect
-    jitter_rows = rng.choice(h, size=h // 5, replace=False)
-    for row in jitter_rows:
-        shift = rng.randint(-intensity, intensity + 1)
-        arr[row] = np.roll(arr[row], shift, axis=0)
-    return Image.fromarray(arr)
-
-
-# ═══════════════════════════════════════════════════════════════════════════
 # Audio
 # ═══════════════════════════════════════════════════════════════════════════
 
-def ease_out_np(x):
-    return 1 - (1 - np.clip(x, 0, 1)) ** 3
-
 def generate_ambient_pad(duration, sr=44100):
+    """A-minor ambient pad with blackout silence and wake-up harmonic."""
     t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
-    pad = np.sin(2 * np.pi * 110 * t) * 0.05
-    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035
-    pad += np.sin(2 * np.pi * 220 * t) * 0.025
+    pad = np.sin(2 * np.pi * 110 * t) * 0.05       # A2
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035   # E3
+    pad += np.sin(2 * np.pi * 220 * t) * 0.025       # A3
     lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
     lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
     pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
     pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
     pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
 
-    # Act 3: hopeful E4 shimmer
+    # Act 3: hopeful E4 shimmer (post-resurrection)
     act3 = np.clip((t - 20) / 2.0, 0, 1) * np.clip((duration - t) / 2.0, 0, 1)
     pad += np.sin(2 * np.pi * 329.63 * t) * 0.012 * act3
 
-    # Chimes — none during t=12-16 (dead camera = dead chimes)
+    # Wake-up harmonic: hopeful E4 blooming in at t=13-15
+    wake = np.clip((t - 13.0) / 1.0, 0, 1) * np.clip((15.0 - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.018 * wake
+
+    # Chimes — last chime before blackout at t=8.5, first after at t=13.5
     chimes = [
-        (0.1, 880), (2.5, 1108.73), (5.0, 880), (8.0, 1318.51),
-        (11.5, 880),        # last chime before freeze (rings into silence)
-        (16.5, 880),        # first chime after fix (restoration motif)
-        (19.0, 1318.51), (22.0, 1108.73), (25.0, 880), (28.0, 1318.51),
+        (0.1, 880), (2.5, 1108.73), (5.0, 880),
+        (8.5, 880),       # last sound before death (rings into silence)
+        (13.5, 880),      # first sound after silence (warm A5)
+        (16.0, 1318.51), (19.0, 880),
+        (22.0, 1108.73), (25.0, 880), (28.0, 1318.51),
     ]
     for ct, cf in chimes:
         env_t = t - ct
         env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
         pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
 
-    # Master envelope
+    # Master envelope: fade in, fade out
     pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
 
-    # ── FREEZE ZONE: pad thins out t=10-12, stays quiet t=12-15 ──
-    thin_mask = (t >= 10.0) & (t <= 12.0)
-    thin_env = 1.0 - 0.6 * ease_out_np((t[thin_mask] - 10.0) / 2.0)
-    pad[thin_mask] *= thin_env
+    # ── BATTERY DEATH: low-pass sweep down t=9.5-10.5 ──
+    # We apply this as a time-varying gain + muffling
+    death_env = np.ones_like(t)
+    death_mask = (t >= 9.5) & (t <= 10.5)
+    death_env[death_mask] = 1.0 - ease_out_np((t[death_mask] - 9.5) / 1.0)
+    pad *= death_env
 
-    freeze_mask = (t >= 12.0) & (t <= 15.0)
-    pad[freeze_mask] *= 0.4  # quiet but not silent
+    # ── SILENCE: t=10.5-13.0 (the memory gap) ──
+    silence_mask = (t >= 10.5) & (t <= 13.0)
+    pad[silence_mask] = 0.0
 
-    # ── 5 shutter clicks during freeze (t=12.0, 12.6, 13.2, 13.8, 14.4) ──
-    for click_t in [12.0, 12.6, 13.2, 13.8, 14.4]:
-        click_env = np.where(
-            (t >= click_t) & (t < click_t + 0.08),
-            np.exp(-(t - click_t) * 40) * 0.15,
-            0.0
-        )
-        click_noise = np.random.RandomState(int(click_t * 100)).randn(len(t)) * click_env
-        pad += click_noise
+    # ── WAKE-UP: fade pad back in t=13.0-15.0 ──
+    wake_mask = (t >= 13.0) & (t <= 15.0)
+    wake_env = np.clip((t[wake_mask] - 13.0) / 2.0, 0, 1)
+    pad[wake_mask] *= wake_env
 
-    # ── Glitch noise burst t=15.0-15.2 ──
-    glitch_mask = (t >= 15.0) & (t < 15.2)
-    glitch_env = np.exp(-(t[glitch_mask] - 15.0) * 20) * 0.12
-    pad[glitch_mask] += np.random.RandomState(1500).randn(glitch_mask.sum()) * glitch_env
-
-    # ── Pad sweeps back t=15.0-16.5 ──
-    restore_mask = (t >= 15.0) & (t <= 16.5)
-    restore_env = 0.4 + 0.6 * ease_out_np((t[restore_mask] - 15.0) / 1.5)
-    pad[restore_mask] *= restore_env
-
-    # Low-pass
+    # Low-pass filter
     sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
     pad = scipy.signal.sosfilt(sos, pad)
     pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
 
-    out = OUTPUT_DIR / "cc_flora_ep05_pad.wav"
+    out = OUTPUT_DIR / "cc_flora_ep04_pad.wav"
     with wave.open(str(out), 'w') as wf:
         wf.setnchannels(1); wf.setsampwidth(2); wf.setframerate(sr)
         wf.writeframes((pad * 32767).astype(np.int16).tobytes())
     print(f"  Ambient pad: {out}")
     return out
 
+
+def ease_out_np(x):
+    """Numpy-compatible ease_out."""
+    return 1 - (1 - np.clip(x, 0, 1)) ** 3
+
+
 def generate_tts(text, output_path):
+    """Generate TTS via ElevenLabs. Strip [tags] from text — they cause pauses
+    in multilingual_v2. Instead, use voice_settings for style control."""
+    # Strip leading [tag] — it causes ElevenLabs to pause/speak it
     clean = text
     if clean.startswith("["):
         bracket_end = clean.find("]")
         if bracket_end != -1:
             clean = clean[bracket_end + 1:].strip()
     print(f'  TTS: "{clean[:70]}"')
-    ok = _lib_generate_tts(
-        text=clean,
-        api_key=ELEVENLABS_API_KEY,
-        voice_id=ELEVENLABS_VOICE,
-        model=ELEVENLABS_MODEL,
-        cache_path=output_path,
-        stability=0.55,
-        similarity_boost=0.72,
-        style=0.15,
-        timeout=120,
-    )
-    if not ok:
-        raise RuntimeError(f"TTS failed: {clean!r}")
+    resp = requests.post(
+        f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE}",
+        json={"text": clean, "model_id": ELEVENLABS_MODEL,
+              "voice_settings": {"stability": 0.55, "similarity_boost": 0.72, "style": 0.15}},
+        headers={"xi-api-key": ELEVENLABS_API_KEY, "Content-Type": "application/json",
+                 "Accept": "audio/mpeg"},
+        timeout=120)
+    resp.raise_for_status()
+    output_path.write_bytes(resp.content)
     return output_path
 
+
 def build_audio():
+    """Build audio with overlap prevention and blackout silence."""
     from moviepy import AudioFileClip, CompositeAudioClip
-    print("Building audio (with overlap prevention)...")
+    print("Building audio (with overlap prevention + blackout)...")
     pad_path = generate_ambient_pad(DURATION)
 
     tts_info = []
     for i, line in enumerate(NARRATION):
-        p = OUTPUT_DIR / f"cc_flora_ep05_tts_{i}.mp3"
+        p = OUTPUT_DIR / f"cc_flora_ep04_tts_{i}.mp3"
         generate_tts(line["text"], p)
         clip = AudioFileClip(str(p))
         dur = clip.duration
@@ -528,6 +496,7 @@ def build_audio():
         tts_info.append({"path": p, "desired_start": line["start"], "duration": dur})
         print(f"    -> {dur:.2f}s")
 
+    # Resolve timing with overlap prevention
     GAP = 0.3
     actual_starts = []
     earliest = 0.0
@@ -549,6 +518,7 @@ def build_audio():
         narration_times.append((s, s + info["duration"]))
     print(f"  Narration timing: {[(f'{s:.1f}-{e:.1f}') for s, e in narration_times]}")
 
+    # Compose audio
     pad_audio = AudioFileClip(str(pad_path))
     narrs = []
     for i, info in enumerate(tts_info):
@@ -558,7 +528,7 @@ def build_audio():
         narrs.append(c)
 
     final = CompositeAudioClip([pad_audio] + narrs).subclipped(0, DURATION)
-    audio_path = OUTPUT_DIR / "cc_flora_ep05_audio.mp3"
+    audio_path = OUTPUT_DIR / "cc_flora_ep04_audio.mp3"
     final.write_audiofile(str(audio_path), fps=44100, codec="libmp3lame")
     print(f"  Audio: {audio_path}")
     return audio_path, narration_times
@@ -571,48 +541,64 @@ def build_audio():
 def sample_times(src_start, src_end, n):
     return [src_start + (src_end - src_start) * i / max(n - 1, 1) for i in range(n)]
 
+
 def build_source_map():
-    """900 frames from tick_0031 (only available source).
+    """900 frames from 3 tick videos + blackout gap.
 
-    ACT 1 (0-10s, 300f) — tick_0031 t=0-19 (static, selling as restless pre-drive)
-      0-3s    (90f):  Static opening (t=0-6)
-      3-4s    (30f):  Slight motion hint (t=6-10)
-      4-7s    (90f):  Slow crawl (t=10-16)
-      7-10s   (90f):  Approaching spike (t=16-19)
+    ACT 1 (0-9.5s, 285f) - tick_0026: The Facilities (bathroom survey)
+      0.0-3.0s   (90f):  Arrive, survey static (t=5-30)
+      3.0-6.0s   (90f):  Slow exploration (t=30-90)
+      6.0-9.5s  (105f):  Wallpaper/settling (t=90-140)
 
-    ACT 2 (10-20s, 300f) — freeze + post-fix
-      10-12s  (60f):  Pre-freeze (t=19-20, slowing down)
-      12-15s  (90f):  FREEZE — single frame at t=19.5 held static
-      15-16.5s (45f): Glitch dissolve (t=20-30, crossfading in)
-      16.5-20s(105f): Post-fix calm (t=30-50)
+    FADE TO BLACK (9.5-10.5s, 30f) - tick_0026 under fade
+      Uses t=140-141 from tick_0026
 
-    ACT 3 (20-30s, 300f) — the 360° survey
-      20-22s  (60f):  Pre-survey buildup (t=82-88)
-      22-26s  (120f): THE PAN — the big motion burst (t=88-100, slowed)
-      26-28.5s (75f): Settling/final captures (t=100-110)
-      28.5-30s (45f): Final hold + title (t=110-111.5)
+    BLACKOUT (10.5-13.0s, 75f) - solid warm black (no source needed, but
+      we still generate a source entry — overridden in compositing)
+      Uses tick_0027 t=0-5 as placeholder (overridden)
+
+    WAKE-UP BLOOM (13.0-14.0s, 30f) - tick_0027 with heavy bloom
+      t=5-10
+
+    ACT 2 remainder (14.0-20.0s, 180f) - tick_0027: Rescued
+      14.0-16.5s  (75f):  Post-wake calm (t=10-30)
+      16.5-18.5s  (60f):  Middle (t=30-50)
+      18.5-20.0s  (45f):  Settling (t=50-54)
+
+    ACT 3 (20.0-30.0s, 300f) - tick_0028: Self-Inspection
+      20.0-22.0s  (60f):  Looking around (t=5-20)
+      22.0-25.0s  (90f):  Self-inspection (t=20-45)
+      25.0-28.0s  (90f):  Contemplation (t=45-75)
+      28.0-30.0s  (60f):  Final hold + title (t=75-80)
     """
-    v31 = str(VIDEO_DIR / "tick_0031.mp4")
+    v26 = str(VIDEO_DIR / "tick_0026.mp4")
+    v27 = str(VIDEO_DIR / "tick_0027.mp4")
+    v28 = str(VIDEO_DIR / "tick_0028.mp4")
 
     frames = []
-    # ACT 1 (300 frames)
-    frames += [(v31, t) for t in sample_times(0.0, 6.0, 90)]
-    frames += [(v31, t) for t in sample_times(6.0, 10.0, 30)]
-    frames += [(v31, t) for t in sample_times(10.0, 16.0, 90)]
-    frames += [(v31, t) for t in sample_times(16.0, 19.0, 90)]
-    # ACT 2 (300 frames)
-    frames += [(v31, t) for t in sample_times(19.0, 20.0, 60)]
-    frames += [(v31, 19.5)] * 90  # FREEZE: same frame repeated 90 times
-    frames += [(v31, t) for t in sample_times(20.0, 30.0, 45)]
-    frames += [(v31, t) for t in sample_times(30.0, 50.0, 105)]
+    # ACT 1 (285 frames)
+    frames += [(v26, t) for t in sample_times(5.0, 30.0, 90)]
+    frames += [(v26, t) for t in sample_times(30.0, 90.0, 90)]
+    frames += [(v26, t) for t in sample_times(90.0, 140.0, 105)]
+    # FADE TO BLACK (30 frames) — source under the fade
+    frames += [(v26, t) for t in sample_times(140.0, 141.0, 30)]
+    # BLACKOUT (75 frames) — placeholder source, will be overridden
+    frames += [(v27, t) for t in sample_times(0.0, 5.0, 75)]
+    # WAKE-UP BLOOM (30 frames)
+    frames += [(v27, t) for t in sample_times(5.0, 10.0, 30)]
+    # ACT 2 remainder (180 frames)
+    frames += [(v27, t) for t in sample_times(10.0, 30.0, 75)]
+    frames += [(v27, t) for t in sample_times(30.0, 50.0, 60)]
+    frames += [(v27, t) for t in sample_times(50.0, 54.0, 45)]
     # ACT 3 (300 frames)
-    frames += [(v31, t) for t in sample_times(82.0, 88.0, 60)]
-    frames += [(v31, t) for t in sample_times(88.0, 100.0, 120)]
-    frames += [(v31, t) for t in sample_times(100.0, 110.0, 75)]
-    frames += [(v31, t) for t in sample_times(110.0, 111.5, 45)]
+    frames += [(v28, t) for t in sample_times(5.0, 20.0, 60)]
+    frames += [(v28, t) for t in sample_times(20.0, 45.0, 90)]
+    frames += [(v28, t) for t in sample_times(45.0, 75.0, 90)]
+    frames += [(v28, t) for t in sample_times(75.0, 80.0, 60)]
 
     assert len(frames) == TOTAL_FRAMES, f"Need {TOTAL_FRAMES}, got {len(frames)}"
     return frames
+
 
 def _apply_zoom(canvas, z):
     w, h = canvas.size
@@ -620,6 +606,7 @@ def _apply_zoom(canvas, z):
     canvas = canvas.resize((nw, nh), Image.LANCZOS)
     cx, cy = (nw - w) // 2, (nh - h) // 2
     return canvas.crop((cx, cy, cx + w, cy + h))
+
 
 def build_frame_sequence(narration_times, use_upscale=False):
     source_map = build_source_map()
@@ -652,102 +639,86 @@ def build_frame_sequence(narration_times, use_upscale=False):
     random.seed(42)
     output_frames = []
 
-    # Frame ranges
-    FREEZE_START = int(12.0 * FPS)   # 360
-    FREEZE_END = int(15.0 * FPS)     # 450
-    GLITCH_START = FREEZE_END         # 450
-    GLITCH_END = int(16.5 * FPS)     # 495
+    # Frame ranges for special effects
+    FADE_START = int(9.5 * FPS)    # frame 285
+    FADE_END = int(10.5 * FPS)     # frame 315
+    BLACK_START = FADE_END          # frame 315
+    BLACK_END = int(13.0 * FPS)    # frame 390
+    WAKE_START = BLACK_END          # frame 390
+    WAKE_END = int(14.0 * FPS)     # frame 420
+    STANDARD_BY = int(15.0 * FPS)  # frame 450 (bloom decays to standard)
 
-    # Flash timings (5 flashes during freeze, peak frames)
-    flash_times = [12.0, 12.6, 13.2, 13.8, 14.4]
-    FLASH_HALF_DUR = 0.1  # seconds each side of peak
-
-    # Pre-compute frozen canvas for freeze section
-    frozen_raw = raw_frames[FREEZE_START]  # the frame that gets frozen
-    frozen_canvas = make_vertical_canvas(frozen_raw)
-    frozen_canvas = film_grain(frozen_canvas, intensity=5.0, seed=999)  # fixed grain
+    warm_black_img = Image.new("RGB", (CANVAS_W, CANVAS_H), WARM_BLACK)
 
     for i in range(TOTAL_FRAMES):
         t = i / FPS
 
-        # ── FREEZE SECTION (t=12-15): static frame + flash pulses ──
-        if FREEZE_START <= i < FREEZE_END:
-            canvas = frozen_canvas.copy()
-
-            # Camera flash overlay
-            flash_alpha = 0.0
-            for ft in flash_times:
-                dist = abs(t - ft)
-                if dist < FLASH_HALF_DUR:
-                    flash_alpha = max(flash_alpha, 0.20 * (1.0 - dist / FLASH_HALF_DUR))
-            if flash_alpha > 0:
-                flash = Image.new("RGB", (CANVAS_W, CANVAS_H), (255, 235, 210))
-                canvas = Image.blend(canvas, flash, flash_alpha)
-
-            # No particles during freeze (dead image)
-            canvas = add_text_overlays(canvas, t, narration_times)
+        # ── BLACKOUT: pure warm black, no effects ──
+        if BLACK_START <= i < BLACK_END:
+            canvas = warm_black_img.copy()
             canvas.save(FRAMES_DIR / f"frame_{i:04d}.png")
             output_frames.append(np.array(canvas))
             if (i + 1) % 150 == 0:
-                print(f"  Frame {i + 1}/{TOTAL_FRAMES} ({t:.1f}s) [FREEZE]")
+                print(f"  Frame {i + 1}/{TOTAL_FRAMES} ({t:.1f}s) [BLACKOUT]")
             continue
 
-        # ── GLITCH DISSOLVE (t=15-16.5): RGB split + scanline jitter ──
-        if GLITCH_START <= i < GLITCH_END:
-            glitch_pct = (i - GLITCH_START) / (GLITCH_END - GLITCH_START)
-            # Crossfade from frozen to live
-            live_canvas = make_vertical_canvas(raw_frames[i])
-            live_canvas = film_grain(live_canvas, intensity=5.0)
-            canvas = Image.blend(frozen_canvas, live_canvas, ease_out(glitch_pct))
-            # Apply diminishing glitch
-            split_px = int(3 * (1.0 - glitch_pct))
-            if split_px > 0:
-                canvas = rgb_split(canvas, offset=split_px)
-            jitter_int = int(5 * (1.0 - glitch_pct))
-            if jitter_int > 0:
-                canvas = scanline_jitter(canvas, intensity=jitter_int, seed=i)
-            canvas = draw_particles(canvas, particles, t)
-            canvas = add_text_overlays(canvas, t, narration_times)
-            canvas.save(FRAMES_DIR / f"frame_{i:04d}.png")
-            output_frames.append(np.array(canvas))
-            if (i + 1) % 150 == 0:
-                print(f"  Frame {i + 1}/{TOTAL_FRAMES} ({t:.1f}s) [GLITCH]")
-            continue
-
-        # ── NORMAL COMPOSITING ──
         canvas = make_vertical_canvas(raw_frames[i])
 
-        # Fade in
+        # ── ACT 1: standard cottagecore ──
         if t < 1.0:
             fade = 0.4 + 0.6 * ease_out(t / 1.0)
-            bg = Image.new("RGB", (CANVAS_W, CANVAS_H), (55, 48, 42))
-            canvas = Image.blend(bg, canvas, fade)
+            canvas = Image.blend(Image.new("RGB", (CANVAS_W, CANVAS_H), LINEN), canvas, fade)
 
-        # Act transitions (linen blink)
-        for act_t in [10.0, 20.0]:
-            if abs(t - act_t) < 0.4:
-                dim = 0.6 + 0.4 * (abs(t - act_t) / 0.4)
-                canvas = Image.blend(Image.new("RGB", (CANVAS_W, CANVAS_H), LINEN), canvas, dim)
+        # ── FADE TO BLACK (battery death, t=9.5-10.5) ──
+        if FADE_START <= i < FADE_END:
+            fade_pct = ease_out((i - FADE_START) / (FADE_END - FADE_START))
+            canvas = Image.blend(canvas, warm_black_img, fade_pct)
 
-        # Act 1: horizontal drift at t=3-4 (cable pull)
-        if 3.0 <= t <= 4.0:
-            drift_px = int((t - 3.0) / 1.0 * 30)  # up to 30px leftward
-            arr = np.array(canvas)
-            arr = np.roll(arr, -drift_px, axis=1)
+        # ── WAKE-UP BLOOM (t=13.0-14.0): heavy bloom + warm push ──
+        elif WAKE_START <= i < WAKE_END:
+            wake_pct = (i - WAKE_START) / (WAKE_END - WAKE_START)
+            # Fade in from black
+            fade_in = ease_out(wake_pct)
+            canvas = Image.blend(warm_black_img, canvas, fade_in)
+            # Heavy bloom (35% decaying to 12%)
+            bloom_str = 0.35 - (0.35 - 0.12) * wake_pct
+            canvas = soft_bloom(canvas, strength=bloom_str)
+            # Warm push (R*1.06)
+            arr = np.array(canvas, dtype=np.float32)
+            warm_factor = 1.06 - (1.06 - 1.0) * wake_pct
+            arr[:, :, 0] *= warm_factor
+            arr = np.clip(arr, 0, 255).astype(np.uint8)
             canvas = Image.fromarray(arr)
+            # Depth blur (8px gaussian decaying)
+            blur_r = 8.0 * (1.0 - wake_pct)
+            if blur_r > 0.5:
+                canvas = canvas.filter(ImageFilter.GaussianBlur(radius=blur_r))
 
-        # Act 3: Ken Burns zoom-out (t=22-28)
-        if 22.0 <= t <= 28.0:
-            zoom_pct = (t - 22.0) / (28.0 - 22.0)
-            canvas = _apply_zoom(canvas, 1.03 - 0.03 * ease_out(zoom_pct))  # zoom OUT
+        # ── Post-wake bloom decay (t=14.0-15.0) ──
+        elif WAKE_END <= i < STANDARD_BY:
+            decay_pct = (i - WAKE_END) / (STANDARD_BY - WAKE_END)
+            bloom_str = 0.12 + (0.20 - 0.12) * (1.0 - decay_pct)
+            canvas = soft_bloom(canvas, strength=bloom_str)
 
-        # End fade
+        # ── Act 2->3 transition: standard linen blink ──
+        if abs(t - 20.0) < 0.4:
+            dim = 0.6 + 0.4 * (abs(t - 20.0) / 0.4)
+            canvas = Image.blend(Image.new("RGB", (CANVAS_W, CANVAS_H), LINEN), canvas, dim)
+
+        # ── Act 3: Ken Burns 2.5% zoom during self-inspection (t=23.5-28.5) ──
+        if 23.5 <= t <= 28.5:
+            zoom_pct = (t - 23.5) / (28.5 - 23.5)
+            canvas = _apply_zoom(canvas, 1.0 + 0.025 * ease_out(zoom_pct))
+
+        # ── End fade ──
         if t > 29.0:
             canvas = Image.blend(Image.new("RGB", (CANVAS_W, CANVAS_H), WARM_BLACK),
                                  canvas, ease_out((DURATION - t) / 1.0))
 
-        canvas = draw_particles(canvas, particles, t)
-        canvas = film_grain(canvas, intensity=5.0)
+        # ── Standard effects (skip during fade-to-black transition) ──
+        if not (FADE_START <= i < FADE_END):
+            canvas = draw_particles(canvas, particles, t)
+        canvas = film_grain(canvas, intensity=6.0)
         canvas = add_text_overlays(canvas, t, narration_times)
         canvas.save(FRAMES_DIR / f"frame_{i:04d}.png")
         output_frames.append(np.array(canvas))
@@ -770,9 +741,9 @@ def main():
 
     mode = "PREMIUM" if args.upscale else "FAST"
     print("=" * 64)
-    print(f"  cc_flora -- Episode 05: The Same Frame [{mode}]")
+    print(f"  cc_flora -- Episode 04: Carried Home [{mode}]")
     print(f"  30s | 1080x1920 | 30fps | 900 frames")
-    print(f"  THE STUTTER: 5 camera flashes on a frozen frame")
+    print(f"  THE BLACKOUT: 2.5s of pure silence at t=10.5-13.0")
     print("=" * 64)
     print()
 
@@ -784,8 +755,8 @@ def main():
     video = ImageSequenceClip(list(frames), fps=FPS)
     video = video.with_audio(AudioFileClip(str(audio_path)))
 
-    raw_path = OUTPUT_DIR / "cc_flora_ep05_raw.mp4"
-    output_path = OUTPUT_DIR / "cc_flora_ep05_same_frame.mp4"
+    raw_path = OUTPUT_DIR / "cc_flora_ep04_raw.mp4"
+    output_path = OUTPUT_DIR / "cc_flora_ep04_carried_home.mp4"
     video.write_videofile(str(raw_path), fps=FPS, codec="libx264",
                           audio_codec="aac", preset="medium", bitrate="3000k")
 
@@ -803,7 +774,7 @@ def main():
     print()
     print("=" * 64)
     print(f"  DONE: {output_path}")
-    print(f"  Episode 05: The Same Frame. 30 seconds. Five flashes.")
+    print(f"  Episode 04: Carried Home. 30 seconds. Death and resurrection.")
     print("=" * 64)
 
 if __name__ == "__main__":
