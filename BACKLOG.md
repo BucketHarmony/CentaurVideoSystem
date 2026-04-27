@@ -275,7 +275,45 @@ segments inside the beat's window automatically. Hand-written
 `caption_lines` only needed for sanitization (e.g., AIC profanity)
 or pacing tweaks. Removes ~100 lines per MPC script.
 
-## Audio overhaul
+## Audio overhaul — SHIPPED (cottagecore + hookshot scope, 2026-04-27)
+
+cc_flora + cc_hookshot drift consolidation lift shipped. Canonical
+audio primitives in `cvs_lib/audio.py`:
+
+- `ambient_pad(duration, mood, ...)` — drone + shimmer, mood-driven.
+- `chime_layer(duration, schedule, mood, ...)` — placed pitched hits.
+- `pad_envelope(duration, mood|variant, ...)` — master gain curve.
+- `sting(duration, mood, rng_seed, ...)` — sub thump + transient
+  noise (+ optional high tone with per-mood attack/decay).
+- `tension_partial(...)` — gated sine partial for act-tension layers.
+- `impact(...)` — percussive thuds (ep07/ep08).
+- `lowpass_normalize(pad, mood, ...)` — cc_flora pad finishing.
+- `sub_bass(duration, mood, sub_octave, ...)` — sub layer at the
+  mood's drone fundamental shifted by N octaves.
+- `motif(name, t_start, mood, ...)` — pre-baked melodic snippets
+  (`hook_land`, `act_break`, `resolve`, `reveal`).
+- `MOODS` registry: `cottagecore_warm`, `cottagecore_masterpiece`,
+  `hookshot_attention`, `hookshot_grief`, `hookshot_toast`.
+
+Migrations: 11 cc_flora scripts (ep02-ep10 + 30s + masterpiece;
+ep01 was TTS-only and unaffected) and 5 cc_hookshot scripts
+(cc_hookshot, toast, faith, midnight, midnight_v2). All migrations
+verified bit-identical (max abs diff ≤ 3e-16) against frozen
+`*_legacy.py` references; legacy copies deleted in Phase 7.
+`cc_hookshot_v2.py` retired as a stale duplicate.
+
+Two philosophies preserved (documented at top of `cvs_lib/audio.py`):
+MPC ducks (sidechain), cc_flora doesn't, cc_hookshot ducks
+aggressively. The lift shares primitives, not the assembly pipeline.
+
+Test coverage: 48 tests in `tests/cvs_lib/test_audio.py`
+(envelope/pad/chime/sting/sub_bass/motif/sidechain math).
+
+Out of scope, deferred to separate plans:
+- cc_ep audio (motion-driven, procedurally distinct).
+- MPC-side adoption of `sub_bass` / `motif` / mood templates.
+
+### Original backlog (pre-lift, kept for next-pass MPC adoption)
 
 Current bed is `harmonic_hum()` — additive sine partials, vibrato,
 breath modulation, butter LPF, single chord per beat. It works, but

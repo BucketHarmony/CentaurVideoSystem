@@ -416,3 +416,93 @@ def test_motif_t_start_shifts_signal():
     # Early motif rings inside [0.5, 1.0); late hasn't started yet.
     assert early_rms > 1e-3
     assert late_rms < 1e-9
+
+
+# --------------------------------------------------------------------------- #
+# sidechain_duck + vo_duck_envelope (Phase 7 test expansion)
+# --------------------------------------------------------------------------- #
+
+
+from cvs_lib.audio import _envelope_follower, sidechain_duck, vo_duck_envelope
+
+
+def test_envelope_follower_attack_is_slower_than_release():
+    """Step input: with attack=50ms / release=10ms, the envelope rises
+    slowly then falls quickly when the step ends."""
+    sr = 44100
+    sig = np.zeros(int(0.5 * sr))
+    sig[int(0.1 * sr): int(0.3 * sr)] = 1.0  # step from 0.1s to 0.3s
+    env = _envelope_follower(sig, sr=sr, attack_ms=50.0, release_ms=10.0)
+    # During attack (0.1 → 0.3s), env is climbing but not yet at 1.0.
+    mid_attack = env[int(0.15 * sr)]
+    end_attack = env[int(0.30 * sr) - 1]
+    assert mid_attack < 0.9
+    assert end_attack > mid_attack
+    # After release starts (0.3s), env should fall toward 0 quickly.
+    post_release = env[int(0.32 * sr)]
+    assert post_release < end_attack
+
+
+def test_sidechain_duck_voice_none_returns_bed_unchanged():
+    bed = np.ones(1000, dtype=np.float32) * 0.5
+    out = sidechain_duck(bed, None, sr=44100)
+    assert out is bed or np.array_equal(out, bed)
+
+
+def test_sidechain_duck_reduces_bed_under_loud_voice():
+    """Constant bed at 0.5; loud voice in middle window. Bed should be
+    attenuated where voice is loud, untouched elsewhere."""
+    sr = 44100
+    n = sr  # 1 second
+    bed = np.full(n, 0.5, dtype=np.float32)
+    voice = np.zeros(n, dtype=np.float32)
+    voice[int(0.4 * sr): int(0.6 * sr)] = 0.5  # loud voice 0.4–0.6s
+    ducked = sidechain_duck(bed, voice, sr=sr, ratio=0.30)
+    # Outside the voice window (after release settles), bed should be ~0.5.
+    quiet_region = ducked[:int(0.1 * sr)]
+    assert np.all(quiet_region > 0.45)
+    # During the loud voice, bed should be reduced (ratio=0.30 means
+    # multiplied by ~0.30 at full duck depth).
+    duck_region = ducked[int(0.5 * sr): int(0.55 * sr)]
+    assert np.max(duck_region) < 0.40
+
+
+def test_vo_duck_envelope_silent_voice_returns_ones():
+    out = vo_duck_envelope(None, total_n=1000, sr=44100)
+    assert out.shape == (1000,)
+    assert np.all(out == 1.0)
+    # Near-silent voice also returns ones.
+    quiet = np.zeros(1000, dtype=np.float32)
+    out2 = vo_duck_envelope(quiet, total_n=1000, sr=44100)
+    assert np.all(out2 == 1.0)
+
+
+def test_vo_duck_envelope_drops_to_low_gain_under_loud_voice():
+    sr = 44100
+    n = sr
+    voice = np.zeros(n, dtype=np.float32)
+    voice[int(0.3 * sr): int(0.7 * sr)] = 0.5
+    duck = vo_duck_envelope(voice, total_n=n, sr=sr,
+                             low_gain=0.5, threshold=0.02)
+    # Outside voice region, duck stays at 1.0.
+    assert duck[0] == pytest.approx(1.0)
+    # Inside loud-voice region (post-attack), duck should be near low_gain=0.5.
+    settled = duck[int(0.5 * sr)]
+    assert 0.45 < settled < 0.65
+
+
+def test_unknown_mood_raises_keyerror():
+    with pytest.raises(KeyError):
+        ambient_pad(2.0, mood="nonexistent_mood", sr=SR)
+
+
+def test_motifs_registry_immutable_intent():
+    """MOTIFS exposes pre-baked schedules. Each entry should be a
+    list/tuple of (offset, freq) pairs with strictly non-decreasing
+    offsets (motifs play forward in time)."""
+    for name, schedule in MOTIFS.items():
+        assert len(schedule) >= 1
+        offsets = [t for t, _ in schedule]
+        assert offsets == sorted(offsets), f"{name} offsets out of order: {offsets}"
+        assert offsets[0] == 0.0, f"{name} should start at offset 0.0"
+        assert all(f > 0 for _, f in schedule), f"{name} has non-positive freq"
