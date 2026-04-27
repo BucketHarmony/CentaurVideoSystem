@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+[FROZEN — pre-cvs_lib.audio migration. Kept as rollback target through
+Phase 7 of the audio overhaul (bouncing-velvet-tympani). Do not edit.]
+
 cc_flora -- Episode 07: Ping-Pong (30-second cut, FAST mode)
 
 ACT 1 (0-10s)  tick_0036: The Bold Drive. 12cm, broke 3m, doorway 20cm ahead.
@@ -28,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import requests
+import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
 from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
@@ -35,14 +39,6 @@ from cvs_lib.image_filters import (
     cottagecore_grade as _cc_grade,
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    impact,
-    pad_envelope,
-    tension_partial,
-    lowpass_normalize,
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -380,33 +376,58 @@ def ease_out_np(x):
     return 1 - (1 - np.clip(x, 0, 1)) ** 3
 
 def generate_ambient_pad(duration, sr=44100):
-    pad = ambient_pad(duration, mood="cottagecore_warm", sr=sr, apply_envelope=False)
+    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
+    pad = np.sin(2 * np.pi * 110 * t) * 0.05
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035
+    pad += np.sin(2 * np.pi * 220 * t) * 0.025
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
+    pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
+    pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
+    pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
 
-    # Act 2-3 frustration: Bb3 minor-second dissonance, peaks 15–20
-    pad += tension_partial(duration, sr=sr, freq_hz=233.08, gain=0.010,
-                           fade_in_t=10.0, fade_in_dur=5.0,
-                           fade_out_t=25.0, fade_out_dur=5.0)
-    # Act 3 resolution: humbled acceptance — E4 returns at 24–30
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.012,
-                           fade_in_t=24.0, fade_in_dur=2.0,
-                           fade_out_t=duration, fade_out_dur=2.0)
+    # Act 2-3: frustration — minor second dissonance builds
+    frustration = np.clip((t - 10) / 5.0, 0, 1) * np.clip((25.0 - t) / 5.0, 0, 1)
+    pad += np.sin(2 * np.pi * 233.08 * t) * 0.010 * frustration  # Bb3
 
-    # Collision thuds: Pelican case at 13.0, barrel at 17.5.
-    # rng_seed=int(impact_t*100) preserves the legacy noise burst seeds.
+    # Act 3 resolution: humbled acceptance — E4 returns
+    act3 = np.clip((t - 24) / 2.0, 0, 1) * np.clip((duration - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.012 * act3
+
+    # Impact sounds at collisions
+    # t=13.0: hits Pelican case (thud)
+    # t=17.5: hits barrel (thud)
     for impact_t in [13.0, 17.5]:
-        pad += impact(duration, t=impact_t, sr=sr,
-                      sub_hz=55.0, sub_gain=0.04, sub_decay=10.0, sub_dur=0.3,
-                      noise_gain=0.08, noise_decay=25.0, noise_dur=0.15,
-                      rng_seed=int(impact_t * 100))
+        imp_env = np.where(
+            (t >= impact_t) & (t < impact_t + 0.15),
+            np.exp(-(t - impact_t) * 25) * 0.08,
+            0.0
+        )
+        pad += np.random.RandomState(int(impact_t * 100)).randn(len(t)) * imp_env
+        # Low thud
+        thud_env = np.where(
+            (t >= impact_t) & (t < impact_t + 0.3),
+            np.exp(-(t - impact_t) * 10) * 0.04,
+            0.0
+        )
+        pad += np.sin(2 * np.pi * 55 * t) * thud_env  # Low A1 thud
 
-    pad += chime_layer(duration, [
+    # Chimes
+    chimes = [
         (0.1, 880), (2.5, 1108.73), (5.0, 880), (8.0, 1318.51),
         (10.5, 880), (15.0, 1108.73), (19.0, 880),
         (22.0, 1108.73), (25.0, 880), (28.0, 1318.51),
-    ], mood="cottagecore_warm", sr=sr)
+    ]
+    for ct, cf in chimes:
+        env_t = t - ct
+        env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
+        pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
 
-    pad *= pad_envelope(duration, mood="cottagecore_warm", sr=sr)
-    pad = lowpass_normalize(pad, mood="cottagecore_warm", sr=sr)
+    pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
+
+    sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
+    pad = scipy.signal.sosfilt(sos, pad)
+    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
 
     out = OUTPUT_DIR / "cc_flora_ep07_pad.wav"
     with wave.open(str(out), 'w') as wf:
