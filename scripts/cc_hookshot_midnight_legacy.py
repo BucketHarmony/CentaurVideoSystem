@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+FROZEN reference for audio overhaul Phase 5d verification. DO NOT MODIFY.
+
 CVS -- Hookshot: "Midnight Run"
 Tick 277-278: Kombucha drives into a stool, flips over, and spends
 several ticks contemplating the ceiling thinking it discovered a new room.
@@ -34,7 +36,6 @@ from cvs_lib.image_filters import (
     hookshot_soft_bloom as _hk_bloom,
     hookshot_vignette as _hk_vignette,
 )
-from cvs_lib.audio import chime_layer
 
 load_dotenv()
 
@@ -224,16 +225,14 @@ def generate_audio(duration, crash_time=1.5):
     pre_env = np.clip(1.0 - (t - post_start) / 3.0, 0, 1)
     pad = pad * pre_env + post_drone * post_env
 
-    schedule = [
-        (ct_c, cf) for ct_c, cf in
-        [(post_start + 2, 587.33), (post_start + 8, 698.46),
-         (post_start + 15, 880.0), (post_start + 22, 587.33)]
-        if ct_c < duration - 1
-    ]
-    chimes = chime_layer(
-        duration, schedule, mood="hookshot_grief",
-        gain_override=0.018, octave_gain_override=0.0, sr=SR,
-    )
+    # Sparse chimes (post-crash only, contemplative)
+    chimes = np.zeros(n)
+    for ct_c, freq in [(post_start + 2, 587.33), (post_start + 8, 698.46),
+                        (post_start + 15, 880.0), (post_start + 22, 587.33)]:
+        if ct_c >= duration - 1:
+            continue
+        ec = np.where(t-ct_c >= 0, np.exp(-(t-ct_c)*3.0) * np.clip((t-ct_c)*20, 0, 1), 0)
+        chimes += np.sin(2*np.pi*freq*t) * 0.018 * ec
 
     mix = pad + crash + chimes
     try:
