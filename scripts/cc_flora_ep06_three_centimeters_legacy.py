@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+[FROZEN — pre-cvs_lib.audio migration. Kept as rollback target through
+Phase 7 of the audio overhaul (bouncing-velvet-tympani). Do not edit.]
+
 cc_flora -- Episode 06: Three Centimeters (30-second cut, FAST mode)
 
 ACT 1 (0-10s)  tick_0032: The Floor. Battery 66%, gimbal tilts down, taking inventory.
@@ -28,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import requests
+import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
 from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
@@ -35,13 +39,6 @@ from cvs_lib.image_filters import (
     cottagecore_grade as _cc_grade,
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    pad_envelope,
-    tension_partial,
-    lowpass_normalize,
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -382,36 +379,51 @@ def ease_out_np(x):
     return 1 - (1 - np.clip(x, 0, 1)) ** 3
 
 def generate_ambient_pad(duration, sr=44100):
-    pad = ambient_pad(duration, mood="cottagecore_warm", sr=sr, apply_envelope=False)
+    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
+    pad = np.sin(2 * np.pi * 110 * t) * 0.05
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035
+    pad += np.sin(2 * np.pi * 220 * t) * 0.025
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
+    pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
+    pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
+    pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
 
-    # Act 1 dying-battery tension: Bb3 ramping DOWN from t=0 to t=10
-    pad += tension_partial(duration, sr=sr, freq_hz=233.08, gain=0.008,
-                           fade_in_t=-1.0, fade_in_dur=1.0,
-                           fade_out_t=10.0, fade_out_dur=10.0)
-    # Act 2 recharge reveal: E4 bloom 10–13s
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.015,
-                           fade_in_t=10.0, fade_in_dur=1.5,
-                           fade_out_t=13.0, fade_out_dur=2.0)
-    # Act 3 steady resolve: E4 shimmer 20–30s
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.012,
-                           fade_in_t=20.0, fade_in_dur=2.0,
-                           fade_out_t=duration, fade_out_dur=2.0)
+    # Act 1: slightly filtered (dying battery mood) — minor second tension
+    act1_tension = np.clip(1.0 - t / 10.0, 0, 1)
+    pad += np.sin(2 * np.pi * 233.08 * t) * 0.008 * act1_tension  # Bb3 (minor 2nd to A)
 
-    pad += chime_layer(duration, [
+    # Act 2 brightness sweep at t=10.5 (recharge reveal)
+    recharge = np.clip((t - 10.0) / 1.5, 0, 1) * np.clip((13.0 - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.015 * recharge  # E4 hopeful
+
+    # Act 3: steady, resolute — E4 shimmer continues
+    act3 = np.clip((t - 20) / 2.0, 0, 1) * np.clip((duration - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.012 * act3
+
+    # Chimes
+    chimes = [
         (0.1, 880), (2.5, 1108.73), (5.0, 880), (8.0, 1318.51),
         (10.5, 1108.73), (13.0, 880), (16.0, 1318.51), (19.0, 880),
         (22.5, 1108.73),   # cable catch moment — slightly dissonant
         (25.0, 880), (28.0, 1318.51),
-    ], mood="cottagecore_warm", sr=sr)
+    ]
+    for ct, cf in chimes:
+        env_t = t - ct
+        env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
+        pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
 
-    # Cable catch sting at t=22.5 — brief dissonant cluster (decay=15
-    # is sharper than mood's chime decay=2.0, so kept inline).
-    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
+    # Cable catch sound at t=22.5 — brief dissonant cluster
     catch_env = np.where((t >= 22.5) & (t < 22.7), np.exp(-(t - 22.5) * 15) * 0.03, 0)
     pad += np.sin(2 * np.pi * 466.16 * t) * catch_env  # Bb4 (dissonant)
 
-    pad *= pad_envelope(duration, mood="cottagecore_warm", sr=sr)
-    pad = lowpass_normalize(pad, mood="cottagecore_warm", sr=sr)
+    # Master envelope
+    pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
+
+    # Low-pass
+    sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
+    pad = scipy.signal.sosfilt(sos, pad)
+    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
 
     out = OUTPUT_DIR / "cc_flora_ep06_pad.wav"
     with wave.open(str(out), 'w') as wf:
