@@ -31,7 +31,8 @@ from pathlib import Path
 from typing import Iterable, Optional, Sequence, Tuple, Union
 
 import numpy as np
-from scipy.signal import butter, lfilter
+from dataclasses import dataclass, field
+from scipy.signal import butter, lfilter, sosfilt
 
 
 PathLike = Union[str, Path]
@@ -564,3 +565,429 @@ def write_wav_stereo(
         w.setsampwidth(2)
         w.setframerate(sr)
         w.writeframes(interleaved.tobytes())
+
+
+# --------------------------------------------------------------------------- #
+# Cottagecore + Hookshot primitives — mood-driven additive synth
+# --------------------------------------------------------------------------- #
+# These primitives consolidate ~18 inline `generate_ambient_pad` /
+# `generate_bed_audio` copies from cc_flora (12 episodes) and cc_hookshot
+# (5 distinct scripts) into one parameterized API. Per the audio overhaul
+# lift design (`C:/Users/kenne/.claude/plans/bouncing-velvet-tympani.md`):
+#
+# Editorial philosophies (PRESERVED — sharing primitives, not the pipeline):
+# - MPC ducks (sidechain compressor in `sidechain_duck`).
+# - cc_flora does NOT duck (narration sits proud on pad).
+# - cc_hookshot ducks aggressively (60% reduction inline in mix_tts).
+# Don't try to "fix" this by unifying — the split is editorial.
+#
+# Primitives are LOWPASS-AGNOSTIC. cc_flora lowpasses the pad alone;
+# cc_hookshot lowpasses the whole mix downstream. Caller decides.
+#
+# Per-episode editorial events (act-N tensions, ep04 battery-death,
+# ep07/ep08 impacts) live OUTSIDE these primitives — caller composes via
+# `tension_partial()` + `impact()` between `ambient_pad()` and
+# `pad_envelope()`. This was Phase 0's audit finding.
+
+
+@dataclass(frozen=True)
+class Mood:
+    """Frozen mood spec. Drives ambient_pad + chime_layer."""
+
+    drone: Tuple[Tuple[float, float], ...]
+    """(freq_hz, gain) per drone partial."""
+
+    shimmer: Tuple[Tuple[float, float, Optional[str]], ...]
+    """(freq_hz, gain, lfo_role) per shimmer partial.
+    lfo_role ∈ {"lfo1", "lfo2", "lfo", "anti_lfo", None}."""
+
+    lfo1_hz: float = 0.12
+    lfo2_hz: float = 0.18
+    lfo2_phase: float = 1.0  # rad
+
+    chime_decay: float = 2.0
+    chime_attack: float = 10.0
+    chime_gain: float = 0.022
+    chime_octave_gain: float = 0.0
+    chime_attack_curve: str = "linear"  # "linear" or "masterpiece"
+
+    envelope_floor: float = 0.3
+    envelope_fade_in_s: float = 2.0
+    envelope_fade_out_s: float = 2.5
+
+    lowpass_hz: float = 3000.0
+    lowpass_order: int = 4
+    pad_target_gain: float = 0.22
+
+    sting: dict = field(default_factory=dict)
+    """Optional sting params (hookshot moods). {} for non-hookshot."""
+
+
+MOODS: dict = {
+    "cottagecore_warm": Mood(
+        drone=(
+            (110.0, 0.050),
+            (164.81, 0.035),
+            (220.0, 0.025),
+        ),
+        shimmer=(
+            (440.0, 0.010, "lfo1"),
+            (554.37, 0.007, "lfo2"),
+            (659.25, 0.005, "lfo1"),
+        ),
+    ),
+
+    "cottagecore_masterpiece": Mood(
+        drone=(
+            (110.0, 0.060),
+            (164.81, 0.040),
+            (220.0, 0.030),
+        ),
+        shimmer=(
+            (440.0, 0.012, "lfo1"),
+            (554.37, 0.008, "lfo2"),
+            (659.25, 0.006, "lfo1"),
+        ),
+        lfo1_hz=0.15,
+        lfo2_hz=0.22,
+        chime_decay=2.5,
+        chime_attack=8.0,
+        chime_attack_curve="masterpiece",
+        chime_gain=0.025,
+        envelope_floor=0.0,
+        envelope_fade_out_s=2.0,
+        pad_target_gain=0.25,
+    ),
+
+    "hookshot_attention": Mood(
+        drone=(
+            (110.00, 0.040),
+            (130.81, 0.025),
+            (164.81, 0.030),
+            (220.00, 0.020),
+        ),
+        shimmer=(
+            (440.00, 0.010, "lfo1"),
+            (523.25, 0.007, "lfo2"),
+            (659.25, 0.005, None),
+        ),
+        chime_decay=2.5,
+        chime_attack=20.0,
+        chime_gain=0.025,
+        chime_octave_gain=0.008,
+        sting={
+            "sub_hz": 60.0, "sub_gain": 0.35, "sub_decay": 8.0, "dur": 0.5,
+            "transient_dur": 0.02, "transient_gain": 0.25, "transient_decay": 10.0,
+            "high_hz": 880.0, "high_gain": 0.08, "high_dur": 0.5,
+        },
+    ),
+
+    "hookshot_grief": Mood(  # faith — D minor
+        drone=(
+            (73.42, 0.045),    # D2
+            (87.31, 0.025),    # F2
+            (110.00, 0.035),   # A2
+            (220.00, 0.020),   # A3
+        ),
+        shimmer=(
+            (293.66, 0.008, "lfo"),       # D4
+            (349.23, 0.006, "anti_lfo"),  # F4
+        ),
+        lfo1_hz=0.08,
+        chime_decay=3.0,
+        chime_attack=20.0,
+        chime_gain=0.020,
+        chime_octave_gain=0.006,
+        lowpass_hz=2800.0,
+        sting={
+            "sub_hz": 50.0, "sub_gain": 0.50, "sub_decay": 6.0, "dur": 0.6,
+            "transient_dur": 0.03, "transient_gain": 0.35, "transient_decay": 8.0,
+            "high_hz": 440.0, "high_gain": 0.06, "high_dur": 0.6,
+        },
+    ),
+
+    # hookshot_collapse (midnight pair) is a TWO-mood cross-fade and
+    # doesn't fit the single-Mood schema. Phase 5 handles it as a
+    # caller-side blend between hookshot_attention (pre-crash) and
+    # hookshot_grief (post-crash) with a `crash_impact()` event.
+}
+
+
+def pad_envelope(
+    duration: float,
+    *,
+    sr: int = DEFAULT_SR,
+    fade_in_s: float = 2.0,
+    fade_out_s: float = 2.5,
+    floor: float = 0.3,
+    variant: Optional[str] = None,
+) -> np.ndarray:
+    """Master pad envelope as 1-D float64 gain curve.
+
+    Default (cc_flora canonical): clipped-line fade-in starting at
+    `floor` ramping to 1.0 over `fade_in_s`, then sustain, then
+    clipped-line fade-out over the last `fade_out_s`.
+
+    Variants:
+      "hookshot_linspace"     — silence 0–1s, linspace ramp 1→4s,
+                                sustain, linspace 3s tail (cc_hookshot).
+      "masterpiece_zerofloor" — floor=0, fade_out_s=2.0.
+      "hookshot_short_in"     — floor=0, fade_in=1s, fade_out=3s.
+    """
+    n = int(duration * sr)
+    t = np.linspace(0, duration, n, dtype=np.float64)
+
+    if variant == "hookshot_linspace":
+        env = np.zeros(n, dtype=np.float64)
+        ramp_start = int(1.0 * sr)
+        ramp_end = int(4.0 * sr)
+        tail_start = max(ramp_end, n - int(3.0 * sr))
+        env[ramp_start:ramp_end] = np.linspace(0, 1, ramp_end - ramp_start)
+        env[ramp_end:tail_start] = 1.0
+        env[tail_start:] = np.linspace(1, 0, n - tail_start)
+        return env
+
+    if variant == "masterpiece_zerofloor":
+        floor = 0.0
+        fade_out_s = 2.0
+    elif variant == "hookshot_short_in":
+        floor = 0.0
+        fade_in_s = 1.0
+        fade_out_s = 3.0
+
+    fade_in = np.clip(floor + (1.0 - floor) * (t / fade_in_s), 0, 1)
+    fade_out = np.clip((duration - t) / fade_out_s, 0, 1)
+    return fade_in * fade_out
+
+
+def ambient_pad(
+    duration: float,
+    *,
+    mood: str = "cottagecore_warm",
+    sr: int = DEFAULT_SR,
+    drone_gain_scale: float = 1.0,
+    apply_envelope: bool = True,
+) -> np.ndarray:
+    """Drone + shimmer pad, mono float64.
+
+    Returns UNFILTERED pad — caller decides whether to lowpass and
+    when (cc_flora lowpasses pad-only; cc_hookshot lowpasses whole
+    mix). Master envelope optional — set `apply_envelope=False` when
+    inserting per-act tension partials before the envelope.
+    """
+    m = MOODS[mood]
+    n = int(duration * sr)
+    t = np.linspace(0, duration, n, dtype=np.float64)
+
+    pad = np.zeros(n, dtype=np.float64)
+
+    for freq, gain in m.drone:
+        pad += np.sin(2 * np.pi * freq * t) * gain * drone_gain_scale
+
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * m.lfo1_hz * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * m.lfo2_hz * t + m.lfo2_phase)
+    lfo_single = 0.5 + 0.5 * np.sin(2 * np.pi * m.lfo1_hz * t)
+    anti_lfo = 1.0 - lfo_single
+    role_to_curve = {
+        "lfo1": lfo1, "lfo2": lfo2,
+        "lfo": lfo_single, "anti_lfo": anti_lfo,
+        None: np.ones_like(t),
+    }
+    for freq, gain, role in m.shimmer:
+        pad += np.sin(2 * np.pi * freq * t) * gain * role_to_curve[role]
+
+    if apply_envelope:
+        pad *= pad_envelope(
+            duration, sr=sr,
+            fade_in_s=m.envelope_fade_in_s,
+            fade_out_s=m.envelope_fade_out_s,
+            floor=m.envelope_floor,
+        )
+
+    return pad
+
+
+def chime_layer(
+    duration: float,
+    schedule: Sequence[Tuple[float, float]],
+    *,
+    mood: str = "cottagecore_warm",
+    sr: int = DEFAULT_SR,
+    gain_override: Optional[float] = None,
+    octave_gain_override: Optional[float] = None,
+) -> np.ndarray:
+    """Chimes scheduled at [(t_seconds, freq_hz), ...].
+
+    Decay/attack/gain/octave-gain pulled from the mood. Overrides let
+    callers force a specific gain (e.g. for a single louder chime
+    inside a stack of canonical-gain ones).
+    """
+    m = MOODS[mood]
+    n = int(duration * sr)
+    t = np.linspace(0, duration, n, dtype=np.float64)
+    out = np.zeros(n, dtype=np.float64)
+
+    gain = m.chime_gain if gain_override is None else gain_override
+    oct_gain = (
+        m.chime_octave_gain if octave_gain_override is None
+        else octave_gain_override
+    )
+
+    for ct, cf in schedule:
+        env_t = t - ct
+        if m.chime_attack_curve == "masterpiece":
+            env = np.where(
+                env_t >= 0,
+                np.clip(env_t * m.chime_attack, 0, 1) * np.exp(-env_t * m.chime_decay),
+                0,
+            )
+        else:
+            env = np.where(
+                env_t >= 0,
+                np.exp(-env_t * m.chime_decay) * np.clip(env_t * m.chime_attack, 0, 1),
+                0,
+            )
+        out += np.sin(2 * np.pi * cf * t) * gain * env
+        if oct_gain > 0:
+            out += np.sin(2 * np.pi * cf * 2 * t) * oct_gain * env
+
+    return out
+
+
+def tension_partial(
+    duration: float,
+    *,
+    freq_hz: float,
+    gain: float,
+    fade_in_t: float,
+    fade_in_dur: float,
+    fade_out_t: float,
+    fade_out_dur: float,
+    sr: int = DEFAULT_SR,
+) -> np.ndarray:
+    """Sine partial gated by a [fade_in_t, fade_out_t] window.
+
+    Replaces the inline pattern
+        env = clip((t - X) / Y, 0, 1) * clip((Z - t) / W, 0, 1)
+        pad += sin(2*pi*freq*t) * gain * env
+    that scattered across cc_flora episodes for act-N tensions.
+    ep10 uses three (drift Bb / hope E4 / milestone B4); ep08 uses
+    two (tension Bb / uncertainty); etc.
+    """
+    n = int(duration * sr)
+    t = np.linspace(0, duration, n, dtype=np.float64)
+    env = (
+        np.clip((t - fade_in_t) / fade_in_dur, 0, 1)
+        * np.clip((fade_out_t - t) / fade_out_dur, 0, 1)
+    )
+    return np.sin(2 * np.pi * freq_hz * t) * gain * env
+
+
+def impact(
+    duration: float,
+    *,
+    t: float,
+    sub_hz: float = 55.0,
+    sub_gain: float = 0.04,
+    sub_decay: float = 8.0,
+    sub_dur: float = 0.4,
+    noise_gain: float = 0.06,
+    noise_decay: float = 20.0,
+    noise_dur: float = 0.2,
+    sr: int = DEFAULT_SR,
+    rng_seed: Optional[int] = None,
+) -> np.ndarray:
+    """Percussive thud at time `t`: low sine + noise burst, both
+    exponentially decaying. ep07 collisions, ep08 wedge.
+
+    `rng_seed` makes the noise burst reproducible.
+    """
+    n = int(duration * sr)
+    t_arr = np.linspace(0, duration, n, dtype=np.float64)
+    out = np.zeros(n, dtype=np.float64)
+
+    rng = np.random.RandomState(rng_seed) if rng_seed is not None else np.random
+
+    sub_t = t_arr - t
+    sub_env = np.where(
+        (sub_t >= 0) & (sub_t < sub_dur),
+        np.exp(-sub_t * sub_decay),
+        0,
+    )
+    out += np.sin(2 * np.pi * sub_hz * t_arr) * sub_gain * sub_env
+
+    noise_t = t_arr - t
+    noise_env = np.where(
+        (noise_t >= 0) & (noise_t < noise_dur),
+        np.exp(-noise_t * noise_decay),
+        0,
+    )
+    out += rng.randn(n) * noise_gain * noise_env
+
+    return out
+
+
+def sting(
+    duration: float,
+    *,
+    mood: str = "hookshot_attention",
+    t_start: float = 0.0,
+    sr: int = DEFAULT_SR,
+    rng_seed: int = 42,
+) -> np.ndarray:
+    """Hookshot opener: sub thump + transient noise + optional high tone.
+
+    Returns mono float64 of length `duration*sr` with the sting starting
+    at `t_start`. Mood pulls all params; for moods without a `sting`
+    dict (e.g. cottagecore_warm), returns silence.
+    """
+    m = MOODS[mood]
+    n = int(duration * sr)
+    if not m.sting:
+        return np.zeros(n, dtype=np.float64)
+    s = m.sting
+
+    t = np.linspace(0, duration, n, dtype=np.float64)
+    out = np.zeros(n, dtype=np.float64)
+    st = t - t_start
+
+    sub_env = np.where(
+        (st >= 0) & (st < s["dur"]),
+        np.exp(-st * s["sub_decay"]),
+        0,
+    )
+    out += np.sin(2 * np.pi * s["sub_hz"] * t) * s["sub_gain"] * sub_env
+
+    rng = np.random.RandomState(rng_seed)
+    transient_env = np.where(
+        (st >= 0) & (st < s["transient_dur"]),
+        np.exp(-st * s["transient_decay"]),
+        0,
+    )
+    out += rng.randn(n) * s["transient_gain"] * transient_env
+
+    if "high_hz" in s and s.get("high_gain", 0) > 0:
+        high_env = np.where(
+            (st >= 0) & (st < s["high_dur"]),
+            np.clip(st * 4.0, 0, 1) * np.exp(-st * 3.0),
+            0,
+        )
+        out += np.sin(2 * np.pi * s["high_hz"] * t) * s["high_gain"] * high_env
+
+    return out
+
+
+def lowpass_normalize(
+    pad: np.ndarray,
+    *,
+    mood: str = "cottagecore_warm",
+    sr: int = DEFAULT_SR,
+) -> np.ndarray:
+    """Apply mood's butterworth lowpass + normalize to mood's
+    `pad_target_gain`. Convenience wrapper for the cc_flora canonical
+    finishing pattern: sosfilt → divide by peak → multiply by target.
+    """
+    m = MOODS[mood]
+    sos = butter(m.lowpass_order, m.lowpass_hz, "low", fs=sr, output="sos")
+    pad = sosfilt(sos, pad)
+    return pad / (np.max(np.abs(pad)) + 1e-8) * m.pad_target_gain

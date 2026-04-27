@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# FROZEN — pre-audio-overhaul Phase 2 snapshot. Rollback target through
+# Phase 7. Do not edit. Delete when audio overhaul ships.
 """
 cc_flora -- Episode 10: The Patience of Rooms (30-second cut, FAST mode)
 
@@ -28,6 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import requests
+import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
 # ===================================================================
@@ -128,13 +131,6 @@ from cvs_lib.image_filters import (  # noqa: E402
     creamy_vignette as _creamy_vignette,
 )
 from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts  # noqa: E402
-from cvs_lib.audio import (  # noqa: E402
-    ambient_pad,
-    chime_layer,
-    pad_envelope,
-    tension_partial,
-    lowpass_normalize,
-)
 
 
 def cottagecore_grade(img):
@@ -381,29 +377,46 @@ def ease_out_np(x):
     return 1 - (1 - np.clip(x, 0, 1)) ** 3
 
 def generate_ambient_pad(duration, sr=44100):
-    pad = ambient_pad(duration, mood="cottagecore_warm", sr=sr, apply_envelope=False)
+    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
+    pad = np.sin(2 * np.pi * 110 * t) * 0.05
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035
+    pad += np.sin(2 * np.pi * 220 * t) * 0.025
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
+    pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
+    pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
+    pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
 
-    # Editorial act-tension partials (drift Bb / hope E4 / milestone B4)
-    pad += tension_partial(duration, sr=sr, freq_hz=233.08, gain=0.006,
-                           fade_in_t=0.0, fade_in_dur=2.0,
-                           fade_out_t=10.0, fade_out_dur=3.0)
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.014,
-                           fade_in_t=10.0, fade_in_dur=4.0,
-                           fade_out_t=duration, fade_out_dur=3.0)
-    pad += tension_partial(duration, sr=sr, freq_hz=493.88, gain=0.005,
-                           fade_in_t=22.0, fade_in_dur=3.0,
-                           fade_out_t=28.0, fade_out_dur=2.0)
+    # Act 1: slight Bb tension for drift frustration
+    drift_env = np.clip((t - 0) / 2.0, 0, 1) * np.clip((10.0 - t) / 3.0, 0, 1)
+    pad += np.sin(2 * np.pi * 233.08 * t) * 0.006 * drift_env
 
-    # Chimes through acts 1-2, thinning in act 3 (last hit at 25.5s
-    # leaves the milestone breathing).
-    pad += chime_layer(duration, [
+    # Act 2-3: hopeful E4 rises through doorway, sustains to milestone
+    hope = np.clip((t - 10) / 4.0, 0, 1) * np.clip((duration - t) / 3.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.014 * hope
+
+    # Act 3: gentle shimmer lift for the 4m milestone
+    shimmer = np.clip((t - 22) / 3.0, 0, 1) * np.clip((28.0 - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 493.88 * t) * 0.005 * shimmer  # B4 — bright color
+
+    # Chimes — steady through acts 1-2, thin out in act 3 for quiet triumph
+    chimes = [
         (0.1, 880), (3.0, 1108.73), (5.5, 880), (8.0, 1318.51),
         (10.5, 880), (13.5, 1108.73), (16.0, 1318.51), (19.0, 880),
         (22.0, 1108.73), (25.5, 880),
-    ], mood="cottagecore_warm", sr=sr)
+        # no chime after 25.5 — let the milestone breathe
+    ]
+    for ct, cf in chimes:
+        env_t = t - ct
+        env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
+        pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
 
-    pad *= pad_envelope(duration, sr=sr)
-    pad = lowpass_normalize(pad, mood="cottagecore_warm", sr=sr)
+    # Master envelope
+    pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
+
+    sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
+    pad = scipy.signal.sosfilt(sos, pad)
+    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
 
     out = OUTPUT_DIR / "cc_flora_ep10_pad.wav"
     with wave.open(str(out), 'w') as wf:
