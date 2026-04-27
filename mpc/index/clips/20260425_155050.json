@@ -980,142 +980,1290 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.936,
+    "language_probability": 1.0,
     "duration_s": 88.2346875,
-    "text": "in one of the stories that's written in English. She writes, In August 1991, my family wanted a better future for their children, so we moved from Mexico to America. The hardships and obstacles we faced in Mexico didn't just stop there. What we were running from soon came to America. Our rapists followed us to our new beginning, our second chance. We tried to beat the odds, or what stereotype idea people think of Mexico slash Hispanic culture. At the age of 14, I was married to a 22-year-old man. This man was authorized to live in America due to his employment. I went through domestic violence with my husband, the same violence I endured from earlier years of childhood, which led CPS to removing me from my home. I thought he would protect me, but I was wrong. He was later deported after a gruesome assault, which caused me to be left in critical condition at the hospital. Not only did he leave me mentally and physically vulnerable, he left me with five beautiful children. Out of my five children, three of them are special needs. I had to learn how to take care and nurture them. As of now, I am married to another snake. Another man tried to beat me, hurt me, and was running into my daughter's room. There he was calling. I was shocked. When the police arrived, I was the one who was being put in the...",
+    "text": "This is one of the stories that's written in English. She writes in August 1991, my family wanted a better future for their children. So we moved from Mexico to America. The hardships and obstacles we faced in Mexico didn't just stop there. What we were running from soon came to America. Our rapists followed us to our new beginning, our second chance. We tried to beat the odds or what stereotype idea people think of Mexico slash Hispanic culture. At the age of 14, I was married to a 22-year-old man. This man was authorized to live in America due to his employment. I went through domestic violence with my husband, the same violence I endured from earlier years of childhood, which led CPS removing me from my home. I thought he would protect me, but I was wrong. He was later deported after a gruesome assault which caused me to be left in critical condition at the hospital. Not only did he leave me mentally and physically vulnerable, he left me with five beautiful children. Out of my five children, three of them have special needs. I had to soon learn how to take care and nurture them. As of now, I am married to another snake. Another man tried to beat me, hurt me, and was running into my daughter's room. There he was calling. I was shocked. When the police arrived, I was the one who was being put to death.",
     "segments": [
       {
-        "start": 0.08,
-        "end": 2.38,
-        "text": "in one of the stories that's written in English."
+        "start": 0.0,
+        "end": 29.8,
+        "text": "This is one of the stories that's written in English. She writes in August 1991, my family wanted a better future for their children. So we moved from Mexico to America. The hardships and obstacles we faced in Mexico didn't just stop there. What we were running from soon came to America. Our rapists followed us to our new beginning, our second chance. We tried to beat the odds or what stereotype idea people think of Mexico slash Hispanic",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.12,
+            "word": "This"
+          },
+          {
+            "start": 0.12,
+            "end": 0.38,
+            "word": "is"
+          },
+          {
+            "start": 0.38,
+            "end": 0.78,
+            "word": "one"
+          },
+          {
+            "start": 0.78,
+            "end": 0.9,
+            "word": "of"
+          },
+          {
+            "start": 0.9,
+            "end": 0.98,
+            "word": "the"
+          },
+          {
+            "start": 0.98,
+            "end": 1.26,
+            "word": "stories"
+          },
+          {
+            "start": 1.26,
+            "end": 1.52,
+            "word": "that's"
+          },
+          {
+            "start": 1.52,
+            "end": 1.7,
+            "word": "written"
+          },
+          {
+            "start": 1.7,
+            "end": 1.9,
+            "word": "in"
+          },
+          {
+            "start": 1.9,
+            "end": 2.2,
+            "word": "English."
+          },
+          {
+            "start": 2.76,
+            "end": 3.36,
+            "word": "She"
+          },
+          {
+            "start": 3.36,
+            "end": 3.64,
+            "word": "writes"
+          },
+          {
+            "start": 3.64,
+            "end": 3.84,
+            "word": "in"
+          },
+          {
+            "start": 3.84,
+            "end": 4.2,
+            "word": "August"
+          },
+          {
+            "start": 4.2,
+            "end": 4.72,
+            "word": "1991,"
+          },
+          {
+            "start": 5.14,
+            "end": 5.48,
+            "word": "my"
+          },
+          {
+            "start": 5.48,
+            "end": 5.84,
+            "word": "family"
+          },
+          {
+            "start": 5.84,
+            "end": 6.16,
+            "word": "wanted"
+          },
+          {
+            "start": 6.16,
+            "end": 6.34,
+            "word": "a"
+          },
+          {
+            "start": 6.34,
+            "end": 6.56,
+            "word": "better"
+          },
+          {
+            "start": 6.56,
+            "end": 6.88,
+            "word": "future"
+          },
+          {
+            "start": 6.88,
+            "end": 7.18,
+            "word": "for"
+          },
+          {
+            "start": 7.18,
+            "end": 7.34,
+            "word": "their"
+          },
+          {
+            "start": 7.34,
+            "end": 7.7,
+            "word": "children."
+          },
+          {
+            "start": 7.9,
+            "end": 8.48,
+            "word": "So"
+          },
+          {
+            "start": 8.48,
+            "end": 8.68,
+            "word": "we"
+          },
+          {
+            "start": 8.68,
+            "end": 8.9,
+            "word": "moved"
+          },
+          {
+            "start": 8.9,
+            "end": 9.08,
+            "word": "from"
+          },
+          {
+            "start": 9.08,
+            "end": 9.46,
+            "word": "Mexico"
+          },
+          {
+            "start": 9.46,
+            "end": 9.7,
+            "word": "to"
+          },
+          {
+            "start": 9.7,
+            "end": 10.08,
+            "word": "America."
+          },
+          {
+            "start": 10.72,
+            "end": 11.32,
+            "word": "The"
+          },
+          {
+            "start": 11.32,
+            "end": 11.68,
+            "word": "hardships"
+          },
+          {
+            "start": 11.68,
+            "end": 12.02,
+            "word": "and"
+          },
+          {
+            "start": 12.02,
+            "end": 12.4,
+            "word": "obstacles"
+          },
+          {
+            "start": 12.4,
+            "end": 12.72,
+            "word": "we"
+          },
+          {
+            "start": 12.72,
+            "end": 13.02,
+            "word": "faced"
+          },
+          {
+            "start": 13.02,
+            "end": 13.26,
+            "word": "in"
+          },
+          {
+            "start": 13.26,
+            "end": 13.56,
+            "word": "Mexico"
+          },
+          {
+            "start": 13.56,
+            "end": 14.04,
+            "word": "didn't"
+          },
+          {
+            "start": 14.04,
+            "end": 14.22,
+            "word": "just"
+          },
+          {
+            "start": 14.22,
+            "end": 14.48,
+            "word": "stop"
+          },
+          {
+            "start": 14.48,
+            "end": 14.8,
+            "word": "there."
+          },
+          {
+            "start": 14.96,
+            "end": 15.36,
+            "word": "What"
+          },
+          {
+            "start": 15.36,
+            "end": 15.48,
+            "word": "we"
+          },
+          {
+            "start": 15.48,
+            "end": 15.66,
+            "word": "were"
+          },
+          {
+            "start": 15.66,
+            "end": 15.92,
+            "word": "running"
+          },
+          {
+            "start": 15.92,
+            "end": 16.18,
+            "word": "from"
+          },
+          {
+            "start": 16.18,
+            "end": 16.48,
+            "word": "soon"
+          },
+          {
+            "start": 16.48,
+            "end": 16.74,
+            "word": "came"
+          },
+          {
+            "start": 16.74,
+            "end": 16.98,
+            "word": "to"
+          },
+          {
+            "start": 16.98,
+            "end": 17.32,
+            "word": "America."
+          },
+          {
+            "start": 18.06,
+            "end": 18.66,
+            "word": "Our"
+          },
+          {
+            "start": 18.66,
+            "end": 19.18,
+            "word": "rapists"
+          },
+          {
+            "start": 19.18,
+            "end": 19.64,
+            "word": "followed"
+          },
+          {
+            "start": 19.64,
+            "end": 20.0,
+            "word": "us"
+          },
+          {
+            "start": 20.0,
+            "end": 20.18,
+            "word": "to"
+          },
+          {
+            "start": 20.18,
+            "end": 20.28,
+            "word": "our"
+          },
+          {
+            "start": 20.28,
+            "end": 20.46,
+            "word": "new"
+          },
+          {
+            "start": 20.46,
+            "end": 20.88,
+            "word": "beginning,"
+          },
+          {
+            "start": 21.02,
+            "end": 21.2,
+            "word": "our"
+          },
+          {
+            "start": 21.2,
+            "end": 21.56,
+            "word": "second"
+          },
+          {
+            "start": 21.56,
+            "end": 21.82,
+            "word": "chance."
+          },
+          {
+            "start": 22.74,
+            "end": 23.34,
+            "word": "We"
+          },
+          {
+            "start": 23.34,
+            "end": 23.68,
+            "word": "tried"
+          },
+          {
+            "start": 23.68,
+            "end": 23.9,
+            "word": "to"
+          },
+          {
+            "start": 23.9,
+            "end": 24.1,
+            "word": "beat"
+          },
+          {
+            "start": 24.1,
+            "end": 24.26,
+            "word": "the"
+          },
+          {
+            "start": 24.26,
+            "end": 24.62,
+            "word": "odds"
+          },
+          {
+            "start": 24.62,
+            "end": 25.22,
+            "word": "or"
+          },
+          {
+            "start": 25.22,
+            "end": 25.52,
+            "word": "what"
+          },
+          {
+            "start": 25.52,
+            "end": 26.2,
+            "word": "stereotype"
+          },
+          {
+            "start": 26.2,
+            "end": 26.9,
+            "word": "idea"
+          },
+          {
+            "start": 26.9,
+            "end": 27.42,
+            "word": "people"
+          },
+          {
+            "start": 27.42,
+            "end": 27.76,
+            "word": "think"
+          },
+          {
+            "start": 27.76,
+            "end": 28.04,
+            "word": "of"
+          },
+          {
+            "start": 28.04,
+            "end": 28.52,
+            "word": "Mexico"
+          },
+          {
+            "start": 28.52,
+            "end": 29.26,
+            "word": "slash"
+          },
+          {
+            "start": 29.26,
+            "end": 29.8,
+            "word": "Hispanic"
+          }
+        ]
       },
       {
-        "start": 3.28,
-        "end": 3.74,
-        "text": "She writes,"
+        "start": 30.0,
+        "end": 59.9,
+        "text": "culture. At the age of 14, I was married to a 22-year-old man. This man was authorized to live in America due to his employment. I went through domestic violence with my husband, the same violence I endured from earlier years of childhood, which led CPS removing me from my home. I thought he would protect me, but I was wrong. He was later deported after a gruesome assault which caused me to be left in critical condition at the hospital. Not only",
+        "words": [
+          {
+            "start": 30.0,
+            "end": 30.26,
+            "word": "culture."
+          },
+          {
+            "start": 30.92,
+            "end": 31.48,
+            "word": "At"
+          },
+          {
+            "start": 31.48,
+            "end": 31.62,
+            "word": "the"
+          },
+          {
+            "start": 31.62,
+            "end": 31.9,
+            "word": "age"
+          },
+          {
+            "start": 31.9,
+            "end": 32.1,
+            "word": "of"
+          },
+          {
+            "start": 32.1,
+            "end": 32.54,
+            "word": "14,"
+          },
+          {
+            "start": 32.7,
+            "end": 32.84,
+            "word": "I"
+          },
+          {
+            "start": 32.84,
+            "end": 32.98,
+            "word": "was"
+          },
+          {
+            "start": 32.98,
+            "end": 33.36,
+            "word": "married"
+          },
+          {
+            "start": 33.36,
+            "end": 33.68,
+            "word": "to"
+          },
+          {
+            "start": 33.68,
+            "end": 33.82,
+            "word": "a"
+          },
+          {
+            "start": 33.82,
+            "end": 34.14,
+            "word": "22"
+          },
+          {
+            "start": 34.14,
+            "end": 34.44,
+            "word": "-year"
+          },
+          {
+            "start": 34.44,
+            "end": 34.58,
+            "word": "-old"
+          },
+          {
+            "start": 34.58,
+            "end": 34.82,
+            "word": "man."
+          },
+          {
+            "start": 35.28,
+            "end": 35.84,
+            "word": "This"
+          },
+          {
+            "start": 35.84,
+            "end": 36.1,
+            "word": "man"
+          },
+          {
+            "start": 36.1,
+            "end": 36.42,
+            "word": "was"
+          },
+          {
+            "start": 36.42,
+            "end": 37.04,
+            "word": "authorized"
+          },
+          {
+            "start": 37.04,
+            "end": 37.62,
+            "word": "to"
+          },
+          {
+            "start": 37.62,
+            "end": 37.8,
+            "word": "live"
+          },
+          {
+            "start": 37.8,
+            "end": 37.9,
+            "word": "in"
+          },
+          {
+            "start": 37.9,
+            "end": 38.2,
+            "word": "America"
+          },
+          {
+            "start": 38.2,
+            "end": 38.5,
+            "word": "due"
+          },
+          {
+            "start": 38.5,
+            "end": 38.6,
+            "word": "to"
+          },
+          {
+            "start": 38.6,
+            "end": 38.76,
+            "word": "his"
+          },
+          {
+            "start": 38.76,
+            "end": 39.12,
+            "word": "employment."
+          },
+          {
+            "start": 39.66,
+            "end": 40.22,
+            "word": "I"
+          },
+          {
+            "start": 40.22,
+            "end": 40.46,
+            "word": "went"
+          },
+          {
+            "start": 40.46,
+            "end": 40.66,
+            "word": "through"
+          },
+          {
+            "start": 40.66,
+            "end": 40.9,
+            "word": "domestic"
+          },
+          {
+            "start": 40.9,
+            "end": 41.48,
+            "word": "violence"
+          },
+          {
+            "start": 41.48,
+            "end": 41.74,
+            "word": "with"
+          },
+          {
+            "start": 41.74,
+            "end": 41.88,
+            "word": "my"
+          },
+          {
+            "start": 41.88,
+            "end": 42.3,
+            "word": "husband,"
+          },
+          {
+            "start": 42.48,
+            "end": 42.74,
+            "word": "the"
+          },
+          {
+            "start": 42.74,
+            "end": 42.96,
+            "word": "same"
+          },
+          {
+            "start": 42.96,
+            "end": 43.36,
+            "word": "violence"
+          },
+          {
+            "start": 43.36,
+            "end": 43.58,
+            "word": "I"
+          },
+          {
+            "start": 43.58,
+            "end": 43.82,
+            "word": "endured"
+          },
+          {
+            "start": 43.82,
+            "end": 44.16,
+            "word": "from"
+          },
+          {
+            "start": 44.16,
+            "end": 44.46,
+            "word": "earlier"
+          },
+          {
+            "start": 44.46,
+            "end": 44.8,
+            "word": "years"
+          },
+          {
+            "start": 44.8,
+            "end": 45.02,
+            "word": "of"
+          },
+          {
+            "start": 45.02,
+            "end": 45.4,
+            "word": "childhood,"
+          },
+          {
+            "start": 45.7,
+            "end": 46.6,
+            "word": "which"
+          },
+          {
+            "start": 46.6,
+            "end": 46.84,
+            "word": "led"
+          },
+          {
+            "start": 46.84,
+            "end": 47.32,
+            "word": "CPS"
+          },
+          {
+            "start": 47.32,
+            "end": 47.8,
+            "word": "removing"
+          },
+          {
+            "start": 47.8,
+            "end": 48.16,
+            "word": "me"
+          },
+          {
+            "start": 48.16,
+            "end": 48.38,
+            "word": "from"
+          },
+          {
+            "start": 48.38,
+            "end": 48.52,
+            "word": "my"
+          },
+          {
+            "start": 48.52,
+            "end": 48.82,
+            "word": "home."
+          },
+          {
+            "start": 49.32,
+            "end": 49.88,
+            "word": "I"
+          },
+          {
+            "start": 49.88,
+            "end": 50.14,
+            "word": "thought"
+          },
+          {
+            "start": 50.14,
+            "end": 50.36,
+            "word": "he"
+          },
+          {
+            "start": 50.36,
+            "end": 50.7,
+            "word": "would"
+          },
+          {
+            "start": 50.7,
+            "end": 51.02,
+            "word": "protect"
+          },
+          {
+            "start": 51.02,
+            "end": 51.42,
+            "word": "me,"
+          },
+          {
+            "start": 51.46,
+            "end": 51.56,
+            "word": "but"
+          },
+          {
+            "start": 51.56,
+            "end": 51.68,
+            "word": "I"
+          },
+          {
+            "start": 51.68,
+            "end": 51.82,
+            "word": "was"
+          },
+          {
+            "start": 51.82,
+            "end": 52.1,
+            "word": "wrong."
+          },
+          {
+            "start": 52.8,
+            "end": 53.36,
+            "word": "He"
+          },
+          {
+            "start": 53.36,
+            "end": 53.58,
+            "word": "was"
+          },
+          {
+            "start": 53.58,
+            "end": 53.86,
+            "word": "later"
+          },
+          {
+            "start": 53.86,
+            "end": 54.46,
+            "word": "deported"
+          },
+          {
+            "start": 54.46,
+            "end": 54.98,
+            "word": "after"
+          },
+          {
+            "start": 54.98,
+            "end": 55.12,
+            "word": "a"
+          },
+          {
+            "start": 55.12,
+            "end": 55.46,
+            "word": "gruesome"
+          },
+          {
+            "start": 55.46,
+            "end": 55.84,
+            "word": "assault"
+          },
+          {
+            "start": 55.84,
+            "end": 56.12,
+            "word": "which"
+          },
+          {
+            "start": 56.12,
+            "end": 56.4,
+            "word": "caused"
+          },
+          {
+            "start": 56.4,
+            "end": 56.62,
+            "word": "me"
+          },
+          {
+            "start": 56.62,
+            "end": 56.76,
+            "word": "to"
+          },
+          {
+            "start": 56.76,
+            "end": 56.84,
+            "word": "be"
+          },
+          {
+            "start": 56.84,
+            "end": 57.04,
+            "word": "left"
+          },
+          {
+            "start": 57.04,
+            "end": 57.22,
+            "word": "in"
+          },
+          {
+            "start": 57.22,
+            "end": 57.5,
+            "word": "critical"
+          },
+          {
+            "start": 57.5,
+            "end": 57.9,
+            "word": "condition"
+          },
+          {
+            "start": 57.9,
+            "end": 58.18,
+            "word": "at"
+          },
+          {
+            "start": 58.18,
+            "end": 58.24,
+            "word": "the"
+          },
+          {
+            "start": 58.24,
+            "end": 58.66,
+            "word": "hospital."
+          },
+          {
+            "start": 59.1,
+            "end": 59.66,
+            "word": "Not"
+          },
+          {
+            "start": 59.66,
+            "end": 59.9,
+            "word": "only"
+          }
+        ]
       },
       {
-        "start": 3.86,
-        "end": 7.78,
-        "text": "In August 1991, my family wanted a better future for their children,"
-      },
-      {
-        "start": 8.08,
-        "end": 10.28,
-        "text": "so we moved from Mexico to America."
-      },
-      {
-        "start": 10.95,
-        "end": 14.95,
-        "text": "The hardships and obstacles we faced in Mexico didn't just stop there."
-      },
-      {
-        "start": 14.95,
-        "end": 17.51,
-        "text": "What we were running from soon came to America."
-      },
-      {
-        "start": 18.27,
-        "end": 22.03,
-        "text": "Our rapists followed us to our new beginning, our second chance."
-      },
-      {
-        "start": 23.15,
-        "end": 28.59,
-        "text": "We tried to beat the odds, or what stereotype idea people think of Mexico"
-      },
-      {
-        "start": 28.59,
-        "end": 30.45,
-        "text": "slash Hispanic culture."
-      },
-      {
-        "start": 31.36,
-        "end": 35.0,
-        "text": "At the age of 14, I was married to a 22-year-old man."
-      },
-      {
-        "start": 35.74,
-        "end": 39.3,
-        "text": "This man was authorized to live in America due to his employment."
-      },
-      {
-        "start": 40.1,
-        "end": 42.4,
-        "text": "I went through domestic violence with my husband,"
-      },
-      {
-        "start": 42.4,
-        "end": 45.52,
-        "text": "the same violence I endured from earlier years of childhood,"
-      },
-      {
-        "start": 46.16,
-        "end": 48.94,
-        "text": "which led CPS to removing me from my home."
-      },
-      {
-        "start": 49.76,
-        "end": 52.26,
-        "text": "I thought he would protect me, but I was wrong."
-      },
-      {
-        "start": 53.24,
-        "end": 55.96,
-        "text": "He was later deported after a gruesome assault,"
-      },
-      {
-        "start": 56.12,
-        "end": 58.6,
-        "text": "which caused me to be left in critical condition at the hospital."
-      },
-      {
-        "start": 59.14,
-        "end": 62.18,
-        "text": "Not only did he leave me mentally and physically vulnerable,"
-      },
-      {
-        "start": 63.06,
-        "end": 69.62,
-        "text": "he left me with five beautiful children."
-      },
-      {
-        "start": 69.62,
-        "end": 72.24,
-        "text": "Out of my five children, three of them are special needs."
-      },
-      {
-        "start": 73.08,
-        "end": 77.18,
-        "text": "I had to learn how to take care and nurture them."
-      },
-      {
-        "start": 77.28,
-        "end": 78.82,
-        "text": "As of now, I am married to another snake."
-      },
-      {
-        "start": 79.58,
-        "end": 83.0,
-        "text": "Another man tried to beat me, hurt me, and was running into my daughter's room."
-      },
-      {
-        "start": 83.14,
-        "end": 84.86,
-        "text": "There he was calling. I was shocked."
-      },
-      {
-        "start": 85.48,
-        "end": 88.26,
-        "text": "When the police arrived, I was the one who was being put in the..."
+        "start": 59.9,
+        "end": 88.16,
+        "text": "did he leave me mentally and physically vulnerable, he left me with five beautiful children. Out of my five children, three of them have special needs. I had to soon learn how to take care and nurture them. As of now, I am married to another snake. Another man tried to beat me, hurt me, and was running into my daughter's room. There he was calling. I was shocked. When the police arrived, I was the one who was being put to death.",
+        "words": [
+          {
+            "start": 59.9,
+            "end": 60.08,
+            "word": "did"
+          },
+          {
+            "start": 60.08,
+            "end": 60.24,
+            "word": "he"
+          },
+          {
+            "start": 60.24,
+            "end": 60.46,
+            "word": "leave"
+          },
+          {
+            "start": 60.46,
+            "end": 60.64,
+            "word": "me"
+          },
+          {
+            "start": 60.64,
+            "end": 61.0,
+            "word": "mentally"
+          },
+          {
+            "start": 61.0,
+            "end": 61.2,
+            "word": "and"
+          },
+          {
+            "start": 61.2,
+            "end": 61.5,
+            "word": "physically"
+          },
+          {
+            "start": 61.5,
+            "end": 61.86,
+            "word": "vulnerable,"
+          },
+          {
+            "start": 62.46,
+            "end": 63.04,
+            "word": "he"
+          },
+          {
+            "start": 63.04,
+            "end": 63.3,
+            "word": "left"
+          },
+          {
+            "start": 63.3,
+            "end": 63.5,
+            "word": "me"
+          },
+          {
+            "start": 63.5,
+            "end": 63.66,
+            "word": "with"
+          },
+          {
+            "start": 63.66,
+            "end": 64.08,
+            "word": "five"
+          },
+          {
+            "start": 64.08,
+            "end": 66.68,
+            "word": "beautiful"
+          },
+          {
+            "start": 66.68,
+            "end": 69.42,
+            "word": "children."
+          },
+          {
+            "start": 69.52,
+            "end": 69.86,
+            "word": "Out"
+          },
+          {
+            "start": 69.86,
+            "end": 70.0,
+            "word": "of"
+          },
+          {
+            "start": 70.0,
+            "end": 70.1,
+            "word": "my"
+          },
+          {
+            "start": 70.1,
+            "end": 70.34,
+            "word": "five"
+          },
+          {
+            "start": 70.34,
+            "end": 70.76,
+            "word": "children,"
+          },
+          {
+            "start": 70.88,
+            "end": 71.04,
+            "word": "three"
+          },
+          {
+            "start": 71.04,
+            "end": 71.18,
+            "word": "of"
+          },
+          {
+            "start": 71.18,
+            "end": 71.34,
+            "word": "them"
+          },
+          {
+            "start": 71.34,
+            "end": 71.48,
+            "word": "have"
+          },
+          {
+            "start": 71.48,
+            "end": 71.8,
+            "word": "special"
+          },
+          {
+            "start": 71.8,
+            "end": 72.0,
+            "word": "needs."
+          },
+          {
+            "start": 72.84,
+            "end": 73.24,
+            "word": "I"
+          },
+          {
+            "start": 73.24,
+            "end": 73.48,
+            "word": "had"
+          },
+          {
+            "start": 73.48,
+            "end": 73.62,
+            "word": "to"
+          },
+          {
+            "start": 73.62,
+            "end": 73.84,
+            "word": "soon"
+          },
+          {
+            "start": 73.84,
+            "end": 74.28,
+            "word": "learn"
+          },
+          {
+            "start": 74.28,
+            "end": 75.52,
+            "word": "how"
+          },
+          {
+            "start": 75.52,
+            "end": 75.68,
+            "word": "to"
+          },
+          {
+            "start": 75.68,
+            "end": 75.92,
+            "word": "take"
+          },
+          {
+            "start": 75.92,
+            "end": 76.16,
+            "word": "care"
+          },
+          {
+            "start": 76.16,
+            "end": 76.5,
+            "word": "and"
+          },
+          {
+            "start": 76.5,
+            "end": 76.76,
+            "word": "nurture"
+          },
+          {
+            "start": 76.76,
+            "end": 77.04,
+            "word": "them."
+          },
+          {
+            "start": 77.16,
+            "end": 77.34,
+            "word": "As"
+          },
+          {
+            "start": 77.34,
+            "end": 77.48,
+            "word": "of"
+          },
+          {
+            "start": 77.48,
+            "end": 77.7,
+            "word": "now,"
+          },
+          {
+            "start": 77.78,
+            "end": 77.9,
+            "word": "I"
+          },
+          {
+            "start": 77.9,
+            "end": 78.0,
+            "word": "am"
+          },
+          {
+            "start": 78.0,
+            "end": 78.26,
+            "word": "married"
+          },
+          {
+            "start": 78.26,
+            "end": 78.42,
+            "word": "to"
+          },
+          {
+            "start": 78.42,
+            "end": 78.7,
+            "word": "another"
+          },
+          {
+            "start": 78.7,
+            "end": 79.14,
+            "word": "snake."
+          },
+          {
+            "start": 79.42,
+            "end": 79.68,
+            "word": "Another"
+          },
+          {
+            "start": 79.68,
+            "end": 79.96,
+            "word": "man"
+          },
+          {
+            "start": 79.96,
+            "end": 80.28,
+            "word": "tried"
+          },
+          {
+            "start": 80.28,
+            "end": 80.46,
+            "word": "to"
+          },
+          {
+            "start": 80.46,
+            "end": 80.64,
+            "word": "beat"
+          },
+          {
+            "start": 80.64,
+            "end": 80.8,
+            "word": "me,"
+          },
+          {
+            "start": 80.86,
+            "end": 81.06,
+            "word": "hurt"
+          },
+          {
+            "start": 81.06,
+            "end": 81.24,
+            "word": "me,"
+          },
+          {
+            "start": 81.26,
+            "end": 81.4,
+            "word": "and"
+          },
+          {
+            "start": 81.4,
+            "end": 81.56,
+            "word": "was"
+          },
+          {
+            "start": 81.56,
+            "end": 81.86,
+            "word": "running"
+          },
+          {
+            "start": 81.86,
+            "end": 82.06,
+            "word": "into"
+          },
+          {
+            "start": 82.06,
+            "end": 82.24,
+            "word": "my"
+          },
+          {
+            "start": 82.24,
+            "end": 82.66,
+            "word": "daughter's"
+          },
+          {
+            "start": 82.66,
+            "end": 82.88,
+            "word": "room."
+          },
+          {
+            "start": 82.98,
+            "end": 83.18,
+            "word": "There"
+          },
+          {
+            "start": 83.18,
+            "end": 83.32,
+            "word": "he"
+          },
+          {
+            "start": 83.32,
+            "end": 83.48,
+            "word": "was"
+          },
+          {
+            "start": 83.48,
+            "end": 83.88,
+            "word": "calling."
+          },
+          {
+            "start": 84.06,
+            "end": 84.2,
+            "word": "I"
+          },
+          {
+            "start": 84.2,
+            "end": 84.34,
+            "word": "was"
+          },
+          {
+            "start": 84.34,
+            "end": 84.64,
+            "word": "shocked."
+          },
+          {
+            "start": 85.1,
+            "end": 85.5,
+            "word": "When"
+          },
+          {
+            "start": 85.5,
+            "end": 85.66,
+            "word": "the"
+          },
+          {
+            "start": 85.66,
+            "end": 85.96,
+            "word": "police"
+          },
+          {
+            "start": 85.96,
+            "end": 86.28,
+            "word": "arrived,"
+          },
+          {
+            "start": 86.6,
+            "end": 86.78,
+            "word": "I"
+          },
+          {
+            "start": 86.78,
+            "end": 87.0,
+            "word": "was"
+          },
+          {
+            "start": 87.0,
+            "end": 87.12,
+            "word": "the"
+          },
+          {
+            "start": 87.12,
+            "end": 87.4,
+            "word": "one"
+          },
+          {
+            "start": 87.4,
+            "end": 87.52,
+            "word": "who"
+          },
+          {
+            "start": 87.52,
+            "end": 87.6,
+            "word": "was"
+          },
+          {
+            "start": 87.6,
+            "end": 87.74,
+            "word": "being"
+          },
+          {
+            "start": 87.74,
+            "end": 87.94,
+            "word": "put"
+          },
+          {
+            "start": 87.94,
+            "end": 88.06,
+            "word": "to"
+          },
+          {
+            "start": 88.06,
+            "end": 88.16,
+            "word": "death."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "camera_shake",
     "dialogue",
     "high_motion",
     "horizontal",
-    "long"
-  ]
+    "long",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 88.235,
+      "class": "speech",
+      "confidence": 1.633
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 1.0
+  }
 }

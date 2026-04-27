@@ -568,46 +568,626 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.985,
+    "language_probability": 1.0,
     "duration_s": 49.088,
-    "text": "So I'm Dylan Wigella. I represent Garden City Inkster, Northeast Romulus, and Southeast Westland and the Michigan House. Woo-woo! You know, I've been thinking, and I think one of the things that we need to be focusing on here and talking about is this number that I can't get out of my head. $254 million, which is the amount the GEO Group profited off of private detention last year. It is immoral for people to be profiting off of what is happening to people. I'll tell you another thing, another number I can't get out of my head. $4,400. That is how many times ICE has lost in court for wrongfully detaining people since October.",
+    "text": "So I'm Dylan Wigella. I represent Garden City, Inkster, Northeast Romulus, and Southeast Westland and the Michigan House. You know, I've been thinking, and I think one of the things that we need to be focusing on here and talking about is this number that I can't get out of my head. $254 million, which is the amount that GeoGroup profited off of private detention last year. It is immoral for people to be profiting off of what is happening to people. I'll tell you another thing, another number I can't get out of my head. $4,400. That is how many times ICE has lost in court for wrongfully detaining people since October.",
     "segments": [
       {
-        "start": 3.66,
-        "end": 10.58,
-        "text": "So I'm Dylan Wigella. I represent Garden City Inkster, Northeast Romulus, and Southeast Westland and the Michigan House."
+        "start": 3.34,
+        "end": 10.36,
+        "text": "So I'm Dylan Wigella. I represent Garden City, Inkster, Northeast Romulus, and Southeast Westland and the Michigan House.",
+        "words": [
+          {
+            "start": 3.34,
+            "end": 3.84,
+            "word": "So"
+          },
+          {
+            "start": 3.84,
+            "end": 4.22,
+            "word": "I'm"
+          },
+          {
+            "start": 4.22,
+            "end": 4.42,
+            "word": "Dylan"
+          },
+          {
+            "start": 4.42,
+            "end": 4.78,
+            "word": "Wigella."
+          },
+          {
+            "start": 4.96,
+            "end": 5.18,
+            "word": "I"
+          },
+          {
+            "start": 5.18,
+            "end": 5.5,
+            "word": "represent"
+          },
+          {
+            "start": 5.5,
+            "end": 5.88,
+            "word": "Garden"
+          },
+          {
+            "start": 5.88,
+            "end": 6.1,
+            "word": "City,"
+          },
+          {
+            "start": 6.26,
+            "end": 6.6,
+            "word": "Inkster,"
+          },
+          {
+            "start": 6.78,
+            "end": 7.2,
+            "word": "Northeast"
+          },
+          {
+            "start": 7.2,
+            "end": 7.84,
+            "word": "Romulus,"
+          },
+          {
+            "start": 8.0,
+            "end": 8.28,
+            "word": "and"
+          },
+          {
+            "start": 8.28,
+            "end": 8.98,
+            "word": "Southeast"
+          },
+          {
+            "start": 8.98,
+            "end": 9.56,
+            "word": "Westland"
+          },
+          {
+            "start": 9.56,
+            "end": 9.68,
+            "word": "and"
+          },
+          {
+            "start": 9.68,
+            "end": 9.78,
+            "word": "the"
+          },
+          {
+            "start": 9.78,
+            "end": 10.0,
+            "word": "Michigan"
+          },
+          {
+            "start": 10.0,
+            "end": 10.36,
+            "word": "House."
+          }
+        ]
       },
       {
-        "start": 10.8,
-        "end": 11.16,
-        "text": "Woo-woo!"
+        "start": 11.82,
+        "end": 19.94,
+        "text": "You know, I've been thinking, and I think one of the things that we need to be focusing on here and talking about is this number that I can't get out of my head.",
+        "words": [
+          {
+            "start": 11.82,
+            "end": 12.32,
+            "word": "You"
+          },
+          {
+            "start": 12.32,
+            "end": 12.82,
+            "word": "know,"
+          },
+          {
+            "start": 12.82,
+            "end": 12.96,
+            "word": "I've"
+          },
+          {
+            "start": 12.96,
+            "end": 13.04,
+            "word": "been"
+          },
+          {
+            "start": 13.04,
+            "end": 13.34,
+            "word": "thinking,"
+          },
+          {
+            "start": 13.5,
+            "end": 13.88,
+            "word": "and"
+          },
+          {
+            "start": 13.88,
+            "end": 14.06,
+            "word": "I"
+          },
+          {
+            "start": 14.06,
+            "end": 14.28,
+            "word": "think"
+          },
+          {
+            "start": 14.28,
+            "end": 14.44,
+            "word": "one"
+          },
+          {
+            "start": 14.44,
+            "end": 14.58,
+            "word": "of"
+          },
+          {
+            "start": 14.58,
+            "end": 14.62,
+            "word": "the"
+          },
+          {
+            "start": 14.62,
+            "end": 14.88,
+            "word": "things"
+          },
+          {
+            "start": 14.88,
+            "end": 15.06,
+            "word": "that"
+          },
+          {
+            "start": 15.06,
+            "end": 15.24,
+            "word": "we"
+          },
+          {
+            "start": 15.24,
+            "end": 15.64,
+            "word": "need"
+          },
+          {
+            "start": 15.64,
+            "end": 15.82,
+            "word": "to"
+          },
+          {
+            "start": 15.82,
+            "end": 15.94,
+            "word": "be"
+          },
+          {
+            "start": 15.94,
+            "end": 16.36,
+            "word": "focusing"
+          },
+          {
+            "start": 16.36,
+            "end": 16.66,
+            "word": "on"
+          },
+          {
+            "start": 16.66,
+            "end": 16.86,
+            "word": "here"
+          },
+          {
+            "start": 16.86,
+            "end": 17.1,
+            "word": "and"
+          },
+          {
+            "start": 17.1,
+            "end": 17.42,
+            "word": "talking"
+          },
+          {
+            "start": 17.42,
+            "end": 17.72,
+            "word": "about"
+          },
+          {
+            "start": 17.72,
+            "end": 18.04,
+            "word": "is"
+          },
+          {
+            "start": 18.04,
+            "end": 18.52,
+            "word": "this"
+          },
+          {
+            "start": 18.52,
+            "end": 18.82,
+            "word": "number"
+          },
+          {
+            "start": 18.82,
+            "end": 19.02,
+            "word": "that"
+          },
+          {
+            "start": 19.02,
+            "end": 19.12,
+            "word": "I"
+          },
+          {
+            "start": 19.12,
+            "end": 19.3,
+            "word": "can't"
+          },
+          {
+            "start": 19.3,
+            "end": 19.38,
+            "word": "get"
+          },
+          {
+            "start": 19.38,
+            "end": 19.54,
+            "word": "out"
+          },
+          {
+            "start": 19.54,
+            "end": 19.62,
+            "word": "of"
+          },
+          {
+            "start": 19.62,
+            "end": 19.72,
+            "word": "my"
+          },
+          {
+            "start": 19.72,
+            "end": 19.94,
+            "word": "head."
+          }
+        ]
       },
       {
-        "start": 12.28,
-        "end": 20.06,
-        "text": "You know, I've been thinking, and I think one of the things that we need to be focusing on here and talking about is this number that I can't get out of my head."
+        "start": 21.28,
+        "end": 29.2,
+        "text": "$254 million, which is the amount that GeoGroup profited off of private detention last year.",
+        "words": [
+          {
+            "start": 21.28,
+            "end": 21.78,
+            "word": "$254"
+          },
+          {
+            "start": 21.78,
+            "end": 22.18,
+            "word": "million,"
+          },
+          {
+            "start": 22.54,
+            "end": 23.68,
+            "word": "which"
+          },
+          {
+            "start": 23.68,
+            "end": 23.84,
+            "word": "is"
+          },
+          {
+            "start": 23.84,
+            "end": 23.96,
+            "word": "the"
+          },
+          {
+            "start": 23.96,
+            "end": 24.32,
+            "word": "amount"
+          },
+          {
+            "start": 24.32,
+            "end": 24.82,
+            "word": "that"
+          },
+          {
+            "start": 24.82,
+            "end": 25.42,
+            "word": "GeoGroup"
+          },
+          {
+            "start": 25.42,
+            "end": 26.2,
+            "word": "profited"
+          },
+          {
+            "start": 26.2,
+            "end": 26.42,
+            "word": "off"
+          },
+          {
+            "start": 26.42,
+            "end": 26.64,
+            "word": "of"
+          },
+          {
+            "start": 26.64,
+            "end": 28.0,
+            "word": "private"
+          },
+          {
+            "start": 28.0,
+            "end": 28.38,
+            "word": "detention"
+          },
+          {
+            "start": 28.38,
+            "end": 28.78,
+            "word": "last"
+          },
+          {
+            "start": 28.78,
+            "end": 29.2,
+            "word": "year."
+          }
+        ]
       },
       {
-        "start": 21.48,
-        "end": 29.26,
-        "text": "$254 million, which is the amount the GEO Group profited off of private detention last year."
+        "start": 30.0,
+        "end": 35.16,
+        "text": "It is immoral for people to be profiting off of what is happening to people.",
+        "words": [
+          {
+            "start": 30.0,
+            "end": 30.1,
+            "word": "It"
+          },
+          {
+            "start": 30.1,
+            "end": 30.24,
+            "word": "is"
+          },
+          {
+            "start": 30.24,
+            "end": 30.92,
+            "word": "immoral"
+          },
+          {
+            "start": 30.92,
+            "end": 31.5,
+            "word": "for"
+          },
+          {
+            "start": 31.5,
+            "end": 31.86,
+            "word": "people"
+          },
+          {
+            "start": 31.86,
+            "end": 32.68,
+            "word": "to"
+          },
+          {
+            "start": 32.68,
+            "end": 32.82,
+            "word": "be"
+          },
+          {
+            "start": 32.82,
+            "end": 33.42,
+            "word": "profiting"
+          },
+          {
+            "start": 33.42,
+            "end": 33.78,
+            "word": "off"
+          },
+          {
+            "start": 33.78,
+            "end": 33.94,
+            "word": "of"
+          },
+          {
+            "start": 33.94,
+            "end": 34.08,
+            "word": "what"
+          },
+          {
+            "start": 34.08,
+            "end": 34.24,
+            "word": "is"
+          },
+          {
+            "start": 34.24,
+            "end": 34.6,
+            "word": "happening"
+          },
+          {
+            "start": 34.6,
+            "end": 34.88,
+            "word": "to"
+          },
+          {
+            "start": 34.88,
+            "end": 35.16,
+            "word": "people."
+          }
+        ]
       },
       {
-        "start": 29.26,
-        "end": 35.28,
-        "text": "It is immoral for people to be profiting off of what is happening to people."
+        "start": 35.54,
+        "end": 38.58,
+        "text": "I'll tell you another thing, another number I can't get out of my head.",
+        "words": [
+          {
+            "start": 35.54,
+            "end": 36.1,
+            "word": "I'll"
+          },
+          {
+            "start": 36.1,
+            "end": 36.3,
+            "word": "tell"
+          },
+          {
+            "start": 36.3,
+            "end": 36.44,
+            "word": "you"
+          },
+          {
+            "start": 36.44,
+            "end": 36.7,
+            "word": "another"
+          },
+          {
+            "start": 36.7,
+            "end": 36.98,
+            "word": "thing,"
+          },
+          {
+            "start": 37.04,
+            "end": 37.26,
+            "word": "another"
+          },
+          {
+            "start": 37.26,
+            "end": 37.54,
+            "word": "number"
+          },
+          {
+            "start": 37.54,
+            "end": 37.72,
+            "word": "I"
+          },
+          {
+            "start": 37.72,
+            "end": 37.98,
+            "word": "can't"
+          },
+          {
+            "start": 37.98,
+            "end": 38.04,
+            "word": "get"
+          },
+          {
+            "start": 38.04,
+            "end": 38.2,
+            "word": "out"
+          },
+          {
+            "start": 38.2,
+            "end": 38.26,
+            "word": "of"
+          },
+          {
+            "start": 38.26,
+            "end": 38.34,
+            "word": "my"
+          },
+          {
+            "start": 38.34,
+            "end": 38.58,
+            "word": "head."
+          }
+        ]
       },
       {
-        "start": 35.96,
-        "end": 38.72,
-        "text": "I'll tell you another thing, another number I can't get out of my head."
-      },
-      {
-        "start": 39.26,
-        "end": 47.98,
-        "text": "$4,400. That is how many times ICE has lost in court for wrongfully detaining people since October."
+        "start": 39.02,
+        "end": 47.72,
+        "text": "$4,400. That is how many times ICE has lost in court for wrongfully detaining people since October.",
+        "words": [
+          {
+            "start": 39.02,
+            "end": 39.36,
+            "word": "$4"
+          },
+          {
+            "start": 39.36,
+            "end": 40.66,
+            "word": ",400."
+          },
+          {
+            "start": 41.1,
+            "end": 41.66,
+            "word": "That"
+          },
+          {
+            "start": 41.66,
+            "end": 42.16,
+            "word": "is"
+          },
+          {
+            "start": 42.16,
+            "end": 42.42,
+            "word": "how"
+          },
+          {
+            "start": 42.42,
+            "end": 42.68,
+            "word": "many"
+          },
+          {
+            "start": 42.68,
+            "end": 43.24,
+            "word": "times"
+          },
+          {
+            "start": 43.24,
+            "end": 43.74,
+            "word": "ICE"
+          },
+          {
+            "start": 43.74,
+            "end": 44.18,
+            "word": "has"
+          },
+          {
+            "start": 44.18,
+            "end": 44.7,
+            "word": "lost"
+          },
+          {
+            "start": 44.7,
+            "end": 45.04,
+            "word": "in"
+          },
+          {
+            "start": 45.04,
+            "end": 45.38,
+            "word": "court"
+          },
+          {
+            "start": 45.38,
+            "end": 45.64,
+            "word": "for"
+          },
+          {
+            "start": 45.64,
+            "end": 46.16,
+            "word": "wrongfully"
+          },
+          {
+            "start": 46.16,
+            "end": 46.72,
+            "word": "detaining"
+          },
+          {
+            "start": 46.72,
+            "end": 46.96,
+            "word": "people"
+          },
+          {
+            "start": 46.96,
+            "end": 47.3,
+            "word": "since"
+          },
+          {
+            "start": 47.3,
+            "end": 47.72,
+            "word": "October."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ICE",
@@ -617,6 +1197,32 @@
     "dialogue",
     "high_motion",
     "horizontal",
-    "immigrant"
-  ]
+    "immigrant",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 1.5,
+      "class": "speech",
+      "confidence": 0.168
+    },
+    {
+      "t0": 0.75,
+      "t1": 2.25,
+      "class": "ambient",
+      "confidence": 0.638
+    },
+    {
+      "t0": 1.5,
+      "t1": 49.088,
+      "class": "speech",
+      "confidence": 2.005
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.97
+  }
 }

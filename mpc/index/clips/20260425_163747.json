@@ -347,66 +347,451 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.991,
+    "language_probability": 1.0,
     "duration_s": 29.8453125,
-    "text": "Do not know who I am. My name is Donovan McKinney. I currently serve as a state representative in the 11th House District. If you know anything about 8 Mile, you heard about the 8 Mile movie? Yeah, come on. That's my district. So I represent M&M's Old Trailer Park and Warren also represent where he grew up at on the other side of 8 Mile in Detroit. Let me tell you why I'm here. ICE is not new to our community. So how many people know that?",
+    "text": "I do not know who I am. My name is Donovan McKinney. I currently serve as a state representative in the 11th House District. If you know anything about 8 Mile, you heard about the 8 Mile movie? That's my district. So I represent M&M's Old Trailer Park and Warren also represents where he grew up at on the other side of 8 Mile in Detroit. Let me tell you why I'm here. ICE is not new to our community. How many people know that?",
     "segments": [
       {
         "start": 0.0,
-        "end": 1.68,
-        "text": "Do not know who I am."
-      },
-      {
-        "start": 1.68,
-        "end": 3.44,
-        "text": "My name is Donovan McKinney."
-      },
-      {
-        "start": 3.44,
-        "end": 7.24,
-        "text": "I currently serve as a state representative in the 11th House District."
-      },
-      {
-        "start": 7.24,
-        "end": 10.64,
-        "text": "If you know anything about 8 Mile, you heard about the 8 Mile movie?"
-      },
-      {
-        "start": 10.64,
-        "end": 12.08,
-        "text": "Yeah, come on."
-      },
-      {
-        "start": 12.08,
-        "end": 13.08,
-        "text": "That's my district."
-      },
-      {
-        "start": 13.08,
-        "end": 16.28,
-        "text": "So I represent M&M's Old Trailer Park and"
-      },
-      {
-        "start": 16.28,
-        "end": 21.56,
-        "text": "Warren also represent where he grew up at on the other side of 8 Mile in Detroit."
-      },
-      {
-        "start": 21.56,
-        "end": 26.42,
-        "text": "Let me tell you why I'm here."
-      },
-      {
-        "start": 26.42,
-        "end": 28.58,
-        "text": "ICE is not new to our community."
-      },
-      {
-        "start": 28.58,
-        "end": 29.58,
-        "text": "So how many people know that?"
+        "end": 29.48,
+        "text": "I do not know who I am. My name is Donovan McKinney. I currently serve as a state representative in the 11th House District. If you know anything about 8 Mile, you heard about the 8 Mile movie? That's my district. So I represent M&M's Old Trailer Park and Warren also represents where he grew up at on the other side of 8 Mile in Detroit. Let me tell you why I'm here. ICE is not new to our community. How many people know that?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.1,
+            "word": "I"
+          },
+          {
+            "start": 0.1,
+            "end": 0.14,
+            "word": "do"
+          },
+          {
+            "start": 0.14,
+            "end": 0.36,
+            "word": "not"
+          },
+          {
+            "start": 0.36,
+            "end": 0.54,
+            "word": "know"
+          },
+          {
+            "start": 0.54,
+            "end": 0.68,
+            "word": "who"
+          },
+          {
+            "start": 0.68,
+            "end": 0.88,
+            "word": "I"
+          },
+          {
+            "start": 0.88,
+            "end": 1.26,
+            "word": "am."
+          },
+          {
+            "start": 1.28,
+            "end": 1.72,
+            "word": "My"
+          },
+          {
+            "start": 1.72,
+            "end": 1.9,
+            "word": "name"
+          },
+          {
+            "start": 1.9,
+            "end": 2.0,
+            "word": "is"
+          },
+          {
+            "start": 2.0,
+            "end": 2.38,
+            "word": "Donovan"
+          },
+          {
+            "start": 2.38,
+            "end": 2.92,
+            "word": "McKinney."
+          },
+          {
+            "start": 3.02,
+            "end": 3.44,
+            "word": "I"
+          },
+          {
+            "start": 3.44,
+            "end": 3.74,
+            "word": "currently"
+          },
+          {
+            "start": 3.74,
+            "end": 4.1,
+            "word": "serve"
+          },
+          {
+            "start": 4.1,
+            "end": 4.3,
+            "word": "as"
+          },
+          {
+            "start": 4.3,
+            "end": 4.4,
+            "word": "a"
+          },
+          {
+            "start": 4.4,
+            "end": 4.62,
+            "word": "state"
+          },
+          {
+            "start": 4.62,
+            "end": 5.2,
+            "word": "representative"
+          },
+          {
+            "start": 5.2,
+            "end": 5.92,
+            "word": "in"
+          },
+          {
+            "start": 5.92,
+            "end": 5.98,
+            "word": "the"
+          },
+          {
+            "start": 5.98,
+            "end": 6.34,
+            "word": "11th"
+          },
+          {
+            "start": 6.34,
+            "end": 6.52,
+            "word": "House"
+          },
+          {
+            "start": 6.52,
+            "end": 6.94,
+            "word": "District."
+          },
+          {
+            "start": 7.18,
+            "end": 7.32,
+            "word": "If"
+          },
+          {
+            "start": 7.32,
+            "end": 7.38,
+            "word": "you"
+          },
+          {
+            "start": 7.38,
+            "end": 7.52,
+            "word": "know"
+          },
+          {
+            "start": 7.52,
+            "end": 7.72,
+            "word": "anything"
+          },
+          {
+            "start": 7.72,
+            "end": 8.14,
+            "word": "about"
+          },
+          {
+            "start": 8.14,
+            "end": 8.4,
+            "word": "8"
+          },
+          {
+            "start": 8.4,
+            "end": 8.66,
+            "word": "Mile,"
+          },
+          {
+            "start": 8.88,
+            "end": 9.28,
+            "word": "you"
+          },
+          {
+            "start": 9.28,
+            "end": 9.54,
+            "word": "heard"
+          },
+          {
+            "start": 9.54,
+            "end": 9.74,
+            "word": "about"
+          },
+          {
+            "start": 9.74,
+            "end": 9.88,
+            "word": "the"
+          },
+          {
+            "start": 9.88,
+            "end": 10.02,
+            "word": "8"
+          },
+          {
+            "start": 10.02,
+            "end": 10.14,
+            "word": "Mile"
+          },
+          {
+            "start": 10.14,
+            "end": 10.5,
+            "word": "movie?"
+          },
+          {
+            "start": 11.84,
+            "end": 12.28,
+            "word": "That's"
+          },
+          {
+            "start": 12.28,
+            "end": 12.38,
+            "word": "my"
+          },
+          {
+            "start": 12.38,
+            "end": 12.84,
+            "word": "district."
+          },
+          {
+            "start": 13.06,
+            "end": 13.18,
+            "word": "So"
+          },
+          {
+            "start": 13.18,
+            "end": 13.7,
+            "word": "I"
+          },
+          {
+            "start": 13.7,
+            "end": 14.2,
+            "word": "represent"
+          },
+          {
+            "start": 14.2,
+            "end": 14.62,
+            "word": "M"
+          },
+          {
+            "start": 14.62,
+            "end": 14.92,
+            "word": "&M's"
+          },
+          {
+            "start": 14.92,
+            "end": 15.04,
+            "word": "Old"
+          },
+          {
+            "start": 15.04,
+            "end": 15.38,
+            "word": "Trailer"
+          },
+          {
+            "start": 15.38,
+            "end": 15.66,
+            "word": "Park"
+          },
+          {
+            "start": 15.66,
+            "end": 16.12,
+            "word": "and"
+          },
+          {
+            "start": 16.12,
+            "end": 16.54,
+            "word": "Warren"
+          },
+          {
+            "start": 16.54,
+            "end": 16.88,
+            "word": "also"
+          },
+          {
+            "start": 16.88,
+            "end": 17.3,
+            "word": "represents"
+          },
+          {
+            "start": 17.3,
+            "end": 17.64,
+            "word": "where"
+          },
+          {
+            "start": 17.64,
+            "end": 17.76,
+            "word": "he"
+          },
+          {
+            "start": 17.76,
+            "end": 17.96,
+            "word": "grew"
+          },
+          {
+            "start": 17.96,
+            "end": 18.14,
+            "word": "up"
+          },
+          {
+            "start": 18.14,
+            "end": 18.36,
+            "word": "at"
+          },
+          {
+            "start": 18.36,
+            "end": 18.92,
+            "word": "on"
+          },
+          {
+            "start": 18.92,
+            "end": 19.02,
+            "word": "the"
+          },
+          {
+            "start": 19.02,
+            "end": 19.26,
+            "word": "other"
+          },
+          {
+            "start": 19.26,
+            "end": 20.16,
+            "word": "side"
+          },
+          {
+            "start": 20.16,
+            "end": 20.3,
+            "word": "of"
+          },
+          {
+            "start": 20.3,
+            "end": 20.44,
+            "word": "8"
+          },
+          {
+            "start": 20.44,
+            "end": 20.6,
+            "word": "Mile"
+          },
+          {
+            "start": 20.6,
+            "end": 20.74,
+            "word": "in"
+          },
+          {
+            "start": 20.74,
+            "end": 20.92,
+            "word": "Detroit."
+          },
+          {
+            "start": 21.98,
+            "end": 22.42,
+            "word": "Let"
+          },
+          {
+            "start": 22.42,
+            "end": 23.24,
+            "word": "me"
+          },
+          {
+            "start": 23.24,
+            "end": 23.44,
+            "word": "tell"
+          },
+          {
+            "start": 23.44,
+            "end": 23.58,
+            "word": "you"
+          },
+          {
+            "start": 23.58,
+            "end": 23.74,
+            "word": "why"
+          },
+          {
+            "start": 23.74,
+            "end": 23.92,
+            "word": "I'm"
+          },
+          {
+            "start": 23.92,
+            "end": 24.1,
+            "word": "here."
+          },
+          {
+            "start": 26.18,
+            "end": 26.62,
+            "word": "ICE"
+          },
+          {
+            "start": 26.62,
+            "end": 26.88,
+            "word": "is"
+          },
+          {
+            "start": 26.88,
+            "end": 27.2,
+            "word": "not"
+          },
+          {
+            "start": 27.2,
+            "end": 27.48,
+            "word": "new"
+          },
+          {
+            "start": 27.48,
+            "end": 27.78,
+            "word": "to"
+          },
+          {
+            "start": 27.78,
+            "end": 28.0,
+            "word": "our"
+          },
+          {
+            "start": 28.0,
+            "end": 28.4,
+            "word": "community."
+          },
+          {
+            "start": 28.54,
+            "end": 28.68,
+            "word": "How"
+          },
+          {
+            "start": 28.68,
+            "end": 28.86,
+            "word": "many"
+          },
+          {
+            "start": 28.86,
+            "end": 29.08,
+            "word": "people"
+          },
+          {
+            "start": 29.08,
+            "end": 29.3,
+            "word": "know"
+          },
+          {
+            "start": 29.3,
+            "end": 29.48,
+            "word": "that?"
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ICE",
@@ -415,5 +800,18 @@
     "high_motion",
     "horizontal",
     "speech"
-  ]
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 29.845,
+      "class": "speech",
+      "confidence": 2.008
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 1.0
+  }
 }

@@ -317,32 +317,270 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.835,
+    "language_probability": 1.0,
     "duration_s": 27.0506875,
-    "text": "Let's keep fighting, let's keep fighting, let's be all together. I was the member of Congress to bring legislation to abolish the fucking ICE. And when we saw, when we saw...",
+    "text": "We fight. We win. And let's keep fighting. Let's keep fighting. Let's be all together. I was the member of Congress to bring legislation to abolish the fucking ICE. And when we saw, when we saw the ICE.",
     "segments": [
       {
         "start": 0.0,
-        "end": 7.73,
-        "text": "Let's keep fighting, let's keep fighting, let's be all together."
+        "end": 7.34,
+        "text": "We fight. We win. And let's keep fighting. Let's keep fighting. Let's be all together.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.12,
+            "word": "We"
+          },
+          {
+            "start": 0.12,
+            "end": 0.64,
+            "word": "fight."
+          },
+          {
+            "start": 0.9,
+            "end": 1.56,
+            "word": "We"
+          },
+          {
+            "start": 1.56,
+            "end": 1.9,
+            "word": "win."
+          },
+          {
+            "start": 2.76,
+            "end": 3.6,
+            "word": "And"
+          },
+          {
+            "start": 3.6,
+            "end": 4.0,
+            "word": "let's"
+          },
+          {
+            "start": 4.0,
+            "end": 4.22,
+            "word": "keep"
+          },
+          {
+            "start": 4.22,
+            "end": 4.8,
+            "word": "fighting."
+          },
+          {
+            "start": 5.0,
+            "end": 5.52,
+            "word": "Let's"
+          },
+          {
+            "start": 5.52,
+            "end": 5.72,
+            "word": "keep"
+          },
+          {
+            "start": 5.72,
+            "end": 6.22,
+            "word": "fighting."
+          },
+          {
+            "start": 6.28,
+            "end": 6.62,
+            "word": "Let's"
+          },
+          {
+            "start": 6.62,
+            "end": 6.64,
+            "word": "be"
+          },
+          {
+            "start": 6.64,
+            "end": 6.82,
+            "word": "all"
+          },
+          {
+            "start": 6.82,
+            "end": 7.34,
+            "word": "together."
+          }
+        ]
       },
       {
-        "start": 8.57,
-        "end": 18.03,
-        "text": "I was the member of Congress to bring legislation to abolish the fucking ICE."
+        "start": 7.82,
+        "end": 17.8,
+        "text": "I was the member of Congress to bring legislation to abolish the fucking ICE.",
+        "words": [
+          {
+            "start": 7.82,
+            "end": 8.66,
+            "word": "I"
+          },
+          {
+            "start": 8.66,
+            "end": 9.14,
+            "word": "was"
+          },
+          {
+            "start": 9.14,
+            "end": 9.36,
+            "word": "the"
+          },
+          {
+            "start": 9.36,
+            "end": 10.42,
+            "word": "member"
+          },
+          {
+            "start": 10.42,
+            "end": 10.78,
+            "word": "of"
+          },
+          {
+            "start": 10.78,
+            "end": 11.46,
+            "word": "Congress"
+          },
+          {
+            "start": 11.46,
+            "end": 12.6,
+            "word": "to"
+          },
+          {
+            "start": 12.6,
+            "end": 12.96,
+            "word": "bring"
+          },
+          {
+            "start": 12.96,
+            "end": 14.12,
+            "word": "legislation"
+          },
+          {
+            "start": 14.12,
+            "end": 15.3,
+            "word": "to"
+          },
+          {
+            "start": 15.3,
+            "end": 16.44,
+            "word": "abolish"
+          },
+          {
+            "start": 16.44,
+            "end": 16.74,
+            "word": "the"
+          },
+          {
+            "start": 16.74,
+            "end": 17.16,
+            "word": "fucking"
+          },
+          {
+            "start": 17.16,
+            "end": 17.8,
+            "word": "ICE."
+          }
+        ]
       },
       {
-        "start": 18.03,
-        "end": 25.97,
-        "text": "And when we saw, when we saw..."
+        "start": 21.88,
+        "end": 26.72,
+        "text": "And when we saw, when we saw the ICE.",
+        "words": [
+          {
+            "start": 21.88,
+            "end": 22.72,
+            "word": "And"
+          },
+          {
+            "start": 22.72,
+            "end": 23.14,
+            "word": "when"
+          },
+          {
+            "start": 23.14,
+            "end": 23.46,
+            "word": "we"
+          },
+          {
+            "start": 23.46,
+            "end": 23.9,
+            "word": "saw,"
+          },
+          {
+            "start": 24.12,
+            "end": 24.84,
+            "word": "when"
+          },
+          {
+            "start": 24.84,
+            "end": 25.1,
+            "word": "we"
+          },
+          {
+            "start": 25.1,
+            "end": 25.74,
+            "word": "saw"
+          },
+          {
+            "start": 25.74,
+            "end": 26.52,
+            "word": "the"
+          },
+          {
+            "start": 26.52,
+            "end": 26.72,
+            "word": "ICE."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ICE",
-    "ambient",
     "camera_shake",
+    "dialogue",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "song",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 2.25,
+      "class": "speech",
+      "confidence": 0.865
+    },
+    {
+      "t0": 1.5,
+      "t1": 3.0,
+      "class": "ambient",
+      "confidence": 0.932
+    },
+    {
+      "t0": 2.25,
+      "t1": 19.5,
+      "class": "speech",
+      "confidence": 1.822
+    },
+    {
+      "t0": 18.75,
+      "t1": 21.0,
+      "class": "song",
+      "confidence": 0.829
+    },
+    {
+      "t0": 20.25,
+      "t1": 27.051,
+      "class": "speech",
+      "confidence": 1.136
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.875
+  }
 }

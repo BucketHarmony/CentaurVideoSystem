@@ -75,22 +75,76 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.934,
+    "language_probability": 1.0,
     "duration_s": 5.504,
     "text": "Stand there or stand around. Thank you.",
     "segments": [
       {
-        "start": 0.14,
-        "end": 2.14,
-        "text": "Stand there or stand around. Thank you."
+        "start": 0.0,
+        "end": 1.98,
+        "text": "Stand there or stand around. Thank you.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.1,
+            "word": "Stand"
+          },
+          {
+            "start": 0.1,
+            "end": 0.2,
+            "word": "there"
+          },
+          {
+            "start": 0.2,
+            "end": 0.46,
+            "word": "or"
+          },
+          {
+            "start": 0.46,
+            "end": 0.72,
+            "word": "stand"
+          },
+          {
+            "start": 0.72,
+            "end": 1.1,
+            "word": "around."
+          },
+          {
+            "start": 1.28,
+            "end": 1.62,
+            "word": "Thank"
+          },
+          {
+            "start": 1.62,
+            "end": 1.98,
+            "word": "you."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ambient",
     "camera_shake",
     "high_motion",
     "horizontal",
-    "short"
-  ]
+    "short",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 5.504,
+      "class": "speech",
+      "confidence": 1.243
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 1.0
+  }
 }

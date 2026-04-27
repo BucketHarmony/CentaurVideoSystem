@@ -1,0 +1,282 @@
+{
+  "meta": {
+    "path": "E:\\AI\\CVS\\raw\\MPC\\Ice Out Romulus\\IMG_0841.MOV",
+    "filename": "IMG_0841.MOV",
+    "duration_s": 17.903333,
+    "size_bytes": 26087447,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "codec": "hevc"
+  },
+  "motion_timeline": [
+    {
+      "t": 0.5,
+      "motion": 33.287
+    },
+    {
+      "t": 1.0,
+      "motion": 35.64
+    },
+    {
+      "t": 1.5,
+      "motion": 38.315
+    },
+    {
+      "t": 2.0,
+      "motion": 30.728
+    },
+    {
+      "t": 2.5,
+      "motion": 37.102
+    },
+    {
+      "t": 3.001,
+      "motion": 49.436
+    },
+    {
+      "t": 3.501,
+      "motion": 58.818
+    },
+    {
+      "t": 4.001,
+      "motion": 60.531
+    },
+    {
+      "t": 4.501,
+      "motion": 55.998
+    },
+    {
+      "t": 5.001,
+      "motion": 54.315
+    },
+    {
+      "t": 5.501,
+      "motion": 50.239
+    },
+    {
+      "t": 6.001,
+      "motion": 56.675
+    },
+    {
+      "t": 6.501,
+      "motion": 53.183
+    },
+    {
+      "t": 7.001,
+      "motion": 54.211
+    },
+    {
+      "t": 7.501,
+      "motion": 55.105
+    },
+    {
+      "t": 8.001,
+      "motion": 49.34
+    },
+    {
+      "t": 8.502,
+      "motion": 46.165
+    },
+    {
+      "t": 9.002,
+      "motion": 43.412
+    },
+    {
+      "t": 9.502,
+      "motion": 45.339
+    },
+    {
+      "t": 10.002,
+      "motion": 57.219
+    },
+    {
+      "t": 10.502,
+      "motion": 61.068
+    },
+    {
+      "t": 11.002,
+      "motion": 60.496
+    },
+    {
+      "t": 11.502,
+      "motion": 54.654
+    },
+    {
+      "t": 12.002,
+      "motion": 56.511
+    },
+    {
+      "t": 12.502,
+      "motion": 56.132
+    },
+    {
+      "t": 13.002,
+      "motion": 49.62
+    },
+    {
+      "t": 13.503,
+      "motion": 51.196
+    },
+    {
+      "t": 14.003,
+      "motion": 48.526
+    },
+    {
+      "t": 14.503,
+      "motion": 47.533
+    },
+    {
+      "t": 15.003,
+      "motion": 46.677
+    },
+    {
+      "t": 15.503,
+      "motion": 45.88
+    },
+    {
+      "t": 16.003,
+      "motion": 43.19
+    },
+    {
+      "t": 16.503,
+      "motion": 35.959
+    },
+    {
+      "t": 17.003,
+      "motion": 41.409
+    },
+    {
+      "t": 17.503,
+      "motion": 39.06
+    }
+  ],
+  "scenes": [
+    {
+      "idx": 0,
+      "t": 0.0,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s00_t0000.jpg"
+    },
+    {
+      "idx": 1,
+      "t": 1.5,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s01_t0001.jpg"
+    },
+    {
+      "idx": 2,
+      "t": 3.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s02_t0003.jpg"
+    },
+    {
+      "idx": 3,
+      "t": 4.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s03_t0004.jpg"
+    },
+    {
+      "idx": 4,
+      "t": 6.001,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s04_t0006.jpg"
+    },
+    {
+      "idx": 5,
+      "t": 7.501,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s05_t0007.jpg"
+    },
+    {
+      "idx": 6,
+      "t": 9.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s06_t0009.jpg"
+    },
+    {
+      "idx": 7,
+      "t": 10.502,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s07_t0010.jpg"
+    },
+    {
+      "idx": 8,
+      "t": 12.002,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s08_t0012.jpg"
+    },
+    {
+      "idx": 9,
+      "t": 13.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s09_t0013.jpg"
+    },
+    {
+      "idx": 10,
+      "t": 15.003,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s10_t0015.jpg"
+    },
+    {
+      "idx": 11,
+      "t": 16.503,
+      "path": "E:\\AI\\CVS\\mpc\\index\\thumbnails\\IMG_0841_s11_t0016.jpg"
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "language_probability": 1.0,
+    "duration_s": 17.9186875,
+    "text": "Close the camps!",
+    "segments": [
+      {
+        "start": 10.74,
+        "end": 14.92,
+        "text": "Close the camps!",
+        "words": [
+          {
+            "start": 10.74,
+            "end": 12.14,
+            "word": "Close"
+          },
+          {
+            "start": 12.14,
+            "end": 12.26,
+            "word": "the"
+          },
+          {
+            "start": 12.26,
+            "end": 14.92,
+            "word": "camps!"
+          }
+        ]
+      }
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
+  },
+  "tags": [
+    "ambient",
+    "camera_shake",
+    "high_motion",
+    "horizontal",
+    "song",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 6.0,
+      "class": "speech",
+      "confidence": 0.874
+    },
+    {
+      "t0": 5.25,
+      "t1": 6.75,
+      "class": "song",
+      "confidence": 0.267
+    },
+    {
+      "t0": 6.0,
+      "t1": 17.919,
+      "class": "speech",
+      "confidence": 1.013
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.923
+  }
+}

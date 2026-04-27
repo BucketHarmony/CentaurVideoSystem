@@ -687,41 +687,293 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.994,
+    "language_probability": 1.0,
     "duration_s": 59.4133125,
-    "text": "Okay, thank you. Just going down real quick. Thank you. Right there. That's how I feel. You want to know how I feel about this guy?",
+    "text": "Okay, thank you. Just going down real quick. Thank you. Thank you. It really varies. How do you really feel about ICE? Right there. That's how I feel. You want to know how I feel about this guy?",
     "segments": [
       {
         "start": 0.0,
-        "end": 1.0,
-        "text": "Okay, thank you."
+        "end": 0.92,
+        "text": "Okay, thank you.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.34,
+            "word": "Okay,"
+          },
+          {
+            "start": 0.36,
+            "end": 0.64,
+            "word": "thank"
+          },
+          {
+            "start": 0.64,
+            "end": 0.92,
+            "word": "you."
+          }
+        ]
       },
       {
-        "start": 16.02,
-        "end": 18.94,
-        "text": "Just going down real quick."
+        "start": 15.32,
+        "end": 17.16,
+        "text": "Just going down real quick.",
+        "words": [
+          {
+            "start": 15.32,
+            "end": 15.88,
+            "word": "Just"
+          },
+          {
+            "start": 15.88,
+            "end": 16.44,
+            "word": "going"
+          },
+          {
+            "start": 16.44,
+            "end": 16.68,
+            "word": "down"
+          },
+          {
+            "start": 16.68,
+            "end": 16.88,
+            "word": "real"
+          },
+          {
+            "start": 16.88,
+            "end": 17.16,
+            "word": "quick."
+          }
+        ]
       },
       {
-        "start": 28.58,
-        "end": 29.58,
-        "text": "Thank you."
+        "start": 23.5,
+        "end": 24.62,
+        "text": "Thank you.",
+        "words": [
+          {
+            "start": 23.5,
+            "end": 24.06,
+            "word": "Thank"
+          },
+          {
+            "start": 24.06,
+            "end": 24.62,
+            "word": "you."
+          }
+        ]
       },
       {
-        "start": 49.46,
-        "end": 51.46,
-        "text": "Right there. That's how I feel."
+        "start": 38.72,
+        "end": 39.76,
+        "text": "Thank you.",
+        "words": [
+          {
+            "start": 38.72,
+            "end": 39.24,
+            "word": "Thank"
+          },
+          {
+            "start": 39.24,
+            "end": 39.76,
+            "word": "you."
+          }
+        ]
       },
       {
-        "start": 51.46,
-        "end": 53.46,
-        "text": "You want to know how I feel about this guy?"
+        "start": 41.84,
+        "end": 43.36,
+        "text": "It really varies.",
+        "words": [
+          {
+            "start": 41.84,
+            "end": 42.36,
+            "word": "It"
+          },
+          {
+            "start": 42.36,
+            "end": 42.88,
+            "word": "really"
+          },
+          {
+            "start": 42.88,
+            "end": 43.36,
+            "word": "varies."
+          }
+        ]
+      },
+      {
+        "start": 44.84,
+        "end": 46.86,
+        "text": "How do you really feel about ICE?",
+        "words": [
+          {
+            "start": 44.84,
+            "end": 45.36,
+            "word": "How"
+          },
+          {
+            "start": 45.36,
+            "end": 45.5,
+            "word": "do"
+          },
+          {
+            "start": 45.5,
+            "end": 45.58,
+            "word": "you"
+          },
+          {
+            "start": 45.58,
+            "end": 45.84,
+            "word": "really"
+          },
+          {
+            "start": 45.84,
+            "end": 46.16,
+            "word": "feel"
+          },
+          {
+            "start": 46.16,
+            "end": 46.46,
+            "word": "about"
+          },
+          {
+            "start": 46.46,
+            "end": 46.86,
+            "word": "ICE?"
+          }
+        ]
+      },
+      {
+        "start": 48.76,
+        "end": 51.02,
+        "text": "Right there. That's how I feel.",
+        "words": [
+          {
+            "start": 48.76,
+            "end": 49.28,
+            "word": "Right"
+          },
+          {
+            "start": 49.28,
+            "end": 49.72,
+            "word": "there."
+          },
+          {
+            "start": 50.06,
+            "end": 50.58,
+            "word": "That's"
+          },
+          {
+            "start": 50.58,
+            "end": 50.64,
+            "word": "how"
+          },
+          {
+            "start": 50.64,
+            "end": 50.8,
+            "word": "I"
+          },
+          {
+            "start": 50.8,
+            "end": 51.02,
+            "word": "feel."
+          }
+        ]
+      },
+      {
+        "start": 51.04,
+        "end": 53.02,
+        "text": "You want to know how I feel about this guy?",
+        "words": [
+          {
+            "start": 51.04,
+            "end": 51.52,
+            "word": "You"
+          },
+          {
+            "start": 51.52,
+            "end": 51.66,
+            "word": "want"
+          },
+          {
+            "start": 51.66,
+            "end": 51.72,
+            "word": "to"
+          },
+          {
+            "start": 51.72,
+            "end": 51.88,
+            "word": "know"
+          },
+          {
+            "start": 51.88,
+            "end": 52.0,
+            "word": "how"
+          },
+          {
+            "start": 52.0,
+            "end": 52.16,
+            "word": "I"
+          },
+          {
+            "start": 52.16,
+            "end": 52.36,
+            "word": "feel"
+          },
+          {
+            "start": 52.36,
+            "end": 52.62,
+            "word": "about"
+          },
+          {
+            "start": 52.62,
+            "end": 52.82,
+            "word": "this"
+          },
+          {
+            "start": 52.82,
+            "end": 53.02,
+            "word": "guy?"
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
+    "ICE",
     "ambient",
     "camera_shake",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "song",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 33.0,
+      "class": "speech",
+      "confidence": 1.146
+    },
+    {
+      "t0": 32.25,
+      "t1": 38.25,
+      "class": "song",
+      "confidence": 0.859
+    },
+    {
+      "t0": 37.5,
+      "t1": 59.413,
+      "class": "speech",
+      "confidence": 1.195
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.901
+  }
 }

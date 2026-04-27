@@ -309,32 +309,231 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.954,
+    "language_probability": 1.0,
     "duration_s": 26.0906875,
-    "text": "of Romulus engaged, and we have to build the power that elected officials, local officials cannot ignore. So, we've been out here for, this is our tenth week protesting the coup out of town.",
+    "text": "The community of Romulus is engaged, and we have to build the power that elected officials, local officials, cannot ignore. So, we've been out here for, this is our tenth of a week, protesting.",
     "segments": [
       {
-        "start": 0.34,
-        "end": 8.34,
-        "text": "of Romulus engaged, and we have to build the power that elected officials, local officials"
+        "start": 0.0,
+        "end": 9.52,
+        "text": "The community of Romulus is engaged, and we have to build the power that elected officials, local officials, cannot ignore.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.06,
+            "word": "The"
+          },
+          {
+            "start": 0.06,
+            "end": 0.34,
+            "word": "community"
+          },
+          {
+            "start": 0.34,
+            "end": 0.64,
+            "word": "of"
+          },
+          {
+            "start": 0.64,
+            "end": 1.1,
+            "word": "Romulus"
+          },
+          {
+            "start": 1.1,
+            "end": 1.24,
+            "word": "is"
+          },
+          {
+            "start": 1.24,
+            "end": 1.6,
+            "word": "engaged,"
+          },
+          {
+            "start": 1.86,
+            "end": 2.88,
+            "word": "and"
+          },
+          {
+            "start": 2.88,
+            "end": 4.0,
+            "word": "we"
+          },
+          {
+            "start": 4.0,
+            "end": 4.2,
+            "word": "have"
+          },
+          {
+            "start": 4.2,
+            "end": 4.42,
+            "word": "to"
+          },
+          {
+            "start": 4.42,
+            "end": 4.58,
+            "word": "build"
+          },
+          {
+            "start": 4.58,
+            "end": 4.72,
+            "word": "the"
+          },
+          {
+            "start": 4.72,
+            "end": 5.08,
+            "word": "power"
+          },
+          {
+            "start": 5.08,
+            "end": 5.94,
+            "word": "that"
+          },
+          {
+            "start": 5.94,
+            "end": 7.1,
+            "word": "elected"
+          },
+          {
+            "start": 7.1,
+            "end": 7.54,
+            "word": "officials,"
+          },
+          {
+            "start": 7.84,
+            "end": 8.06,
+            "word": "local"
+          },
+          {
+            "start": 8.06,
+            "end": 8.54,
+            "word": "officials,"
+          },
+          {
+            "start": 8.62,
+            "end": 9.0,
+            "word": "cannot"
+          },
+          {
+            "start": 9.0,
+            "end": 9.52,
+            "word": "ignore."
+          }
+        ]
       },
       {
-        "start": 8.34,
-        "end": 10.34,
-        "text": "cannot ignore."
-      },
-      {
-        "start": 12.34,
-        "end": 18.34,
-        "text": "So, we've been out here for, this is our tenth week protesting the coup out of town."
+        "start": 12.24,
+        "end": 16.68,
+        "text": "So, we've been out here for, this is our tenth of a week, protesting.",
+        "words": [
+          {
+            "start": 12.24,
+            "end": 12.76,
+            "word": "So,"
+          },
+          {
+            "start": 12.76,
+            "end": 13.28,
+            "word": "we've"
+          },
+          {
+            "start": 13.28,
+            "end": 13.44,
+            "word": "been"
+          },
+          {
+            "start": 13.44,
+            "end": 13.54,
+            "word": "out"
+          },
+          {
+            "start": 13.54,
+            "end": 13.8,
+            "word": "here"
+          },
+          {
+            "start": 13.8,
+            "end": 14.28,
+            "word": "for,"
+          },
+          {
+            "start": 14.44,
+            "end": 14.94,
+            "word": "this"
+          },
+          {
+            "start": 14.94,
+            "end": 15.08,
+            "word": "is"
+          },
+          {
+            "start": 15.08,
+            "end": 15.3,
+            "word": "our"
+          },
+          {
+            "start": 15.3,
+            "end": 15.54,
+            "word": "tenth"
+          },
+          {
+            "start": 15.54,
+            "end": 15.68,
+            "word": "of"
+          },
+          {
+            "start": 15.68,
+            "end": 15.76,
+            "word": "a"
+          },
+          {
+            "start": 15.76,
+            "end": 16.0,
+            "word": "week,"
+          },
+          {
+            "start": 16.1,
+            "end": 16.68,
+            "word": "protesting."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "Romulus",
     "ambient",
     "camera_shake",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "song",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 10.5,
+      "class": "speech",
+      "confidence": 1.158
+    },
+    {
+      "t0": 9.75,
+      "t1": 11.25,
+      "class": "song",
+      "confidence": 0.69
+    },
+    {
+      "t0": 10.5,
+      "t1": 26.091,
+      "class": "speech",
+      "confidence": 1.063
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.946
+  }
 }

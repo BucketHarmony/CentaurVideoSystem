@@ -92,32 +92,85 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.99,
+    "language_probability": 1.0,
     "duration_s": 6.9546875,
     "text": "Okay. All right. Thank you.",
     "segments": [
       {
-        "start": 0.34,
-        "end": 1.18,
-        "text": "Okay."
-      },
-      {
-        "start": 3.52,
-        "end": 4.68,
-        "text": "All right."
-      },
-      {
-        "start": 5.08,
-        "end": 5.78,
-        "text": "Thank you."
+        "start": 3.44,
+        "end": 5.54,
+        "text": "Okay. All right. Thank you.",
+        "words": [
+          {
+            "start": 3.44,
+            "end": 3.88,
+            "word": "Okay."
+          },
+          {
+            "start": 3.88,
+            "end": 4.32,
+            "word": "All"
+          },
+          {
+            "start": 4.32,
+            "end": 4.54,
+            "word": "right."
+          },
+          {
+            "start": 4.88,
+            "end": 5.32,
+            "word": "Thank"
+          },
+          {
+            "start": 5.32,
+            "end": 5.54,
+            "word": "you."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ambient",
     "camera_shake",
     "high_motion",
     "horizontal",
-    "short"
-  ]
+    "short",
+    "song",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 3.0,
+      "class": "speech",
+      "confidence": 1.099
+    },
+    {
+      "t0": 2.25,
+      "t1": 4.5,
+      "class": "song",
+      "confidence": 0.777
+    },
+    {
+      "t0": 3.75,
+      "t1": 6.75,
+      "class": "speech",
+      "confidence": 0.83
+    },
+    {
+      "t0": 6.0,
+      "t1": 6.955,
+      "class": "song",
+      "confidence": 0.851
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.652
+  }
 }

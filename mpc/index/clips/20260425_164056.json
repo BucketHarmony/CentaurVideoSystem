@@ -207,56 +207,316 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.948,
+    "language_probability": 1.0,
     "duration_s": 16.8533125,
-    "text": "We're stronger together. Say it with me, we're stronger together. Stronger together. I'm gonna use this bad word here. I'm gonna try to say fuck guys, you all ready with me? Fuck guys. Fuck guys. So last thing I'm gonna say.",
+    "text": "We're stronger together. Say it with me. We're stronger together. Stronger together. Stronger together. I'm going to use this bad word here. I'm going to try to say, fuck ICE. Y'all ready with me? Fuck ICE. So last thing I'm going to say.",
     "segments": [
       {
         "start": 0.0,
-        "end": 1.2,
-        "text": "We're stronger together."
+        "end": 2.62,
+        "text": "We're stronger together. Say it with me. We're stronger together.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.14,
+            "word": "We're"
+          },
+          {
+            "start": 0.14,
+            "end": 0.54,
+            "word": "stronger"
+          },
+          {
+            "start": 0.54,
+            "end": 0.86,
+            "word": "together."
+          },
+          {
+            "start": 1.12,
+            "end": 1.3,
+            "word": "Say"
+          },
+          {
+            "start": 1.3,
+            "end": 1.48,
+            "word": "it"
+          },
+          {
+            "start": 1.48,
+            "end": 1.62,
+            "word": "with"
+          },
+          {
+            "start": 1.62,
+            "end": 1.76,
+            "word": "me."
+          },
+          {
+            "start": 1.84,
+            "end": 1.94,
+            "word": "We're"
+          },
+          {
+            "start": 1.94,
+            "end": 2.32,
+            "word": "stronger"
+          },
+          {
+            "start": 2.32,
+            "end": 2.62,
+            "word": "together."
+          }
+        ]
       },
       {
-        "start": 1.2,
-        "end": 3.2,
-        "text": "Say it with me, we're stronger together."
+        "start": 3.34,
+        "end": 3.98,
+        "text": "Stronger together.",
+        "words": [
+          {
+            "start": 3.34,
+            "end": 3.74,
+            "word": "Stronger"
+          },
+          {
+            "start": 3.74,
+            "end": 3.98,
+            "word": "together."
+          }
+        ]
       },
       {
-        "start": 3.2,
-        "end": 4.72,
-        "text": "Stronger together."
+        "start": 4.64,
+        "end": 5.34,
+        "text": "Stronger together.",
+        "words": [
+          {
+            "start": 4.64,
+            "end": 4.96,
+            "word": "Stronger"
+          },
+          {
+            "start": 4.96,
+            "end": 5.34,
+            "word": "together."
+          }
+        ]
       },
       {
-        "start": 4.72,
-        "end": 8.56,
-        "text": "I'm gonna use this bad word here."
+        "start": 5.54,
+        "end": 9.96,
+        "text": "I'm going to use this bad word here. I'm going to try to say, fuck ICE.",
+        "words": [
+          {
+            "start": 5.54,
+            "end": 5.92,
+            "word": "I'm"
+          },
+          {
+            "start": 5.92,
+            "end": 6.0,
+            "word": "going"
+          },
+          {
+            "start": 6.0,
+            "end": 6.22,
+            "word": "to"
+          },
+          {
+            "start": 6.22,
+            "end": 6.42,
+            "word": "use"
+          },
+          {
+            "start": 6.42,
+            "end": 6.74,
+            "word": "this"
+          },
+          {
+            "start": 6.74,
+            "end": 7.34,
+            "word": "bad"
+          },
+          {
+            "start": 7.34,
+            "end": 7.92,
+            "word": "word"
+          },
+          {
+            "start": 7.92,
+            "end": 8.2,
+            "word": "here."
+          },
+          {
+            "start": 8.32,
+            "end": 8.66,
+            "word": "I'm"
+          },
+          {
+            "start": 8.66,
+            "end": 8.74,
+            "word": "going"
+          },
+          {
+            "start": 8.74,
+            "end": 8.82,
+            "word": "to"
+          },
+          {
+            "start": 8.82,
+            "end": 9.0,
+            "word": "try"
+          },
+          {
+            "start": 9.0,
+            "end": 9.1,
+            "word": "to"
+          },
+          {
+            "start": 9.1,
+            "end": 9.32,
+            "word": "say,"
+          },
+          {
+            "start": 9.42,
+            "end": 9.66,
+            "word": "fuck"
+          },
+          {
+            "start": 9.66,
+            "end": 9.96,
+            "word": "ICE."
+          }
+        ]
       },
       {
-        "start": 8.56,
-        "end": 10.8,
-        "text": "I'm gonna try to say fuck guys, you all ready with me?"
+        "start": 10.04,
+        "end": 10.7,
+        "text": "Y'all ready with me?",
+        "words": [
+          {
+            "start": 10.04,
+            "end": 10.14,
+            "word": "Y"
+          },
+          {
+            "start": 10.14,
+            "end": 10.2,
+            "word": "'all"
+          },
+          {
+            "start": 10.2,
+            "end": 10.36,
+            "word": "ready"
+          },
+          {
+            "start": 10.36,
+            "end": 10.54,
+            "word": "with"
+          },
+          {
+            "start": 10.54,
+            "end": 10.7,
+            "word": "me?"
+          }
+        ]
       },
       {
-        "start": 10.8,
-        "end": 11.6,
-        "text": "Fuck guys."
+        "start": 11.04,
+        "end": 12.14,
+        "text": "Fuck ICE.",
+        "words": [
+          {
+            "start": 11.04,
+            "end": 11.44,
+            "word": "Fuck"
+          },
+          {
+            "start": 11.44,
+            "end": 12.14,
+            "word": "ICE."
+          }
+        ]
       },
       {
-        "start": 11.6,
-        "end": 12.56,
-        "text": "Fuck guys."
-      },
-      {
-        "start": 12.56,
-        "end": 16.88,
-        "text": "So last thing I'm gonna say."
+        "start": 14.2,
+        "end": 15.78,
+        "text": "So last thing I'm going to say.",
+        "words": [
+          {
+            "start": 14.2,
+            "end": 14.6,
+            "word": "So"
+          },
+          {
+            "start": 14.6,
+            "end": 14.98,
+            "word": "last"
+          },
+          {
+            "start": 14.98,
+            "end": 15.26,
+            "word": "thing"
+          },
+          {
+            "start": 15.26,
+            "end": 15.44,
+            "word": "I'm"
+          },
+          {
+            "start": 15.44,
+            "end": 15.52,
+            "word": "going"
+          },
+          {
+            "start": 15.52,
+            "end": 15.6,
+            "word": "to"
+          },
+          {
+            "start": 15.6,
+            "end": 15.78,
+            "word": "say."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
+    "ICE",
+    "ambient",
     "camera_shake",
     "dialogue",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 12.0,
+      "class": "speech",
+      "confidence": 1.15
+    },
+    {
+      "t0": 11.25,
+      "t1": 12.75,
+      "class": "ambient",
+      "confidence": 0.626
+    },
+    {
+      "t0": 12.0,
+      "t1": 16.853,
+      "class": "speech",
+      "confidence": 1.051
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.918
+  }
 }

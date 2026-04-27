@@ -194,41 +194,215 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.722,
+    "language_probability": 1.0,
     "duration_s": 16.0426875,
-    "text": "For right and justice, we win. My friend, my name is Dr. Naz Hassan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is at test right now.",
+    "text": "For right and justice, we win. My friend, my name is Dr. Naz Hassan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is attested. Right now.",
     "segments": [
       {
         "start": 0.0,
-        "end": 3.0,
-        "text": "For right and justice, we win."
-      },
-      {
-        "start": 3.5,
-        "end": 5.8,
-        "text": "My friend, my name is Dr. Naz Hassan."
-      },
-      {
-        "start": 6.1,
-        "end": 7.32,
-        "text": "I'm not going to take much time."
-      },
-      {
-        "start": 8.67,
-        "end": 10.95,
-        "text": "I am very fearful of what's going around."
-      },
-      {
-        "start": 11.77,
-        "end": 14.94,
-        "text": "Our democracy is at test right now."
+        "end": 14.74,
+        "text": "For right and justice, we win. My friend, my name is Dr. Naz Hassan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is attested. Right now.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.1,
+            "word": "For"
+          },
+          {
+            "start": 0.1,
+            "end": 0.42,
+            "word": "right"
+          },
+          {
+            "start": 0.42,
+            "end": 0.68,
+            "word": "and"
+          },
+          {
+            "start": 0.68,
+            "end": 1.34,
+            "word": "justice,"
+          },
+          {
+            "start": 1.66,
+            "end": 2.48,
+            "word": "we"
+          },
+          {
+            "start": 2.48,
+            "end": 2.82,
+            "word": "win."
+          },
+          {
+            "start": 3.04,
+            "end": 3.6,
+            "word": "My"
+          },
+          {
+            "start": 3.6,
+            "end": 3.92,
+            "word": "friend,"
+          },
+          {
+            "start": 4.06,
+            "end": 4.52,
+            "word": "my"
+          },
+          {
+            "start": 4.52,
+            "end": 4.72,
+            "word": "name"
+          },
+          {
+            "start": 4.72,
+            "end": 4.86,
+            "word": "is"
+          },
+          {
+            "start": 4.86,
+            "end": 4.96,
+            "word": "Dr."
+          },
+          {
+            "start": 5.08,
+            "end": 5.24,
+            "word": "Naz"
+          },
+          {
+            "start": 5.24,
+            "end": 5.64,
+            "word": "Hassan."
+          },
+          {
+            "start": 5.8,
+            "end": 6.24,
+            "word": "I'm"
+          },
+          {
+            "start": 6.24,
+            "end": 6.34,
+            "word": "not"
+          },
+          {
+            "start": 6.34,
+            "end": 6.46,
+            "word": "going"
+          },
+          {
+            "start": 6.46,
+            "end": 6.58,
+            "word": "to"
+          },
+          {
+            "start": 6.58,
+            "end": 6.74,
+            "word": "take"
+          },
+          {
+            "start": 6.74,
+            "end": 6.88,
+            "word": "much"
+          },
+          {
+            "start": 6.88,
+            "end": 7.24,
+            "word": "time."
+          },
+          {
+            "start": 8.16,
+            "end": 8.72,
+            "word": "I"
+          },
+          {
+            "start": 8.72,
+            "end": 8.9,
+            "word": "am"
+          },
+          {
+            "start": 8.9,
+            "end": 9.44,
+            "word": "very"
+          },
+          {
+            "start": 9.44,
+            "end": 9.8,
+            "word": "fearful"
+          },
+          {
+            "start": 9.8,
+            "end": 10.08,
+            "word": "of"
+          },
+          {
+            "start": 10.08,
+            "end": 10.18,
+            "word": "what's"
+          },
+          {
+            "start": 10.18,
+            "end": 10.34,
+            "word": "going"
+          },
+          {
+            "start": 10.34,
+            "end": 10.72,
+            "word": "around."
+          },
+          {
+            "start": 11.34,
+            "end": 11.9,
+            "word": "Our"
+          },
+          {
+            "start": 11.9,
+            "end": 12.36,
+            "word": "democracy"
+          },
+          {
+            "start": 12.36,
+            "end": 12.68,
+            "word": "is"
+          },
+          {
+            "start": 12.68,
+            "end": 13.14,
+            "word": "attested."
+          },
+          {
+            "start": 13.9,
+            "end": 14.46,
+            "word": "Right"
+          },
+          {
+            "start": 14.46,
+            "end": 14.74,
+            "word": "now."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ambient",
     "camera_shake",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 16.043,
+      "class": "speech",
+      "confidence": 1.602
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 1.0
+  }
 }

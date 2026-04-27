@@ -406,22 +406,362 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.95,
+    "language_probability": 1.0,
     "duration_s": 35.1786875,
-    "text": "protect abolish ice right now abolish ice abolish abolish ice",
+    "text": "Now we're gonna love and protect our neighbors. abolish ICE right now. right now. abolish ICE. abolish ICE. abolish ICE. abolish ICE. abolish ICE right now. right now. We're gonna love and protect our neighbors. abolish ICE right now. right now.",
     "segments": [
       {
-        "start": 3.38,
-        "end": 16.77,
-        "text": "protect abolish ice right now abolish ice abolish abolish ice"
+        "start": 0.0,
+        "end": 5.4,
+        "text": "Now we're gonna love and protect our neighbors.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.56,
+            "word": "Now"
+          },
+          {
+            "start": 0.56,
+            "end": 1.7,
+            "word": "we're"
+          },
+          {
+            "start": 1.7,
+            "end": 2.04,
+            "word": "gonna"
+          },
+          {
+            "start": 2.04,
+            "end": 2.7,
+            "word": "love"
+          },
+          {
+            "start": 2.7,
+            "end": 3.24,
+            "word": "and"
+          },
+          {
+            "start": 3.24,
+            "end": 3.74,
+            "word": "protect"
+          },
+          {
+            "start": 3.74,
+            "end": 4.54,
+            "word": "our"
+          },
+          {
+            "start": 4.54,
+            "end": 5.4,
+            "word": "neighbors."
+          }
+        ]
+      },
+      {
+        "start": 6.42,
+        "end": 10.28,
+        "text": "abolish ICE right now. right now.",
+        "words": [
+          {
+            "start": 6.42,
+            "end": 7.42,
+            "word": "abolish"
+          },
+          {
+            "start": 7.42,
+            "end": 7.78,
+            "word": "ICE"
+          },
+          {
+            "start": 7.78,
+            "end": 8.3,
+            "word": "right"
+          },
+          {
+            "start": 8.3,
+            "end": 8.94,
+            "word": "now."
+          },
+          {
+            "start": 9.24,
+            "end": 9.62,
+            "word": "right"
+          },
+          {
+            "start": 9.62,
+            "end": 10.28,
+            "word": "now."
+          }
+        ]
+      },
+      {
+        "start": 11.22,
+        "end": 16.16,
+        "text": "abolish ICE. abolish ICE. abolish ICE. abolish ICE.",
+        "words": [
+          {
+            "start": 11.22,
+            "end": 12.3,
+            "word": "abolish"
+          },
+          {
+            "start": 12.3,
+            "end": 12.7,
+            "word": "ICE."
+          },
+          {
+            "start": 12.78,
+            "end": 13.52,
+            "word": "abolish"
+          },
+          {
+            "start": 13.52,
+            "end": 13.94,
+            "word": "ICE."
+          },
+          {
+            "start": 13.96,
+            "end": 14.72,
+            "word": "abolish"
+          },
+          {
+            "start": 14.72,
+            "end": 15.02,
+            "word": "ICE."
+          },
+          {
+            "start": 15.12,
+            "end": 15.9,
+            "word": "abolish"
+          },
+          {
+            "start": 15.9,
+            "end": 16.16,
+            "word": "ICE."
+          }
+        ]
+      },
+      {
+        "start": 16.28,
+        "end": 19.92,
+        "text": "abolish ICE right now. right now.",
+        "words": [
+          {
+            "start": 16.28,
+            "end": 17.14,
+            "word": "abolish"
+          },
+          {
+            "start": 17.14,
+            "end": 17.46,
+            "word": "ICE"
+          },
+          {
+            "start": 17.46,
+            "end": 17.96,
+            "word": "right"
+          },
+          {
+            "start": 17.96,
+            "end": 18.68,
+            "word": "now."
+          },
+          {
+            "start": 18.86,
+            "end": 19.4,
+            "word": "right"
+          },
+          {
+            "start": 19.4,
+            "end": 19.92,
+            "word": "now."
+          }
+        ]
+      },
+      {
+        "start": 21.4,
+        "end": 25.22,
+        "text": "We're gonna love and protect our neighbors.",
+        "words": [
+          {
+            "start": 20.96,
+            "end": 21.5,
+            "word": "We're"
+          },
+          {
+            "start": 21.5,
+            "end": 21.82,
+            "word": "gonna"
+          },
+          {
+            "start": 21.82,
+            "end": 22.54,
+            "word": "love"
+          },
+          {
+            "start": 22.54,
+            "end": 23.12,
+            "word": "and"
+          },
+          {
+            "start": 23.12,
+            "end": 23.6,
+            "word": "protect"
+          },
+          {
+            "start": 23.6,
+            "end": 24.4,
+            "word": "our"
+          },
+          {
+            "start": 24.4,
+            "end": 25.22,
+            "word": "neighbors."
+          }
+        ]
+      },
+      {
+        "start": 26.34,
+        "end": 30.06,
+        "text": "abolish ICE right now. right now.",
+        "words": [
+          {
+            "start": 26.34,
+            "end": 27.34,
+            "word": "abolish"
+          },
+          {
+            "start": 27.34,
+            "end": 27.7,
+            "word": "ICE"
+          },
+          {
+            "start": 27.7,
+            "end": 28.2,
+            "word": "right"
+          },
+          {
+            "start": 28.2,
+            "end": 28.82,
+            "word": "now."
+          },
+          {
+            "start": 28.92,
+            "end": 29.42,
+            "word": "right"
+          },
+          {
+            "start": 29.42,
+            "end": 30.06,
+            "word": "now."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ICE",
     "ambient",
     "camera_shake",
+    "chant",
+    "dialogue",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "song",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 3.0,
+      "class": "song",
+      "confidence": 1.201
+    },
+    {
+      "t0": 2.25,
+      "t1": 3.75,
+      "class": "chant",
+      "confidence": 0.631
+    },
+    {
+      "t0": 3.0,
+      "t1": 12.75,
+      "class": "song",
+      "confidence": 2.242
+    },
+    {
+      "t0": 12.0,
+      "t1": 13.5,
+      "class": "speech",
+      "confidence": 0.968
+    },
+    {
+      "t0": 12.75,
+      "t1": 15.0,
+      "class": "song",
+      "confidence": 1.256
+    },
+    {
+      "t0": 14.25,
+      "t1": 15.75,
+      "class": "speech",
+      "confidence": 1.057
+    },
+    {
+      "t0": 15.0,
+      "t1": 20.25,
+      "class": "song",
+      "confidence": 1.387
+    },
+    {
+      "t0": 19.5,
+      "t1": 21.0,
+      "class": "chant",
+      "confidence": 0.352
+    },
+    {
+      "t0": 20.25,
+      "t1": 30.75,
+      "class": "song",
+      "confidence": 1.735
+    },
+    {
+      "t0": 30.0,
+      "t1": 31.5,
+      "class": "chant",
+      "confidence": 0.363
+    },
+    {
+      "t0": 30.75,
+      "t1": 32.25,
+      "class": "song",
+      "confidence": 0.932
+    },
+    {
+      "t0": 31.5,
+      "t1": 33.75,
+      "class": "ambient",
+      "confidence": 0.47
+    },
+    {
+      "t0": 33.0,
+      "t1": 34.5,
+      "class": "song",
+      "confidence": 0.627
+    },
+    {
+      "t0": 33.75,
+      "t1": 35.179,
+      "class": "ambient",
+      "confidence": 0.765
+    }
+  ],
+  "audio_dominant": {
+    "class": "song",
+    "fraction": 0.751
+  }
 }

@@ -198,42 +198,277 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.967,
+    "language_probability": 1.0,
     "duration_s": 16.6613125,
-    "text": "We are some of the singing resistance groups. They're all around the country, and we are trying to give support to the community. Now, we're not just going to sing for you. We want to sing with you. So please, you'll know the tune that I...",
+    "text": "We are some of the singing resistance groups. They're all around the country. And we are trying to give support to the community. Now, we're not just going to sing for you. We want to sing with you. So please, you'll know the tune that I...",
     "segments": [
       {
-        "start": 0.72,
-        "end": 4.4,
-        "text": "We are some of the singing resistance groups."
-      },
-      {
-        "start": 4.7,
-        "end": 10.16,
-        "text": "They're all around the country, and we are trying to give support to the community."
-      },
-      {
-        "start": 10.3,
-        "end": 11.96,
-        "text": "Now, we're not just going to sing for you."
-      },
-      {
-        "start": 12.34,
-        "end": 13.78,
-        "text": "We want to sing with you."
-      },
-      {
-        "start": 14.12,
+        "start": 1.58,
         "end": 16.64,
-        "text": "So please, you'll know the tune that I..."
+        "text": "We are some of the singing resistance groups. They're all around the country. And we are trying to give support to the community. Now, we're not just going to sing for you. We want to sing with you. So please, you'll know the tune that I...",
+        "words": [
+          {
+            "start": 1.58,
+            "end": 2.06,
+            "word": "We"
+          },
+          {
+            "start": 2.06,
+            "end": 2.26,
+            "word": "are"
+          },
+          {
+            "start": 2.26,
+            "end": 2.54,
+            "word": "some"
+          },
+          {
+            "start": 2.54,
+            "end": 2.76,
+            "word": "of"
+          },
+          {
+            "start": 2.76,
+            "end": 2.82,
+            "word": "the"
+          },
+          {
+            "start": 2.82,
+            "end": 3.16,
+            "word": "singing"
+          },
+          {
+            "start": 3.16,
+            "end": 3.5,
+            "word": "resistance"
+          },
+          {
+            "start": 3.5,
+            "end": 4.2,
+            "word": "groups."
+          },
+          {
+            "start": 4.58,
+            "end": 5.06,
+            "word": "They're"
+          },
+          {
+            "start": 5.06,
+            "end": 5.24,
+            "word": "all"
+          },
+          {
+            "start": 5.24,
+            "end": 5.56,
+            "word": "around"
+          },
+          {
+            "start": 5.56,
+            "end": 5.7,
+            "word": "the"
+          },
+          {
+            "start": 5.7,
+            "end": 6.1,
+            "word": "country."
+          },
+          {
+            "start": 6.76,
+            "end": 7.24,
+            "word": "And"
+          },
+          {
+            "start": 7.24,
+            "end": 7.58,
+            "word": "we"
+          },
+          {
+            "start": 7.58,
+            "end": 7.82,
+            "word": "are"
+          },
+          {
+            "start": 7.82,
+            "end": 8.24,
+            "word": "trying"
+          },
+          {
+            "start": 8.24,
+            "end": 8.5,
+            "word": "to"
+          },
+          {
+            "start": 8.5,
+            "end": 8.88,
+            "word": "give"
+          },
+          {
+            "start": 8.88,
+            "end": 9.36,
+            "word": "support"
+          },
+          {
+            "start": 9.36,
+            "end": 9.56,
+            "word": "to"
+          },
+          {
+            "start": 9.56,
+            "end": 9.66,
+            "word": "the"
+          },
+          {
+            "start": 9.66,
+            "end": 10.0,
+            "word": "community."
+          },
+          {
+            "start": 10.2,
+            "end": 10.36,
+            "word": "Now,"
+          },
+          {
+            "start": 10.38,
+            "end": 10.54,
+            "word": "we're"
+          },
+          {
+            "start": 10.54,
+            "end": 10.68,
+            "word": "not"
+          },
+          {
+            "start": 10.68,
+            "end": 10.9,
+            "word": "just"
+          },
+          {
+            "start": 10.9,
+            "end": 11.02,
+            "word": "going"
+          },
+          {
+            "start": 11.02,
+            "end": 11.14,
+            "word": "to"
+          },
+          {
+            "start": 11.14,
+            "end": 11.32,
+            "word": "sing"
+          },
+          {
+            "start": 11.32,
+            "end": 11.56,
+            "word": "for"
+          },
+          {
+            "start": 11.56,
+            "end": 11.86,
+            "word": "you."
+          },
+          {
+            "start": 11.98,
+            "end": 12.46,
+            "word": "We"
+          },
+          {
+            "start": 12.46,
+            "end": 12.68,
+            "word": "want"
+          },
+          {
+            "start": 12.68,
+            "end": 12.78,
+            "word": "to"
+          },
+          {
+            "start": 12.78,
+            "end": 12.98,
+            "word": "sing"
+          },
+          {
+            "start": 12.98,
+            "end": 13.26,
+            "word": "with"
+          },
+          {
+            "start": 13.26,
+            "end": 13.62,
+            "word": "you."
+          },
+          {
+            "start": 13.76,
+            "end": 14.16,
+            "word": "So"
+          },
+          {
+            "start": 14.16,
+            "end": 14.52,
+            "word": "please,"
+          },
+          {
+            "start": 14.66,
+            "end": 15.26,
+            "word": "you'll"
+          },
+          {
+            "start": 15.26,
+            "end": 15.46,
+            "word": "know"
+          },
+          {
+            "start": 15.46,
+            "end": 15.64,
+            "word": "the"
+          },
+          {
+            "start": 15.64,
+            "end": 15.94,
+            "word": "tune"
+          },
+          {
+            "start": 15.94,
+            "end": 16.4,
+            "word": "that"
+          },
+          {
+            "start": 16.4,
+            "end": 16.64,
+            "word": "I..."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "camera_shake",
     "dialogue",
     "high_motion",
     "horizontal",
+    "song",
     "speech"
-  ]
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 1.5,
+      "class": "song",
+      "confidence": 0.716
+    },
+    {
+      "t0": 0.75,
+      "t1": 16.661,
+      "class": "speech",
+      "confidence": 1.338
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 0.914
+  }
 }

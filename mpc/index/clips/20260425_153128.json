@@ -134,21 +134,155 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.938,
+    "language_probability": 1.0,
     "duration_s": 11.0293125,
-    "text": "And NDCM is a coalition of people groups that has been around since 2019, originally formed to oppose the construction of the new...",
+    "text": "And NBCM is a coalition of people groups that has been around since 2019, originally formed to oppose the construction of the new...",
     "segments": [
       {
-        "start": 0.46,
-        "end": 11.02,
-        "text": "And NDCM is a coalition of people groups that has been around since 2019, originally formed to oppose the construction of the new..."
+        "start": 0.0,
+        "end": 11.0,
+        "text": "And NBCM is a coalition of people groups that has been around since 2019, originally formed to oppose the construction of the new...",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.78,
+            "word": "And"
+          },
+          {
+            "start": 0.78,
+            "end": 1.68,
+            "word": "NBCM"
+          },
+          {
+            "start": 1.68,
+            "end": 1.96,
+            "word": "is"
+          },
+          {
+            "start": 1.96,
+            "end": 2.14,
+            "word": "a"
+          },
+          {
+            "start": 2.14,
+            "end": 2.62,
+            "word": "coalition"
+          },
+          {
+            "start": 2.62,
+            "end": 2.96,
+            "word": "of"
+          },
+          {
+            "start": 2.96,
+            "end": 3.18,
+            "word": "people"
+          },
+          {
+            "start": 3.18,
+            "end": 3.42,
+            "word": "groups"
+          },
+          {
+            "start": 3.42,
+            "end": 4.28,
+            "word": "that"
+          },
+          {
+            "start": 4.28,
+            "end": 4.42,
+            "word": "has"
+          },
+          {
+            "start": 4.42,
+            "end": 4.58,
+            "word": "been"
+          },
+          {
+            "start": 4.58,
+            "end": 4.82,
+            "word": "around"
+          },
+          {
+            "start": 4.82,
+            "end": 5.14,
+            "word": "since"
+          },
+          {
+            "start": 5.14,
+            "end": 5.7,
+            "word": "2019,"
+          },
+          {
+            "start": 6.12,
+            "end": 6.8,
+            "word": "originally"
+          },
+          {
+            "start": 6.8,
+            "end": 7.42,
+            "word": "formed"
+          },
+          {
+            "start": 7.42,
+            "end": 7.84,
+            "word": "to"
+          },
+          {
+            "start": 7.84,
+            "end": 8.78,
+            "word": "oppose"
+          },
+          {
+            "start": 8.78,
+            "end": 9.68,
+            "word": "the"
+          },
+          {
+            "start": 9.68,
+            "end": 10.38,
+            "word": "construction"
+          },
+          {
+            "start": 10.38,
+            "end": 10.66,
+            "word": "of"
+          },
+          {
+            "start": 10.66,
+            "end": 10.72,
+            "word": "the"
+          },
+          {
+            "start": 10.72,
+            "end": 11.0,
+            "word": "new..."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ambient",
     "camera_shake",
     "high_motion",
-    "horizontal"
-  ]
+    "horizontal",
+    "speech"
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 11.029,
+      "class": "speech",
+      "confidence": 1.203
+    }
+  ],
+  "audio_dominant": {
+    "class": "speech",
+    "fraction": 1.0
+  }
 }

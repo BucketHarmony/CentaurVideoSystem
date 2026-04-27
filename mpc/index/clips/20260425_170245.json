@@ -232,28 +232,207 @@
   ],
   "transcript": {
     "language": "en",
-    "language_probability": 0.93,
+    "language_probability": 1.0,
     "duration_s": 19.6266875,
-    "text": "We are locked inside, together we'll abolish ICE. This is for our neighbors who are locked inside, together we'll abolish ICE.",
+    "text": "are locked inside. Together we will abolish ICE. This is for our neighbors who are locked inside. Together we will abolish ICE.",
     "segments": [
       {
         "start": 0.0,
-        "end": 7.6,
-        "text": "We are locked inside, together we'll abolish ICE."
-      },
-      {
-        "start": 7.84,
-        "end": 17.7,
-        "text": "This is for our neighbors who are locked inside, together we'll abolish ICE."
+        "end": 17.46,
+        "text": "are locked inside. Together we will abolish ICE. This is for our neighbors who are locked inside. Together we will abolish ICE.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.14,
+            "word": "are"
+          },
+          {
+            "start": 0.14,
+            "end": 0.6,
+            "word": "locked"
+          },
+          {
+            "start": 0.6,
+            "end": 1.32,
+            "word": "inside."
+          },
+          {
+            "start": 1.7,
+            "end": 2.88,
+            "word": "Together"
+          },
+          {
+            "start": 2.88,
+            "end": 4.3,
+            "word": "we"
+          },
+          {
+            "start": 4.3,
+            "end": 4.84,
+            "word": "will"
+          },
+          {
+            "start": 4.84,
+            "end": 6.44,
+            "word": "abolish"
+          },
+          {
+            "start": 6.44,
+            "end": 6.76,
+            "word": "ICE."
+          },
+          {
+            "start": 7.64,
+            "end": 8.36,
+            "word": "This"
+          },
+          {
+            "start": 8.36,
+            "end": 8.6,
+            "word": "is"
+          },
+          {
+            "start": 8.6,
+            "end": 8.98,
+            "word": "for"
+          },
+          {
+            "start": 8.98,
+            "end": 9.3,
+            "word": "our"
+          },
+          {
+            "start": 9.3,
+            "end": 9.88,
+            "word": "neighbors"
+          },
+          {
+            "start": 9.88,
+            "end": 10.26,
+            "word": "who"
+          },
+          {
+            "start": 10.26,
+            "end": 10.54,
+            "word": "are"
+          },
+          {
+            "start": 10.54,
+            "end": 10.98,
+            "word": "locked"
+          },
+          {
+            "start": 10.98,
+            "end": 11.74,
+            "word": "inside."
+          },
+          {
+            "start": 12.46,
+            "end": 13.34,
+            "word": "Together"
+          },
+          {
+            "start": 13.34,
+            "end": 14.8,
+            "word": "we"
+          },
+          {
+            "start": 14.8,
+            "end": 15.28,
+            "word": "will"
+          },
+          {
+            "start": 15.28,
+            "end": 16.86,
+            "word": "abolish"
+          },
+          {
+            "start": 16.86,
+            "end": 17.46,
+            "word": "ICE."
+          }
+        ]
       }
-    ]
+    ],
+    "model": "large-v3",
+    "vad": false,
+    "initial_prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
   },
   "tags": [
     "ICE",
     "ambient",
     "camera_shake",
+    "chant",
     "high_motion",
     "horizontal",
+    "song",
     "speech"
-  ]
+  ],
+  "scanner_version": 2,
+  "audio_segments": [
+    {
+      "t0": 0.0,
+      "t1": 1.5,
+      "class": "song",
+      "confidence": 0.911
+    },
+    {
+      "t0": 0.75,
+      "t1": 2.25,
+      "class": "chant",
+      "confidence": 0.341
+    },
+    {
+      "t0": 1.5,
+      "t1": 6.0,
+      "class": "song",
+      "confidence": 1.362
+    },
+    {
+      "t0": 5.25,
+      "t1": 6.75,
+      "class": "chant",
+      "confidence": 0.749
+    },
+    {
+      "t0": 6.0,
+      "t1": 8.25,
+      "class": "song",
+      "confidence": 1.095
+    },
+    {
+      "t0": 7.5,
+      "t1": 9.0,
+      "class": "speech",
+      "confidence": 0.346
+    },
+    {
+      "t0": 8.25,
+      "t1": 15.0,
+      "class": "song",
+      "confidence": 1.962
+    },
+    {
+      "t0": 14.25,
+      "t1": 17.25,
+      "class": "chant",
+      "confidence": 0.663
+    },
+    {
+      "t0": 16.5,
+      "t1": 19.5,
+      "class": "song",
+      "confidence": 1.228
+    },
+    {
+      "t0": 18.75,
+      "t1": 19.627,
+      "class": "speech",
+      "confidence": 0.43
+    }
+  ],
+  "audio_dominant": {
+    "class": "song",
+    "fraction": 0.682
+  }
 }
