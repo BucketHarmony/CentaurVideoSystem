@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+[FROZEN — pre-cvs_lib.audio migration. Kept as rollback target through
+Phase 7 of the audio overhaul (bouncing-velvet-tympani). Do not edit.]
+
 cc_flora -- Episode 08: The Threshold (30-second cut, FAST mode)
 
 ACT 1 (0-10s)  tick_0038: Visual verification. Careful navigation. 80% power. 3.5m.
@@ -28,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import requests
+import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
 from cvs_lib.elevenlabs_tts import generate_tts as _lib_generate_tts
@@ -35,14 +39,6 @@ from cvs_lib.image_filters import (
     cottagecore_grade as _cc_grade,
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    impact,
-    pad_envelope,
-    tension_partial,
-    lowpass_normalize,
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -384,41 +380,59 @@ def ease_out_np(x):
     return 1 - (1 - np.clip(x, 0, 1)) ** 3
 
 def generate_ambient_pad(duration, sr=44100):
-    pad = ambient_pad(duration, mood="cottagecore_warm", sr=sr, apply_envelope=False)
-
-    # Act 1 determined: steady E4 ramping DOWN 0→12s
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.010,
-                           fade_in_t=-1.0, fade_in_dur=1.0,
-                           fade_out_t=12.0, fade_out_dur=12.0)
-    # Act 2 tension: minor-second Bb3 10–20s
-    pad += tension_partial(duration, sr=sr, freq_hz=233.08, gain=0.012,
-                           fade_in_t=10.0, fade_in_dur=3.0,
-                           fade_out_t=20.0, fade_out_dur=3.0)
-
-    # ── Editorial: act-3 uncertainty thins the pad to 60% by t=23 ──
-    # This multiplies through everything added so far (drone + tensions)
-    # but NOT the impact or chimes that follow.
     t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
-    uncertain = np.clip((t - 20) / 3.0, 0, 1)
-    pad *= 1.0 - uncertain * 0.4
+    pad = np.sin(2 * np.pi * 110 * t) * 0.05
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035
+    pad += np.sin(2 * np.pi * 220 * t) * 0.025
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
+    pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
+    pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
+    pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
 
-    # Wedge impact at t=15.0 (wheels catch); rng_seed=1500 preserves the
-    # legacy noise burst.
-    pad += impact(duration, t=15.0, sr=sr,
-                  sub_hz=55.0, sub_gain=0.04, sub_decay=8.0, sub_dur=0.4,
-                  noise_gain=0.06, noise_decay=20.0, noise_dur=0.2,
-                  rng_seed=1500)
+    # Act 1: determined — steady E4 shimmer
+    act1 = np.clip(1.0 - t / 12.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.010 * act1
+
+    # Act 2: tension builds — minor second
+    tension = np.clip((t - 10) / 3.0, 0, 1) * np.clip((20.0 - t) / 3.0, 0, 1)
+    pad += np.sin(2 * np.pi * 233.08 * t) * 0.012 * tension
+
+    # Act 3: uncertainty — pad thins, low-pass sweep
+    uncertain = np.clip((t - 20) / 3.0, 0, 1)
+    pad *= 1.0 - uncertain * 0.4  # pad drops to 60%
+
+    # Wedge impact at t=15.0 (wheels catch)
+    imp_env = np.where(
+        (t >= 15.0) & (t < 15.2),
+        np.exp(-(t - 15.0) * 20) * 0.06,
+        0.0
+    )
+    pad += np.random.RandomState(1500).randn(len(t)) * imp_env
+    thud_env = np.where(
+        (t >= 15.0) & (t < 15.4),
+        np.exp(-(t - 15.0) * 8) * 0.04,
+        0.0
+    )
+    pad += np.sin(2 * np.pi * 55 * t) * thud_env
 
     # Chimes — fewer in Act 3 (uncertainty)
-    pad += chime_layer(duration, [
+    chimes = [
         (0.1, 880), (2.5, 1108.73), (5.0, 880), (8.0, 1318.51),
         (10.5, 880), (13.0, 1108.73), (16.0, 880), (19.0, 1318.51),
-        (22.0, 880),       # last chime — then silence as the frame goes dark
-        (28.0, 1108.73),   # title card chime
-    ], mood="cottagecore_warm", sr=sr)
+        (22.0, 880),  # last chime — then silence as the frame goes dark
+        (28.0, 1108.73),  # title card chime
+    ]
+    for ct, cf in chimes:
+        env_t = t - ct
+        env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
+        pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
 
-    pad *= pad_envelope(duration, mood="cottagecore_warm", sr=sr)
-    pad = lowpass_normalize(pad, mood="cottagecore_warm", sr=sr)
+    pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
+
+    sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
+    pad = scipy.signal.sosfilt(sos, pad)
+    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
 
     out = OUTPUT_DIR / "cc_flora_ep08_pad.wav"
     with wave.open(str(out), 'w') as wf:
