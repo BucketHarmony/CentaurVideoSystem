@@ -1,0 +1,14 @@
+{
+  "content_hash": "2cc09120ead9cf16",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "Juan was released 4/24 (April 24, 2026).",
+      "verdict": "uncertain",
+      "sources": ["https://nodetentioncentersmi.org/2026/04/21/press-release-immigrants-launch-multi-unit-hunger-strike-at-baldwin-detention-center-protesting-dire-conditions-and-unconstitutional-captivity/"],
+      "notes": "Tied to first-person testimonial from Juan in companion north_lake reel. Not independently corroborated in press, but consistent with broader Baldwin/North Lake release pattern."
+    }
+  ],
+  "summary": "1 claim reviewed: 0 supported, 1 uncertain. Reel is mostly slogans (FOR OUR NEIGHBORS, WE DON'T BACK DOWN) with one date chip. Cleared for render."
+}

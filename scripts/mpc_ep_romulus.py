@@ -507,45 +507,10 @@ def harmonic_hum():
 
 
 def synthesize_narration(env):
-    """Synth (or load cached) narration + place at absolute "start" times.
-
-    Romulus's NARRATION_LINES use absolute timeline t (not start_in_beat),
-    so cvs_tts.synthesize_narration's scene_start callback doesn't apply.
-    We use cvs_tts.generate_tts for the HTTP/cache layer and place the
-    decoded samples ourselves.
-    """
-    api_key = env.get("ELEVENLABS_API_KEY")
-    voice = env.get("ELEVENLABS_VOICE")
-    model = env.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
-    if not api_key:
-        print("[narration] no ELEVENLABS_API_KEY — skipping TTS")
-        return None
-    try:
-        from pydub import AudioSegment
-    except ImportError as e:
-        print(f"[narration] missing dep: {e}")
-        return None
-
-    track = np.zeros(N, dtype=np.float32)
-    for i, line in enumerate(NARRATION_LINES):
-        cache_path = TTS_CACHE / f"{TTS_PREFIX}_{line['slug']}.mp3"
-        if not cache_path.exists():
-            print(f"[narration] generating line {i}: {line['text'][:60]!r}")
-            ok = cvs_tts.generate_tts(
-                text=line["text"], api_key=api_key,
-                voice_id=voice, model=model, cache_path=cache_path,
-            )
-            if not ok:
-                return None
-        else:
-            print(f"[narration] cached line {i}")
-        seg = AudioSegment.from_mp3(cache_path).set_frame_rate(SR).set_channels(1)
-        samples = np.array(seg.get_array_of_samples(), dtype=np.float32)
-        samples = samples / float(1 << (8 * seg.sample_width - 1))
-        i0 = int(line["start"] * SR)
-        i1 = min(N, i0 + len(samples))
-        track[i0:i1] += samples[: i1 - i0] * 0.95
-    return track
+    # AI VO disabled 2026-04-26 per editorial call. NARRATION_LINES kept
+    # in source for caption alignment but is not voiced. Source audio +
+    # harmonic bed remain.
+    return None
 
 
 def build_voice_track():
@@ -758,7 +723,8 @@ def main():
         return
 
     # Preflight: validate sources + scene-sum, on a synthetic BEATS list.
-    _preflight(_preview_beats(), DURATION, rotation_cache_dir=_ROT_CACHE_DIR)
+    _preflight(_preview_beats(), DURATION, rotation_cache_dir=_ROT_CACHE_DIR,
+               reel_slug="romulus")
 
     print("\n[pre-warm] generating any missing TTS now...")
     synthesize_narration(load_env(ENV_PATH))

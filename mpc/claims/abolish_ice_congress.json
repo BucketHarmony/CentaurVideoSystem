@@ -1,0 +1,27 @@
+{
+  "content_hash": "df22009de9601f66",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "Rep. Rashida Tlaib has introduced legislation in Congress related to abolishing/restricting ICE.",
+      "verdict": "supported",
+      "sources": [
+        "https://tlaib.house.gov/posts/tlaib-introduces-bill-to-stop-ices-warehouse-detention-prisons",
+        "https://www.detroitnews.com/story/news/politics/2026/04/23/rashida-tlaib-ice-romulus-warehouse-ban-detention-center/89753912007/",
+        "https://www.metrotimes.com/news/tlaib-deny-ice-its-request-for-more-funding-abolish-it-21970566/"
+      ],
+      "notes": "Tlaib introduced the Ban Warehouse Detention Act (Apr 2026) and has publicly called for abolishing ICE. The chip 'REP. TLAIB - CONGRESS' and her speaker quote are accurate."
+    },
+    {
+      "claim": "Kristi Noem has been fired (chip: 'KRISTI NOEM - WILL BE PROSECUTED').",
+      "verdict": "supported",
+      "sources": [
+        "https://www.npr.org/2026/03/05/nx-s1-5667546/kristi-noem-homeland-security-fired",
+        "https://www.nbcnews.com/politics/trump-administration/trump-says-kristi-noem-stepping-homeland-security-secretary-rcna248719"
+      ],
+      "notes": "Trump fired Noem as DHS Secretary on March 5, 2026; replaced by Sen. Markwayne Mullin. The 'will be prosecuted' framing is Tlaib's attributed prediction/aspiration in a first-person quote, not a present-tense MPC factual assertion."
+    }
+  ],
+  "summary": "2 claims reviewed: 2 supported, 0 uncertain. Roster-flagged figure (Noem) is accurately characterized as fired; the 'prosecuted' framing is Tlaib's first-person speech, not MPC assertion. Cleared for render."
+}

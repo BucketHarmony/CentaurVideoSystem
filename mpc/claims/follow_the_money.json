@@ -1,0 +1,28 @@
+{
+  "content_hash": "6b6109f826f25a37",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "GEO Group profited $254 million off private detention last year (2025).",
+      "verdict": "supported",
+      "sources": [
+        "https://www.commondreams.org/news/geo-group-ice-profits",
+        "https://www.michiganpublic.org/criminal-justice-legal-system/2026-02-13/michigan-ice-detention-center-owner-reports-254-million-profit-record-new-business-in-2025",
+        "https://investors.geogroup.com/news-releases/news-release-details/geo-group-reports-fourth-quarter-and-full-year-2025-results"
+      ],
+      "notes": "Confirmed: GEO Group reported a company-record $254M profit in 2025, ~700% increase over 2024, driven by new ICE detention contracts. Source is GEO's own Q4/FY 2025 earnings release."
+    },
+    {
+      "claim": "ICE has lost in court 4,400 times for wrongfully detaining people since October.",
+      "verdict": "supported",
+      "sources": [
+        "https://www.commondreams.org/news/ice-illegal-arrests",
+        "https://truthout.org/articles/judges-have-ruled-that-over-4400-ice-detentions-since-october-were-illegal/",
+        "https://www.mprnews.org/story/2026/02/14/ice-continues-detaining-people-illegally-despite-4400-court-rulings"
+      ],
+      "notes": "Confirmed: 4,421 cases ruled illegal by 400+ federal judges between October 2025 and mid-February 2026. Reuters review widely reported. Speaker said 4,400, exact figure 4,421."
+    }
+  ],
+  "summary": "2 claims reviewed: 2 supported, 0 uncertain. Both dollar/court figures match cited reports. Cleared for render."
+}

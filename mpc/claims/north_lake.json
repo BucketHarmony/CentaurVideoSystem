@@ -1,0 +1,38 @@
+{
+  "content_hash": "e21ee8ec9e58893f",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "A detainee named Juan was released April 24, 2026 from North Lake.",
+      "verdict": "uncertain",
+      "sources": ["https://nodetentioncentersmi.org/2026/04/21/press-release-immigrants-launch-multi-unit-hunger-strike-at-baldwin-detention-center-protesting-dire-conditions-and-unconstitutional-captivity/"],
+      "notes": "First-person attributed testimonial from Juan himself ('So this is from Juan. I was released Friday April 24.'). Not independently corroborated in press, but consistent with broader Baldwin/North Lake release pattern; press attribution rule applies."
+    },
+    {
+      "claim": "Juan was held 90 days at North Lake before release.",
+      "verdict": "uncertain",
+      "sources": ["https://www.michiganpublic.org/criminal-justice-legal-system/2026-04-13/judges-ruled-immigrants-unlawfully-detained-in-michigan-but-many-still-cant-get-out"],
+      "notes": "Chip claim; not independently verified for this individual. North Lake had average daily population of 1,300+ with documented long stays, so plausible. Speaker testimony is the source."
+    },
+    {
+      "claim": "Federal judges have issued very high bond awards and denials of bond in asylum cases.",
+      "verdict": "supported",
+      "sources": [
+        "https://www.michiganpublic.org/criminal-justice-legal-system/2026-04-13/judges-ruled-immigrants-unlawfully-detained-in-michigan-but-many-still-cant-get-out",
+        "https://www.nilc.org/resources/rapid-response-update-on-bond-eligibility-for-undocumented-immigrants/"
+      ],
+      "notes": "Confirmed: bond hearings have been 'almost pre-ordained to be denied'; Matter of Yajure Hurtado (Sept 2025) BIA decision restricted bond eligibility; 100+ MI immigrants granted habeas were still denied bond."
+    },
+    {
+      "claim": "ICE is not following the law in detention conditions/practices.",
+      "verdict": "supported",
+      "sources": [
+        "https://www.commondreams.org/news/ice-illegal-arrests",
+        "https://www.michiganpublic.org/criminal-justice-legal-system/2026-03-04/judges-rule-hundreds-of-immigrants-unlawfully-detained-at-ice-center-in-northern-michigan"
+      ],
+      "notes": "4,421+ federal court rulings of unlawful detention since October 2025; multiple courts including in MI have ruled North Lake detentions unconstitutional."
+    }
+  ],
+  "summary": "4 claims reviewed: 2 supported, 2 uncertain (first-person speaker testimonials about specific individual). Reel cleared for render."
+}

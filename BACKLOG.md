@@ -83,6 +83,40 @@ Tier 1 features wired:
 
 Test coverage: 45 tests in `tests/cvs_lib/`.
 
+### Factcheck + LLM-driven claims verifier (2026-04-26)
+
+Pre-render fact-check shipped in `cvs_lib/factcheck.py`. Wired into
+`cvs_lib.preflight.run()` — every MPC reel now passes `reel_slug=` and
+gets:
+
+- **Name validation** against `mpc/roster.json` (8 entries: 7 people +
+  GEO Group as org). Misspelling → ERROR. Non-progressive figure
+  mention (e.g. Kristi Noem) → WARN. Unknown multi-word capitalized
+  phrase → WARN. Smart filtering keeps ALL-CAPS chip slogans,
+  deny-only phrases, and honorific-extended forms (e.g. "Rep. Donovan
+  McKinney") silent.
+- **Claims verification** via `mpc/claims/<reel_slug>.json`. The
+  legacy human sign-off was replaced (2026-04-26) by the
+  `mpc-claims-verifier` subagent (`.claude/agents/`), which extracts
+  factual claims from the reel's caption_lines + chips, web-verifies
+  each (.gov, AP, local MI press), records verdicts + source URLs,
+  and writes the file. Each record pins the reel's text to a 16-char
+  content_hash; any edit drifts the hash and blocks render until the
+  verifier subagent re-runs.
+
+Test coverage: +29 tests in `tests/cvs_lib/test_factcheck.py`
+(roster/extraction/match paths, content_hash stability, verifier
+field requirement, legacy human-sign rejection, preflight integration).
+Total: 93 tests in `tests/cvs_lib/`.
+
+To verify a reel before render, in Claude Code ask: "verify claims
+for `<slug>`" → spawns the verifier subagent.
+
+Status report any time:
+```
+python mpc/seed_claims.py
+```
+
 Remaining MPC follow-ups (post-lift):
 - Whether to drop `caption_lines` from individual reels and use the
   index auto-fill is an editorial decision per reel (raw Whisper text

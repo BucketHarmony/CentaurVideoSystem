@@ -1,0 +1,19 @@
+{
+  "content_hash": "725f1a4a0ab94b90",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "Donavan McKinney is a Michigan state representative serving the 11th House District.",
+      "verdict": "supported",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Donavan_McKinney",
+        "https://housedems.com/donavan-mckinney/",
+        "https://ballotpedia.org/Donavan_McKinney",
+        "https://wdet.org/2025/04/29/state-rep-donavan-mckinney-enters-race-for-13th-congressional-district-seat/"
+      ],
+      "notes": "McKinney was originally elected to the 14th in 2022; after MICRC redistricting (approved March 27, 2024), he ran in and won the 11th in 2024. Currently representing 11th. Chip 'MI-11' and his caption 'I currently serve as a state representative in the 11th House District' are accurate as of speech date (April 25, 2026). Note: name spelling is Donavan (not Donovan) per official sources, but spelling validation is handled by mpc/roster.json."
+    }
+  ],
+  "summary": "1 claim reviewed: 1 supported, 0 uncertain. McKinney's current district (11th) is correct as of speech date. Cleared for render."
+}

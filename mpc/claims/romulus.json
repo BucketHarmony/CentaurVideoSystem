@@ -1,0 +1,23 @@
+{
+  "content_hash": "c149e830beb5d6b9",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "DHS plans to convert a Romulus warehouse into an ICE detention facility.",
+      "verdict": "supported",
+      "sources": [
+        "https://michiganadvance.com/2026/04/25/hundreds-protest-in-romulus-against-proposal-to-convert-warehouse-into-ice-detention-center/",
+        "https://www.detroitnews.com/story/news/local/wayne-county/2026/04/25/romulus-ice-detention-center-march-protest-gilchrist-immigration/89795933007/"
+      ],
+      "notes": "DHS purchased the Romulus warehouse on Feb 4, 2026 for $34.7M for a planned 500-bed ICE detention center. Confirmed by court filings."
+    },
+    {
+      "claim": "An Ice Out Romulus rally / protest event is associated with May 18 (chip 'MAY 18').",
+      "verdict": "uncertain",
+      "sources": ["https://michiganadvance.com/2026/04/25/hundreds-protest-in-romulus-against-proposal-to-convert-warehouse-into-ice-detention-center/"],
+      "notes": "April 25 rally is well-documented. May 18 may refer to a follow-up action / next event date that isn't yet in press; chip is forward-looking call to action, not historical assertion."
+    }
+  ],
+  "summary": "2 claims reviewed: 1 supported, 1 uncertain (forward-looking date). Reel is largely chips (ROMULUS, DHS WAREHOUSE, MAY 18, CHIP IN). Cleared for render."
+}

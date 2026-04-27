@@ -1,0 +1,66 @@
+{
+  "_schema": {
+    "description": "MPC name roster. Every person mentioned in caption_lines, chip labels, or CTAs should have an entry here. The factcheck step validates spelling/casing on render and flags non-progressive figures for sign-off.",
+    "fields": {
+      "name": "Canonical full name (exact spelling/casing as it should appear in captions/chips)",
+      "role": "Short role description, e.g. 'MI State Rep, 11th House District'",
+      "progressive": "true | false | null. true = aligned with MPC values, false = needs critical framing on mention, null = stance unknown / not relevant",
+      "aliases": "Other valid forms (last name only, common short forms, titles). Case-insensitive.",
+      "notes": "Optional human notes (e.g. why marked non-progressive, links to citations)"
+    }
+  },
+  "donovan_mckinney": {
+    "name": "Donovan McKinney",
+    "role": "Michigan State Representative, 14th House District (formerly 11th, post-redistricting context per his own remarks)",
+    "progressive": true,
+    "aliases": ["McKinney", "Rep. McKinney", "Representative McKinney"],
+    "notes": "Verify district number against current MI legislature page before publishing — speaker said '11th' on 2026-04-25; redistricting may apply."
+  },
+  "rashida_tlaib": {
+    "name": "Rashida Tlaib",
+    "role": "U.S. Representative, MI 12th Congressional District",
+    "progressive": true,
+    "aliases": ["Tlaib", "Rep. Tlaib", "Congresswoman Tlaib"]
+  },
+  "dana_nessel": {
+    "name": "Dana Nessel",
+    "role": "Michigan Attorney General",
+    "progressive": true,
+    "aliases": ["Nessel", "AG Nessel", "Attorney General Nessel"]
+  },
+  "kristi_noem": {
+    "name": "Kristi Noem",
+    "role": "U.S. Secretary of Homeland Security",
+    "progressive": false,
+    "aliases": ["Noem", "Secretary Noem"],
+    "notes": "Subject of MPC criticism re: ICE policy. Mentions must be in critical framing — preflight will warn so the line gets human sign-off."
+  },
+  "juan": {
+    "name": "Juan",
+    "role": "North Lake detention facility detainee, released 2026-04-24 after 90 days. Last name withheld for safety per MPC policy.",
+    "progressive": null,
+    "aliases": [],
+    "notes": "First-name-only on purpose. Roster entry exists so 'Juan' isn't flagged as unknown."
+  },
+  "wigella": {
+    "name": "Wigella",
+    "role": "Speaker at Ice Out Romulus rally 2026-04-25; cited GEO Group profit + ICE court loss statistics",
+    "progressive": true,
+    "aliases": [],
+    "notes": "Single-name attribution per source video. Verify full name + affiliation before next render."
+  },
+  "hassan": {
+    "name": "Hassan",
+    "role": "Speaker at Ice Out Romulus rally 2026-04-25; '10 weeks protesting' clip",
+    "progressive": true,
+    "aliases": [],
+    "notes": "Single-name attribution per source video. Verify full name + affiliation before next render."
+  },
+  "geo_group": {
+    "name": "GEO Group",
+    "role": "Private prison corporation operating detention contracts (Northlake, Romulus). Subject of MPC 'follow the money' criticism.",
+    "progressive": null,
+    "aliases": ["GEO Group, Inc.", "The GEO Group"],
+    "notes": "Org, not a person. Roster entry exists to suppress unknown-name WARN. Reference financial claims to MPC/source material before publishing."
+  }
+}

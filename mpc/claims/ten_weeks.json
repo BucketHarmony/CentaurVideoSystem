@@ -1,0 +1,26 @@
+{
+  "content_hash": "916c2c18c3fa3604",
+  "verified_by": "claude-opus-4-7",
+  "verified_at": "2026-04-26",
+  "claims_reviewed": [
+    {
+      "claim": "Speaker (NDCM) has been protesting Romulus ICE detention for ten weeks (chip: 'WEEK 10 - STILL SHOWING UP'; caption: 'this is our tenth week protesting').",
+      "verdict": "uncertain",
+      "sources": ["https://michiganadvance.com/2026/04/25/hundreds-protest-in-romulus-against-proposal-to-convert-warehouse-into-ice-detention-center/"],
+      "notes": "First-person speaker quote verified against transcript at mpc/index/clips/20260425_154736.json segment 12.34-18.34. Press confirms ongoing weekly protests at Romulus but does not enumerate to ten. Attributed quote rule applies."
+    },
+    {
+      "claim": "Hassan: 'Our democracy is at test right now.' (subjective testimony)",
+      "verdict": "supported",
+      "sources": [],
+      "notes": "Verified against transcript at mpc/index/clips/20260425_165207.json segment 11.77-14.94. Pure subjective claim by named speaker — no factual assertion to fact-check."
+    },
+    {
+      "claim": "NDCM: 'We have to build the power that elected officials - local officials - cannot ignore.' (strategic position)",
+      "verdict": "supported",
+      "sources": [],
+      "notes": "Verified against transcript at mpc/index/clips/20260425_154736.json segment 0.34-10.34. Caption text matches what the speaker said on camera, including the 'local officials' aside. Subjective political position by named speaker."
+    }
+  ],
+  "summary": "3 claims reviewed: 2 supported (subjective speaker testimony, transcript-verified), 1 uncertain (10-week count is first-person, partially press-corroborated). All caption text now matches source transcripts verbatim. Cleared for render."
+}

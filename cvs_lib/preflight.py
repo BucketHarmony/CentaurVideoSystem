@@ -26,6 +26,13 @@ from typing import Iterable, List, Sequence, Tuple
 ERROR = "ERROR"
 WARN = "WARN"
 
+# MPC default locations. When `reel_slug` is provided and the factcheck
+# paths aren't, run() auto-resolves to these. Override via explicit args
+# if a non-MPC pipeline ever calls into preflight with a reel_slug.
+_MPC_ROOT = Path("E:/AI/CVS/mpc")
+_MPC_ROSTER_DEFAULT = _MPC_ROOT / "roster.json"
+_MPC_CLAIMS_DEFAULT = _MPC_ROOT / "claims"
+
 
 @dataclass(frozen=True)
 class Issue:
@@ -160,11 +167,20 @@ def run(
     target_duration: float,
     rotation_cache_dir: Path = Path("E:/AI/CVS/ComfyUI/output/mpc/_rot_cache"),
     strict: bool = False,
+    factcheck_roster: Path | None = None,
+    factcheck_claims_dir: Path | None = None,
+    reel_slug: str | None = None,
+    factcheck_require_claims: bool = True,
 ) -> int:
     """Run all validators and return an exit code (0 OK, 1 fatal).
 
     Hard errors exit 1. Warnings exit 1 only when strict=True.
     Prints all issues regardless.
+
+    If `factcheck_roster` is provided, also runs `cvs_lib.factcheck` (name
+    validation against the roster + per-reel claims sign-off check). The
+    claims check requires `factcheck_claims_dir` and `reel_slug`; pass
+    `factcheck_require_claims=False` to validate names only.
     """
     issues: List[Issue] = []
     issues += assert_sources_exist(beats)
@@ -176,8 +192,35 @@ def run(
     for i in issues:
         print(i.format())
 
-    has_error = any(i.severity == ERROR for i in issues)
-    has_warn = any(i.severity == WARN for i in issues)
+    factcheck_issues = []
+    # Auto-resolve MPC defaults when reel_slug is provided.
+    if reel_slug is not None and factcheck_roster is None:
+        factcheck_roster = _MPC_ROSTER_DEFAULT
+    if reel_slug is not None and factcheck_claims_dir is None:
+        factcheck_claims_dir = _MPC_CLAIMS_DEFAULT
+
+    if factcheck_roster is not None:
+        from cvs_lib import factcheck as _fc
+        require_claims = (
+            factcheck_require_claims
+            and factcheck_claims_dir is not None
+            and reel_slug is not None
+        )
+        factcheck_issues = _fc.run(
+            beats=beats,
+            reel_slug=reel_slug or "",
+            roster_path=factcheck_roster,
+            claims_dir=factcheck_claims_dir or Path("."),
+            require_claims=require_claims,
+        )
+        for i in factcheck_issues:
+            print(i.format())
+
+    all_severities = (
+        [i.severity for i in issues] + [i.severity for i in factcheck_issues]
+    )
+    has_error = any(s == ERROR for s in all_severities)
+    has_warn = any(s == WARN for s in all_severities)
 
     if has_error or (strict and has_warn):
         return 1
@@ -189,8 +232,21 @@ def run_or_exit(
     target_duration: float,
     rotation_cache_dir: Path = Path("E:/AI/CVS/ComfyUI/output/mpc/_rot_cache"),
     strict: bool = False,
+    factcheck_roster: Path | None = None,
+    factcheck_claims_dir: Path | None = None,
+    reel_slug: str | None = None,
+    factcheck_require_claims: bool = True,
 ) -> None:
     """Convenience wrapper for scripts: exits process on failure."""
-    code = run(beats, target_duration, rotation_cache_dir, strict)
+    code = run(
+        beats,
+        target_duration,
+        rotation_cache_dir,
+        strict,
+        factcheck_roster=factcheck_roster,
+        factcheck_claims_dir=factcheck_claims_dir,
+        reel_slug=reel_slug,
+        factcheck_require_claims=factcheck_require_claims,
+    )
     if code != 0:
         sys.exit(code)

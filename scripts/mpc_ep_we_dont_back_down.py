@@ -220,11 +220,8 @@ def harmonic_hum():
 
 
 def synthesize_narration(env):
-    return _lib_synthesize_narration(
-        env, NARRATION_LINES,
-        cache_dir=TTS_CACHE, cache_prefix=TTS_PREFIX,
-        duration=DURATION, scene_start=_scene_start, sr=SR,
-    )
+    # AI VO disabled 2026-04-26 per editorial call. Source audio + bed only.
+    return None
 
 
 def measure_tts_duration(slug):
@@ -437,7 +434,8 @@ def main():
         )
         return
 
-    _preflight(BEATS, DURATION, rotation_cache_dir=_ROT_CACHE_DIR)
+    _preflight(BEATS, DURATION, rotation_cache_dir=_ROT_CACHE_DIR,
+               reel_slug="we_dont_back_down")
 
     print("\n[pre-warm] generating any missing TTS...")
     synthesize_narration(load_env())
