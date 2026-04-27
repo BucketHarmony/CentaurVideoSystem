@@ -243,7 +243,11 @@ def main():
     args = ap.parse_args()
 
     root = Path(args.root)
-    videos = sorted(root.glob("*.mp4"))
+    # Case-insensitive across common video extensions. iPhone footage
+    # often lands as .MOV (HEVC); without this we silently skip it.
+    VIDEO_EXTS = {".mp4", ".mov", ".m4v", ".mkv", ".avi"}
+    videos = sorted(p for p in root.iterdir()
+                    if p.is_file() and p.suffix.lower() in VIDEO_EXTS)
     print(f"Found {len(videos)} videos in {root}")
     if not videos:
         return
