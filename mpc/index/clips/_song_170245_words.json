@@ -1,0 +1,128 @@
+[
+  {
+    "start": 0.0,
+    "end": 7.12,
+    "text": "We are locked inside, together we'll abolish ice.",
+    "words": [
+      {
+        "start": 0.0,
+        "end": 0.22,
+        "word": "We"
+      },
+      {
+        "start": 0.22,
+        "end": 0.28,
+        "word": "are"
+      },
+      {
+        "start": 0.28,
+        "end": 0.72,
+        "word": "locked"
+      },
+      {
+        "start": 0.72,
+        "end": 1.7,
+        "word": "inside,"
+      },
+      {
+        "start": 2.42,
+        "end": 3.36,
+        "word": "together"
+      },
+      {
+        "start": 3.36,
+        "end": 4.26,
+        "word": "we'll"
+      },
+      {
+        "start": 5.28,
+        "end": 6.48,
+        "word": "abolish"
+      },
+      {
+        "start": 6.48,
+        "end": 7.12,
+        "word": "ice."
+      }
+    ]
+  },
+  {
+    "start": 8.18,
+    "end": 12.38,
+    "text": "This is for our neighbors who are locked inside.",
+    "words": [
+      {
+        "start": 8.18,
+        "end": 8.48,
+        "word": "This"
+      },
+      {
+        "start": 8.48,
+        "end": 8.76,
+        "word": "is"
+      },
+      {
+        "start": 8.76,
+        "end": 9.18,
+        "word": "for"
+      },
+      {
+        "start": 9.18,
+        "end": 9.54,
+        "word": "our"
+      },
+      {
+        "start": 9.54,
+        "end": 9.96,
+        "word": "neighbors"
+      },
+      {
+        "start": 9.96,
+        "end": 10.5,
+        "word": "who"
+      },
+      {
+        "start": 10.5,
+        "end": 10.74,
+        "word": "are"
+      },
+      {
+        "start": 10.74,
+        "end": 11.14,
+        "word": "locked"
+      },
+      {
+        "start": 11.14,
+        "end": 12.38,
+        "word": "inside."
+      }
+    ]
+  },
+  {
+    "start": 13.14,
+    "end": 17.38,
+    "text": "Together we'll abolish ice.",
+    "words": [
+      {
+        "start": 13.14,
+        "end": 13.7,
+        "word": "Together"
+      },
+      {
+        "start": 13.7,
+        "end": 14.92,
+        "word": "we'll"
+      },
+      {
+        "start": 15.6,
+        "end": 16.94,
+        "word": "abolish"
+      },
+      {
+        "start": 16.94,
+        "end": 17.38,
+        "word": "ice."
+      }
+    ]
+  }
+]

@@ -187,6 +187,162 @@ def render_caption_strip(
     return np.array(img)
 
 
+def render_callout(
+    text: str,
+    *,
+    font_path: str,
+    size: int = 180,
+    fill=(255, 255, 255, 255),
+    stroke_fill=(139, 58, 82, 255),
+    stroke_w: int = 8,
+    pad: int = 24,
+):
+    """Render a stylized callout (big punch text with stroke).
+
+    Sized to the text bounds plus `pad`. Default styling: white fill,
+    deep-magenta outline, ~180pt — designed for muted/sound-off
+    legibility over rally footage.
+    """
+    import numpy as np
+    from PIL import Image, ImageDraw, ImageFont
+
+    fnt = ImageFont.truetype(font_path, size)
+    measure = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    l, t, r, b = measure.textbbox((0, 0), text, font=fnt, stroke_width=stroke_w)
+    w_total = (r - l) + 2 * pad
+    h_total = (b - t) + 2 * pad
+    img = Image.new("RGBA", (w_total, h_total), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    draw.text((pad - l, pad - t), text, font=fnt, fill=fill,
+              stroke_width=stroke_w, stroke_fill=stroke_fill)
+    return np.array(img)
+
+
+def make_callout_clips(
+    callouts: Sequence[Dict],
+    *,
+    width: int,
+    font_path: str,
+    y_anchor: int = 1300,
+    size: int = 180,
+    fill=(255, 255, 255, 255),
+    stroke_fill=(139, 58, 82, 255),
+    stroke_w: int = 8,
+):
+    """Build MoviePy ImageClips for stylized callouts.
+
+    Each callout entry: ``{"start", "end", "text"}`` with optional
+    overrides ``size``, ``fill``, ``stroke_fill``, ``stroke_w``, ``y``.
+    Centered horizontally; vertical center at ``y_anchor`` unless the
+    callout overrides it. Quick (0.08s) crossfade-in for a punchy feel.
+    """
+    import numpy as np
+    from moviepy.editor import ImageClip
+
+    clips = []
+    for c in callouts:
+        rgba = render_callout(
+            c["text"], font_path=font_path,
+            size=c.get("size", size),
+            fill=c.get("fill", fill),
+            stroke_fill=c.get("stroke_fill", stroke_fill),
+            stroke_w=c.get("stroke_w", stroke_w),
+        )
+        rgb = rgba[:, :, :3]
+        alpha = rgba[:, :, 3].astype(np.float32) / 255.0
+        dur = max(0.05, c["end"] - c["start"])
+        clip = ImageClip(rgb).set_duration(dur)
+        clip = clip.set_mask(ImageClip(alpha, ismask=True).set_duration(dur))
+        h_clip, w_clip = rgba.shape[:2]
+        x = (width - w_clip) // 2
+        y = c.get("y", y_anchor) - h_clip // 2
+        clip = clip.set_start(c["start"]).set_position((x, y))
+        clip = clip.crossfadein(min(0.08, dur / 6))
+        clips.append(clip)
+    return clips
+
+
+def make_karaoke_lines(
+    lines: Sequence[Dict],
+    *,
+    width: int,
+    font_path: str,
+    y_anchor: int = 1500,
+    size: int = 90,
+    word_spacing: int = 18,
+    fill=(255, 255, 255, 255),
+    stroke_fill=(139, 58, 82, 255),
+    stroke_w: int = 6,
+    fade_in: float = 0.10,
+):
+    """Word-by-word karaoke clips for sung lyrics.
+
+    Each line contains pre-timed words; words appear at their `start`
+    timestamp and persist until the line's `line_end`, then clear so the
+    next line builds fresh. Words within a line are pre-laid-out so they
+    appear in stable horizontal positions (line builds left-to-right
+    rather than re-layout-ing on each word).
+
+    `lines` schema:
+        [{"line_start": float, "line_end": float,
+          "words": [{"start": float, "end": float, "text": str}, ...]}]
+
+    All words in a line render in `fill` with `stroke_fill` outline —
+    no separate "active vs settled" coloring (keeps the visual stable
+    and readable on a phone).
+    """
+    import numpy as np
+    from PIL import Image, ImageDraw, ImageFont
+    from moviepy.editor import ImageClip
+
+    fnt = ImageFont.truetype(font_path, size)
+    measure = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+
+    clips = []
+    for line in lines:
+        # Render each word into a tightly-bounded RGBA strip; keep its
+        # bbox so we can lay them out side-by-side on the same baseline.
+        word_imgs = []
+        max_h = 0
+        for w in line["words"]:
+            text = str(w["text"])
+            l, t, r, b = measure.textbbox(
+                (0, 0), text, font=fnt, stroke_width=stroke_w
+            )
+            w_w = (r - l) + 4
+            w_h = (b - t) + 4
+            img = Image.new("RGBA", (w_w, w_h), (0, 0, 0, 0))
+            draw = ImageDraw.Draw(img)
+            draw.text(
+                (-l + 2, -t + 2), text, font=fnt, fill=fill,
+                stroke_width=stroke_w, stroke_fill=stroke_fill,
+            )
+            arr = np.array(img)
+            word_imgs.append((w, arr))
+            if arr.shape[0] > max_h:
+                max_h = arr.shape[0]
+
+        # Center the whole line horizontally.
+        total_w = sum(arr.shape[1] for _, arr in word_imgs) + \
+                  word_spacing * max(0, len(word_imgs) - 1)
+        x = (width - total_w) // 2
+
+        for w, arr in word_imgs:
+            rgb = arr[:, :, :3]
+            alpha = arr[:, :, 3].astype(np.float32) / 255.0
+            dur = max(0.05, float(line["line_end"]) - float(w["start"]))
+            clip = ImageClip(rgb).set_duration(dur)
+            clip = clip.set_mask(ImageClip(alpha, ismask=True).set_duration(dur))
+            # Vertical center the word strip on `y_anchor`.
+            y_pos = y_anchor - arr.shape[0] // 2
+            clip = clip.set_start(float(w["start"])).set_position((x, y_pos))
+            clip = clip.crossfadein(min(fade_in, dur / 6))
+            clips.append(clip)
+            x += arr.shape[1] + word_spacing
+
+    return clips
+
+
 def make_caption_clips(
     events: Sequence[Dict],
     *,
