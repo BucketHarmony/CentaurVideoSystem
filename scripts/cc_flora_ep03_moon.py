@@ -25,7 +25,6 @@ from pathlib import Path
 
 import numpy as np
 import requests
-import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
 import sys
@@ -35,6 +34,13 @@ from cvs_lib.image_filters import (
     cottagecore_grade as _cc_grade,
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
+)
+from cvs_lib.audio import (
+    ambient_pad,
+    chime_layer,
+    pad_envelope,
+    tension_partial,
+    lowpass_normalize,
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -326,31 +332,22 @@ def add_text_overlays(img, t, narration_times):
 # ═══════════════════════════════════════════════════════════════════════════
 
 def generate_ambient_pad(duration, sr=44100):
-    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
-    pad = np.sin(2 * np.pi * 110 * t) * 0.05
-    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035
-    pad += np.sin(2 * np.pi * 220 * t) * 0.025
-    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
-    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
-    pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
-    pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
-    pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
-    # Act 3: awakening — brighter shimmer
-    act3 = np.clip((t - 20) / 2.0, 0, 1) * np.clip((duration - t) / 2.0, 0, 1)
-    pad += np.sin(2 * np.pi * 329.63 * t) * 0.012 * act3  # E4 (hopeful)
-    chimes = [
+    pad = ambient_pad(duration, mood="cottagecore_warm", sr=sr, apply_envelope=False)
+
+    # Act 3: E4 hopeful awakening shimmer.
+    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.012,
+                           fade_in_t=20.0, fade_in_dur=2.0,
+                           fade_out_t=duration, fade_out_dur=2.0)
+
+    pad += chime_layer(duration, [
         (0.1, 880), (0.5, 1108.73), (2.5, 880), (5.0, 1318.51),
         (8.0, 880), (10.5, 1108.73), (13.0, 880), (16.0, 1318.51),
         (19.0, 880), (22.0, 1108.73), (25.0, 880), (28.0, 1318.51),
-    ]
-    for ct, cf in chimes:
-        env_t = t - ct
-        env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
-        pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
-    pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
-    sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
-    pad = scipy.signal.sosfilt(sos, pad)
-    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
+    ], mood="cottagecore_warm", sr=sr)
+
+    pad *= pad_envelope(duration, sr=sr, mood="cottagecore_warm")
+    pad = lowpass_normalize(pad, mood="cottagecore_warm", sr=sr)
+
     out = OUTPUT_DIR / "cc_flora_ep03_pad.wav"
     with wave.open(str(out), 'w') as wf:
         wf.setnchannels(1); wf.setsampwidth(2); wf.setframerate(sr)
