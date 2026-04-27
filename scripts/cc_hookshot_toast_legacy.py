@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+[FROZEN — pre-cvs_lib.audio migration. Kept as rollback target through
+Phase 7 of the audio overhaul (bouncing-velvet-tympani). Do not edit.]
+
 CVS -- Hookshot: Toast the Cat (3 hook variants)
 Same episode content, 3 different 3-second hooks for A/B testing.
 
@@ -33,12 +36,6 @@ from cvs_lib.image_filters import (
     hookshot_cottagecore_grade as _hk_grade,
     hookshot_soft_bloom as _hk_bloom,
     hookshot_vignette as _hk_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    pad_envelope,
-    sting,
 )
 
 load_dotenv()
@@ -194,19 +191,35 @@ def generate_audio(duration):
     n = int(duration * SR)
     t = np.linspace(0, duration, n, dtype=np.float64)
 
-    sting_arr = sting(duration, mood="hookshot_toast", rng_seed=42, sr=SR)
+    # Sting
+    sting = np.zeros(n)
+    sn = min(int(0.5 * SR), n)
+    st = t[:sn]
+    sting[:sn] += np.sin(2 * np.pi * 55 * st) * 0.4 * np.exp(-st * 7)
+    tn = min(int(0.025 * SR), n)
+    sting[:tn] += np.random.randn(tn) * 0.3 * np.exp(-np.linspace(0, 1, tn) * 9)
 
-    pad = ambient_pad(duration, mood="hookshot_toast", apply_envelope=False, sr=SR)
-    pad *= pad_envelope(duration, mood="hookshot_toast", sr=SR)
+    # A-minor pad
+    A2, C3, E3, A3 = 110.0, 130.81, 164.81, 220.0
+    drone = (np.sin(2*np.pi*A2*t)*0.040 + np.sin(2*np.pi*C3*t)*0.025 +
+             np.sin(2*np.pi*E3*t)*0.030 + np.sin(2*np.pi*A3*t)*0.020)
+    lfo = 0.5 + 0.5 * np.sin(2*np.pi*0.12*t)
+    shimmer = np.sin(2*np.pi*440*t)*0.010*lfo + np.sin(2*np.pi*523.25*t)*0.007*(1-lfo)
+    pad = drone + shimmer
+    env = np.clip(t / 2.5, 0, 1) * np.clip((duration - t) / 3.0, 0, 1)
+    pad *= env
 
-    schedule = [
-        (ct, cf) for ct, cf in
-        [(4.0, 880.0), (9.0, 1046.5), (15.0, 1318.5), (21.0, 880.0), (27.0, 1046.5)]
-        if ct < duration - 1
-    ]
-    chimes = chime_layer(duration, schedule, mood="hookshot_toast", sr=SR)
+    # Chimes
+    chime_t = [4.0, 9.0, 15.0, 21.0, 27.0]
+    chime_n = [880.0, 1046.5, 1318.5, 880.0, 1046.5]
+    chimes = np.zeros(n)
+    for ct, freq in zip(chime_t, chime_n):
+        if ct >= duration - 1:
+            continue
+        ec = np.where(t-ct >= 0, np.exp(-(t-ct)*2.5) * np.clip((t-ct)*20, 0, 1), 0)
+        chimes += np.sin(2*np.pi*freq*t) * 0.025 * ec
 
-    mix = sting_arr + pad + chimes
+    mix = sting + pad + chimes
     try:
         import scipy.signal
         sos = scipy.signal.butter(4, 3000, 'low', fs=SR, output='sos')
@@ -215,7 +228,7 @@ def generate_audio(duration):
         pass
 
     pan = 0.5 + 0.3 * np.sin(2*np.pi*0.05*t)
-    stereo = np.column_stack([mix * (1-pan) + sting_arr, mix * pan + sting_arr])
+    stereo = np.column_stack([mix * (1-pan) + sting, mix * pan + sting])
     pk = np.abs(stereo).max()
     return stereo / pk * 0.7 if pk > 0 else stereo
 

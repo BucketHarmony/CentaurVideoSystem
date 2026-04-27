@@ -706,6 +706,30 @@ MOODS: dict = {
         },
     ),
 
+    "hookshot_toast": Mood(  # toast — A minor, no high tone, single-lfo shimmer
+        drone=(
+            (110.00, 0.040),
+            (130.81, 0.025),
+            (164.81, 0.030),
+            (220.00, 0.020),
+        ),
+        shimmer=(
+            (440.00, 0.010, "lfo"),
+            (523.25, 0.007, "anti_lfo"),
+        ),
+        chime_decay=2.5,
+        chime_attack=20.0,
+        chime_gain=0.025,
+        chime_octave_gain=0.0,
+        envelope_floor=0.0,
+        envelope_fade_in_s=2.5,
+        envelope_fade_out_s=3.0,
+        sting={
+            "sub_hz": 55.0, "sub_gain": 0.4, "sub_decay": 7.0, "dur": 0.5,
+            "transient_dur": 0.025, "transient_gain": 0.3, "transient_decay": 9.0,
+        },
+    ),
+
     # hookshot_collapse (midnight pair) is a TWO-mood cross-fade and
     # doesn't fit the single-Mood schema. Phase 5 handles it as a
     # caller-side blend between hookshot_attention (pre-crash) and
