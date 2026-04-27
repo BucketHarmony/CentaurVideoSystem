@@ -13,13 +13,16 @@ import pytest
 
 from cvs_lib.audio import (
     MOODS,
+    MOTIFS,
     Mood,
     ambient_pad,
     chime_layer,
     impact,
     lowpass_normalize,
+    motif,
     pad_envelope,
     sting,
+    sub_bass,
     tension_partial,
 )
 
@@ -344,3 +347,72 @@ def test_lowpass_normalize_attenuates_high_frequencies():
     # Cottagecore lowpass is 3 kHz, order 4. 500 Hz passes; 5 kHz is
     # well above cutoff and should be substantially attenuated.
     assert spec[bin_500] > 5 * spec[bin_5k]
+
+
+# --------------------------------------------------------------------------- #
+# sub_bass
+# --------------------------------------------------------------------------- #
+
+
+def test_sub_bass_shape_and_peak():
+    sb = sub_bass(5.0, mood="cottagecore_warm", sr=SR, gain=0.18)
+    assert sb.shape == (5 * SR,)
+    assert sb.dtype == np.float64
+    assert np.max(np.abs(sb)) == pytest.approx(0.18, abs=1e-4)
+
+
+def test_sub_bass_starts_and_ends_silent():
+    sb = sub_bass(5.0, mood="cottagecore_warm", sr=SR,
+                  fade_in_s=1.0, fade_out_s=1.5)
+    assert abs(sb[0]) < 1e-6
+    assert abs(sb[-1]) < 1e-6
+
+
+def test_sub_bass_sub_octave_default_below_fundamental():
+    """Default sub_octave=-1 means carrier is half the fundamental."""
+    fundamental = MOODS["cottagecore_warm"].drone[0][0]
+    sb = sub_bass(2.0, mood="cottagecore_warm", sr=SR,
+                  fade_in_s=0, fade_out_s=0)
+    spec = np.abs(np.fft.rfft(sb))
+    freqs = np.fft.rfftfreq(len(sb), d=1 / SR)
+    expected_hz = fundamental * 0.5
+    peak_bin = np.argmax(spec)
+    peak_hz = freqs[peak_bin]
+    assert abs(peak_hz - expected_hz) < 2.0  # within 2 Hz
+
+
+# --------------------------------------------------------------------------- #
+# motif
+# --------------------------------------------------------------------------- #
+
+
+def test_motifs_registry_has_named_signals():
+    assert {"hook_land", "act_break", "resolve", "reveal"} <= set(MOTIFS)
+
+
+def test_motif_unknown_name_raises():
+    with pytest.raises(ValueError, match="Unknown motif"):
+        motif("nonexistent", 0.5, duration=2.0, mood="cottagecore_warm", sr=SR)
+
+
+def test_motif_act_break_places_three_chimes():
+    """act_break has 3 notes at offsets 0.0/0.15/0.30 from t_start."""
+    out = motif("act_break", 1.0, duration=4.0, mood="cottagecore_warm", sr=SR)
+    assert out.shape == (4 * SR,)
+    # Energy concentrated in [1.0, 1.5) window where the three notes ring.
+    pre = np.sum(np.abs(out[:int(0.95 * SR)]))
+    motif_window = np.sum(np.abs(out[int(1.0 * SR):int(1.6 * SR)]))
+    assert motif_window > 100 * pre
+
+
+def test_motif_t_start_shifts_signal():
+    """Same motif at different start times produces signal in
+    different windows."""
+    early = motif("hook_land", 0.5, duration=4.0, mood="cottagecore_warm", sr=SR)
+    late = motif("hook_land", 2.0, duration=4.0, mood="cottagecore_warm", sr=SR)
+    win = (int(0.5 * SR), int(1.0 * SR))
+    early_rms = float(np.sqrt(np.mean(early[win[0]:win[1]] ** 2)))
+    late_rms = float(np.sqrt(np.mean(late[win[0]:win[1]] ** 2)))
+    # Early motif rings inside [0.5, 1.0); late hasn't started yet.
+    assert early_rms > 1e-3
+    assert late_rms < 1e-9

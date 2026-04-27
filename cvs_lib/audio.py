@@ -1041,3 +1041,63 @@ def lowpass_normalize(
     sos = butter(m.lowpass_order, m.lowpass_hz, "low", fs=sr, output="sos")
     pad = sosfilt(sos, pad)
     return pad / (np.max(np.abs(pad)) + 1e-8) * m.pad_target_gain
+
+
+def sub_bass(
+    duration: float,
+    *,
+    mood: str = "cottagecore_warm",
+    sr: int = DEFAULT_SR,
+    gain: float = 0.18,
+    fade_in_s: float = 1.0,
+    fade_out_s: float = 1.5,
+    sub_octave: int = -1,
+) -> np.ndarray:
+    """Sub-bass sine layer at the mood's chord fundamental shifted by
+    `sub_octave` octaves (default -1 = one octave below fundamental).
+
+    Slow fade in/out so the sub doesn't click on entry. Mono float64.
+    Future episodes layer this under `ambient_pad` for low-end weight
+    that the additive synth doesn't deliver on its own.
+    """
+    m = MOODS[mood]
+    fundamental = m.drone[0][0] * (2.0 ** sub_octave)
+    n = int(duration * sr)
+    t = np.linspace(0, duration, n, dtype=np.float64)
+    fade_in = np.clip(t / fade_in_s, 0, 1) if fade_in_s > 0 else np.ones(n)
+    fade_out = np.clip((duration - t) / fade_out_s, 0, 1) if fade_out_s > 0 else np.ones(n)
+    return np.sin(2 * np.pi * fundamental * t) * gain * (fade_in * fade_out)
+
+
+# Pre-baked melodic snippets keyed by signal name. Frequencies are
+# absolute (in Hz) so motifs work across moods without scale-degree
+# logic. Format: [(offset_seconds, freq_hz), ...].
+MOTIFS: Dict[str, Sequence[Tuple[float, float]]] = {
+    "hook_land": [(0.0, 880.0)],                                   # single A5
+    "act_break": [(0.0, 880.0), (0.15, 698.46), (0.30, 587.33)],   # A5→F5→D5 descending
+    "resolve":   [(0.0, 587.33), (0.20, 698.46), (0.45, 880.0)],   # D5→F5→A5 ascending triad
+    "reveal":    [(0.0, 587.33), (0.30, 1174.66)],                 # D5→D6 octave rise
+}
+
+
+def motif(
+    name: str,
+    t_start: float,
+    *,
+    duration: float,
+    mood: str = "cottagecore_warm",
+    sr: int = DEFAULT_SR,
+    gain: float = 0.04,
+) -> np.ndarray:
+    """Pitched melodic snippet at a moment. Inverse of chimes —
+    chimes are ornamental, motifs are signal (hook landing, act
+    break, reveal). Decay/attack come from the mood's chime envelope
+    so motifs sit naturally inside a pad of the same mood.
+    """
+    if name not in MOTIFS:
+        raise ValueError(f"Unknown motif {name!r}; available: {list(MOTIFS)}")
+    schedule = [(t_start + ot, f) for ot, f in MOTIFS[name]]
+    return chime_layer(
+        duration, schedule, mood=mood, sr=sr,
+        gain_override=gain, octave_gain_override=0.0,
+    )
