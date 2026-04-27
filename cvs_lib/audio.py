@@ -973,11 +973,20 @@ def sting(
     out += np.sin(2 * np.pi * s["sub_hz"] * t) * s["sub_gain"] * sub_env
 
     rng = np.random.RandomState(rng_seed)
-    transient_env = np.where(
-        (st >= 0) & (st < s["transient_dur"]),
-        np.exp(-st * s["transient_decay"]),
-        0,
-    )
+    # Transient envelope: e-folds-over-window. Matches the legacy
+    # `np.exp(-np.linspace(0, 1, trans_n) * transient_decay)` shape, where
+    # `transient_decay` is the exponent reached at the end of the window
+    # (not a per-second rate). Index-based progress so the env is bit-
+    # identical to the legacy linspace when t_start=0 and trans_n samples
+    # fit inside the output.
+    transient_env = np.zeros(n, dtype=np.float64)
+    trans_n = int(s["transient_dur"] * sr)
+    i_start = int(t_start * sr)
+    i_end = min(i_start + trans_n, n)
+    n_active = i_end - i_start
+    if n_active > 0 and trans_n > 0:
+        progress = np.linspace(0, 1, trans_n)[:n_active]
+        transient_env[i_start:i_end] = np.exp(-progress * s["transient_decay"])
     out += rng.randn(n) * s["transient_gain"] * transient_env
 
     if "high_hz" in s and s.get("high_gain", 0) > 0:

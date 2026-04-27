@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+[FROZEN — pre-cvs_lib.audio migration. Kept as rollback target through
+Phase 7 of the audio overhaul (bouncing-velvet-tympani). Do not edit.]
+
 CVS -- Hookshot Pipeline v2
 Narration-driven TikTok video with 3-second attention science.
 
@@ -51,13 +54,6 @@ from cvs_lib.image_filters import (
     hookshot_cottagecore_grade as _hk_grade,
     hookshot_soft_bloom as _hk_bloom,
     hookshot_vignette as _hk_vignette,
-)
-from cvs_lib.audio import (
-    MOODS as _MOODS,
-    ambient_pad,
-    chime_layer,
-    pad_envelope,
-    sting,
 )
 
 load_dotenv()
@@ -294,54 +290,66 @@ def draw_text_pill(img, text, y, font, text_color=CREAM, max_width=None):
 
 # ── Audio Synthesis ─────────────────────────────────────────────────────────
 
-def _hookshot_chime_schedule(duration):
-    """Build the (t, freq) schedule the legacy while-loop produces:
-    every 4.5s starting at 3.0s, cycling through 6 A-minor pentatonic
-    notes, until duration-1.0."""
-    notes = [880.0, 1046.5, 1318.5, 880.0, 1318.5, 1046.5]
-    schedule = []
-    ct, ci = 3.0, 0
-    while ct < duration - 1.0:
-        schedule.append((ct, notes[ci % len(notes)]))
-        ct += 4.5
-        ci += 1
-    return schedule
-
-
 def generate_bed_audio(duration):
-    """Sting + A-minor ambient pad + chimes. Returns stereo numpy array.
-
-    The transient noise burst inside the sting was previously unseeded
-    (`np.random.randn(trans_n)` against the global RNG); migration
-    canonicalizes it to rng_seed=42 so renders are reproducible.
-    """
-    from scipy.signal import butter, sosfilt
-
+    """Sting + A-minor ambient pad + chimes. Returns stereo numpy array."""
     n = int(duration * SR)
     t = np.linspace(0, duration, n, dtype=np.float64)
 
-    sting_arr = sting(duration, mood="hookshot_attention",
-                      t_start=0.0, sr=SR, rng_seed=42)
+    # Sting at t=0 (sub + transient)
+    sting = np.zeros(n)
+    sting_n = min(int(0.5 * SR), n)
+    st = t[:sting_n]
+    sting[:sting_n] += np.sin(2 * np.pi * 60 * st) * 0.35 * np.exp(-st * 8)
+    trans_n = min(int(0.02 * SR), n)
+    sting[:trans_n] += np.random.randn(trans_n) * 0.25 * np.exp(-np.linspace(0, 1, trans_n) * 10)
+    sting[:sting_n] += np.sin(2 * np.pi * 880 * st) * 0.08 * np.clip(st * 4, 0, 1) * np.exp(-st * 3)
 
-    pad = ambient_pad(duration, mood="hookshot_attention", sr=SR,
-                      apply_envelope=False)
-    pad_env = pad_envelope(duration, variant="hookshot_linspace", sr=SR)
+    # Pad (fades in from 1s)
+    A2, C3, E3, A3 = 110.0, 130.81, 164.81, 220.0
+    A4, C5, E5 = 440.0, 523.25, 659.25
+    drone = (np.sin(2*np.pi*A2*t)*0.040 + np.sin(2*np.pi*C3*t)*0.025 +
+             np.sin(2*np.pi*E3*t)*0.030 + np.sin(2*np.pi*A3*t)*0.020)
+    lfo1 = 0.5 + 0.5 * np.sin(2*np.pi*0.12*t)
+    lfo2 = 0.5 + 0.5 * np.sin(2*np.pi*0.18*t + 1.0)
+    shimmer = (np.sin(2*np.pi*A4*t)*0.010*lfo1 + np.sin(2*np.pi*C5*t)*0.007*lfo2 +
+               np.sin(2*np.pi*E5*t)*0.005)
+    pad = drone + shimmer
+
+    pad_env = np.zeros(n)
+    ramp_start = min(int(1.0*SR), n)
+    ramp_len = min(int(3*SR), n - ramp_start)
+    if ramp_len > 0:
+        pad_env[ramp_start:ramp_start+ramp_len] = np.linspace(0, 1, ramp_len)
+        pad_env[ramp_start+ramp_len:] = 1.0
+    fade_start = max(0, n - int(3*SR))
+    pad_env[fade_start:] *= np.linspace(1, 0, n - fade_start)
     pad *= pad_env
 
-    chimes = chime_layer(duration, _hookshot_chime_schedule(duration),
-                         mood="hookshot_attention", sr=SR)
+    # Chimes (every ~5s starting at 3s)
+    chime_notes = [880.0, 1046.5, 1318.5, 880.0, 1318.5, 1046.5]
+    ct = 3.0
+    ci = 0
+    chimes = np.zeros(n)
+    while ct < duration - 1.0:
+        freq = chime_notes[ci % len(chime_notes)]
+        env = np.where(t-ct >= 0, np.exp(-(t-ct)*2.5) * np.clip((t-ct)*20, 0, 1), 0)
+        chimes += np.sin(2*np.pi*freq*t) * 0.025 * env
+        chimes += np.sin(2*np.pi*freq*2*t) * 0.008 * env
+        ct += 4.5
+        ci += 1
 
-    mix = sting_arr + pad + chimes
-    sos = butter(4, _MOODS["hookshot_attention"].lowpass_hz,
-                 "low", fs=SR, output="sos")
-    mix = sosfilt(sos, mix)
+    mix = sting + pad + chimes
+    try:
+        import scipy.signal
+        sos = scipy.signal.butter(4, 3000, 'low', fs=SR, output='sos')
+        mix = scipy.signal.sosfilt(sos, mix)
+    except ImportError:
+        pass
 
-    # Stereo composition with un-lowpassed sting bleed + 112Hz right-channel
-    # partial — kept inline because they're per-script editorial.
-    pan = 0.5 + 0.3 * np.sin(2 * np.pi * 0.05 * t)
-    left = mix * (1 - pan) + sting_arr
-    right = mix * pan + sting_arr
-    right += np.sin(2 * np.pi * 112.0 * t) * 0.010 * pad_env
+    pan = 0.5 + 0.3 * np.sin(2*np.pi*0.05*t)
+    left = mix * (1-pan) + sting
+    right = mix * pan + sting
+    right += np.sin(2*np.pi*112.0*t) * 0.010 * pad_env
 
     stereo = np.column_stack([left, right])
     pk = np.abs(stereo).max()
