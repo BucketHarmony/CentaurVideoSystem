@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+FROZEN reference for audio overhaul Phase 5c verification. DO NOT MODIFY.
+
 CVS -- Hookshot: "Driving by Faith"
 Ticks 271-276: Seven ticks blind, navigating by face detector alone.
 
@@ -30,11 +32,6 @@ from cvs_lib.image_filters import (
     hookshot_cottagecore_grade as _hk_grade,
     hookshot_soft_bloom as _hk_bloom,
     hookshot_vignette as _hk_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    sting,
 )
 
 load_dotenv()
@@ -224,33 +221,55 @@ def generate_audio(duration):
     n = int(duration * SR)
     t = np.linspace(0, duration, n, dtype=np.float64)
 
-    sting_arr = sting(duration, mood="hookshot_grief", rng_seed=42, sr=SR)
+    # Sting at t=0: deep sub hit + contact transient (hand on lens)
+    sting = np.zeros(n)
+    sn = min(int(0.6 * SR), n)
+    st = t[:sn]
+    sting[:sn] += np.sin(2 * np.pi * 50 * st) * 0.5 * np.exp(-st * 6)  # deeper sub
+    tn = min(int(0.03 * SR), n)
+    sting[:tn] += np.random.randn(tn) * 0.35 * np.exp(-np.linspace(0, 1, tn) * 8)  # contact thud
+    sting[:sn] += np.sin(2 * np.pi * 440 * st) * 0.06 * np.clip(st * 3, 0, 1) * np.exp(-st * 4)
 
-    pad = ambient_pad(duration, mood="hookshot_grief", apply_envelope=False, sr=SR)
-    env = np.zeros(n, dtype=np.float64)
-    rs = min(int(2 * SR), n)
+    # Pad — darker, more tension. D-minor instead of A-minor
+    D2, F2, A2 = 73.42, 87.31, 110.0
+    D3, F3, A3 = 146.83, 174.61, 220.0
+    drone = (np.sin(2*np.pi*D2*t)*0.045 + np.sin(2*np.pi*F2*t)*0.025 +
+             np.sin(2*np.pi*A2*t)*0.035 + np.sin(2*np.pi*D3*t)*0.020)
+    # Slow shimmer — uneasy
+    lfo = 0.5 + 0.5 * np.sin(2*np.pi*0.08*t)
+    shimmer = (np.sin(2*np.pi*293.66*t)*0.008*lfo +  # D4
+               np.sin(2*np.pi*349.23*t)*0.006*(1-lfo))  # F4
+
+    pad = drone + shimmer
+    env = np.zeros(n)
+    rs = min(int(2*SR), n)
     env[:rs] = np.linspace(0, 1, rs)
     env[rs:] = 1.0
-    fo = max(0, n - int(3 * SR))
+    fo = max(0, n - int(3*SR))
     env[fo:] *= np.linspace(1, 0, n - fo)
     pad *= env * 0.8
 
-    schedule = [
-        (ct, cf) for ct, cf in
-        [(5.0, 587.33), (12.0, 698.46), (20.0, 880.0), (28.0, 587.33)]
-        if ct < duration - 1
-    ]
-    chimes = chime_layer(duration, schedule, mood="hookshot_grief", sr=SR)
+    # Sparse chimes — fewer, more lonely
+    chime_times = [5.0, 12.0, 20.0, 28.0]
+    chime_notes = [587.33, 698.46, 880.0, 587.33]  # D5, F5, A5, D5
+    chimes = np.zeros(n)
+    for ct, freq in zip(chime_times, chime_notes):
+        if ct >= duration - 1:
+            continue
+        ec = np.where(t-ct >= 0, np.exp(-(t-ct)*3.0) * np.clip((t-ct)*20, 0, 1), 0)
+        chimes += np.sin(2*np.pi*freq*t) * 0.020 * ec
+        chimes += np.sin(2*np.pi*freq*2*t) * 0.006 * ec
 
+    # "Eyes back" sting near the end (bright, resolving)
     eyes_back_t = duration - 6.0
     if eyes_back_t > 0:
         ebt = t - eyes_back_t
         eb_env = np.where(ebt >= 0, np.clip(ebt * 5, 0, 1) * np.exp(-ebt * 2), 0)
-        chimes += np.sin(2*np.pi*880*t) * 0.03 * eb_env
-        chimes += np.sin(2*np.pi*1046.5*t) * 0.02 * eb_env
-        chimes += np.sin(2*np.pi*1318.5*t) * 0.015 * eb_env
+        chimes += np.sin(2*np.pi*880*t) * 0.03 * eb_env  # A5
+        chimes += np.sin(2*np.pi*1046.5*t) * 0.02 * eb_env  # C6
+        chimes += np.sin(2*np.pi*1318.5*t) * 0.015 * eb_env  # E6
 
-    mix = sting_arr + pad + chimes
+    mix = sting + pad + chimes
     try:
         import scipy.signal
         sos = scipy.signal.butter(4, 2800, 'low', fs=SR, output='sos')
@@ -259,8 +278,8 @@ def generate_audio(duration):
         pass
 
     pan = 0.5 + 0.25 * np.sin(2*np.pi*0.04*t)
-    left = mix * (1-pan) + sting_arr * 0.5
-    right = mix * pan + sting_arr * 0.5
+    left = mix * (1-pan) + sting * 0.5
+    right = mix * pan + sting * 0.5
 
     stereo = np.column_stack([left, right])
     pk = np.abs(stereo).max()

@@ -687,7 +687,7 @@ MOODS: dict = {
             (73.42, 0.045),    # D2
             (87.31, 0.025),    # F2
             (110.00, 0.035),   # A2
-            (220.00, 0.020),   # A3
+            (146.83, 0.020),   # D3
         ),
         shimmer=(
             (293.66, 0.008, "lfo"),       # D4
@@ -703,6 +703,7 @@ MOODS: dict = {
             "sub_hz": 50.0, "sub_gain": 0.50, "sub_decay": 6.0, "dur": 0.6,
             "transient_dur": 0.03, "transient_gain": 0.35, "transient_decay": 8.0,
             "high_hz": 440.0, "high_gain": 0.06, "high_dur": 0.6,
+            "high_attack": 3.0, "high_decay": 4.0,
         },
     ),
 
@@ -1014,9 +1015,11 @@ def sting(
     out += rng.randn(n) * s["transient_gain"] * transient_env
 
     if "high_hz" in s and s.get("high_gain", 0) > 0:
+        high_attack = s.get("high_attack", 4.0)
+        high_decay = s.get("high_decay", 3.0)
         high_env = np.where(
             (st >= 0) & (st < s["high_dur"]),
-            np.clip(st * 4.0, 0, 1) * np.exp(-st * 3.0),
+            np.clip(st * high_attack, 0, 1) * np.exp(-st * high_decay),
             0,
         )
         out += np.sin(2 * np.pi * s["high_hz"] * t) * s["high_gain"] * high_env
