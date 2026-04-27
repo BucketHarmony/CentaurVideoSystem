@@ -1,0 +1,5 @@
+{
+  "_doc": "Per-source-folder vocabulary prompts for cvs_lib.scanner. Keyed by the parent folder name of the source video. VOCABULARY ONLY — proper nouns, project terms, names. Do NOT include verbs, exact phrases, or quoted strings; whisper treats prompts as continuation context and will echo them. See scripts/scan_phase0_validate.py for the cautionary tale (early prompt with quoted chant phrases leaked 'Crowd chants:' into transcripts).",
+
+  "Ice Out Romulus": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally."
+}

@@ -1,16 +1,17 @@
-"""
-MPC source scanner — for every video in raw/MPC/<event>/ produce:
-  - per-clip JSON: meta, motion timeline, scene boundaries, transcript, tags
-  - SQLite index of clips/scenes/tags/transcript-segments (+ FTS5 for search)
-  - thumbnail per scene
-  - human-readable scan_report.md
+"""MPC source scanner — batch driver over a source folder.
 
-This is Phase 2 of the MPC pipeline — it's what lets later phases (LLM
-tagging, hook scoring, brief-driven composition) query "where do I have a
-crowd-shot under 8s with the word 'march' on the audio?" without manually
-re-scrubbing footage.
+Per-clip work delegates to `cvs_lib.scanner` (see that module for
+schema + Phase 0 findings). This script handles batch orchestration:
+SQLite indexing (clips/scenes/tags/transcripts FTS5), per-clip JSON
+persistence, thumbnail dir, and the human-readable scan_report.md.
 
-Outputs land in E:/AI/CVS/mpc/index/ (clips/, thumbnails/, clips.db, scan_report.md).
+Outputs land in E:/AI/CVS/mpc/index/ (clips/, thumbnails/, clips.db,
+scan_report.md).
+
+Defaults reflect Phase 0 findings: large-v3 + VAD off + vocab prompt
+auto-resolved from mpc/scanner_prompts.json. To use the legacy small
+model on a clip set with no domain prompt, pass --whisper-model small
+--vad.
 
 Usage:
     python E:/AI/CVS/scripts/mpc_scan_sources.py
@@ -22,14 +23,14 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sqlite3
-import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 
-import cv2
-import numpy as np
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from cvs_lib import scanner
 
 # --------------------------------------------------------------------------- #
 # Defaults
@@ -40,201 +41,6 @@ INDEX_DIR = Path("E:/AI/CVS/mpc/index")
 THUMB_DIR = INDEX_DIR / "thumbnails"
 CLIPS_DIR = INDEX_DIR / "clips"
 DB_PATH = INDEX_DIR / "clips.db"
-
-# Heuristic transcript-keyword → tag mapping. Word-boundary regexes keep
-# "ice" out of "police" and "march" out of "marchioness", etc.
-TAG_PATTERNS = {
-    "march":      [r"\bmarch(ing|ed|es)?\b", r"\brally\b", r"\bdemonstration\b"],
-    "chant":      [r"\bchant", r"\bshout"],
-    "warehouse":  [r"\bwarehouse"],
-    "DHS":        [r"\bDHS\b", r"\bhomeland security\b"],
-    "ICE":        [r"\bICE\b", r"\bimmigration enforcement\b"],
-    "Romulus":    [r"\bromulus\b", r"\bcogswell\b"],
-    "Nessel":     [r"\bnessel\b", r"\battorney general\b"],
-    "immigrant":  [r"\bimmigra(nt|tion)\b", r"\basylum\b", r"\bdetention\b"],
-    "press":      [r"\bpresser\b", r"\bpress conference\b"],
-    "speech":     [r"\bfellow\b", r"\bneighbors?\b", r"\bcommunity\b"],
-    "court":      [r"\bcourt\b", r"\binjunction\b", r"\bsuing\b", r"\blawsuit\b"],
-}
-
-# --------------------------------------------------------------------------- #
-# ffprobe / OpenCV: metadata + motion timeline
-# --------------------------------------------------------------------------- #
-
-def probe_video(path: Path) -> dict:
-    out = subprocess.run(
-        ["ffprobe", "-v", "quiet", "-print_format", "json",
-         "-show_format", "-show_streams", str(path)],
-        capture_output=True, text=True
-    )
-    info = json.loads(out.stdout) if out.stdout else {}
-    fmt = info.get("format", {})
-    streams = info.get("streams", [])
-    vstream = next((s for s in streams if s.get("codec_type") == "video"), {})
-    fps_str = vstream.get("r_frame_rate", "30/1")
-    try:
-        num, den = map(int, fps_str.split("/"))
-        fps = num / den if den else 30.0
-    except Exception:
-        fps = 30.0
-    return {
-        "path": str(path),
-        "filename": path.name,
-        "duration_s": float(fmt.get("duration", 0)),
-        "size_bytes": int(fmt.get("size", 0)),
-        "width": int(vstream.get("width", 0)),
-        "height": int(vstream.get("height", 0)),
-        "fps": fps,
-        "codec": vstream.get("codec_name", "unknown"),
-    }
-
-
-def motion_timeline(path: Path, sample_rate_hz: float = 2.0) -> list[dict]:
-    """
-    Sample motion at ~`sample_rate_hz` Hz. Each entry:
-      {t: float (seconds), motion: float (0..255 mean abs frame-diff)}
-    Frames are downsampled to 320x180 grayscale before diffing — fast and
-    insensitive to compression noise at the original res.
-    """
-    cap = cv2.VideoCapture(str(path))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
-    n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    step = max(1, int(round(fps / sample_rate_hz)))
-    timeline: list[dict] = []
-    prev = None
-    f = 0
-    while f < n:
-        cap.set(cv2.CAP_PROP_POS_FRAMES, f)
-        ret, frame = cap.read()
-        if not ret:
-            break
-        small = cv2.resize(frame, (320, 180))
-        gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
-        if prev is not None:
-            motion = float(np.abs(gray.astype(int) - prev.astype(int)).mean())
-            timeline.append({"t": round(f / fps, 3), "motion": round(motion, 3)})
-        prev = gray
-        f += step
-    cap.release()
-    return timeline
-
-
-def detect_scenes(timeline: list[dict],
-                  threshold: float = 14.0,
-                  min_gap_s: float = 1.5) -> list[float]:
-    """
-    Treat motion spikes above `threshold` as scene boundaries (with a
-    minimum gap so a sustained spike doesn't register as N back-to-back cuts).
-    Always includes 0.0 as the first scene start.
-    """
-    cuts: list[float] = [0.0]
-    last_t = 0.0
-    for entry in timeline:
-        if entry["motion"] > threshold and entry["t"] - last_t >= min_gap_s:
-            cuts.append(entry["t"])
-            last_t = entry["t"]
-    return cuts
-
-
-def extract_thumbnails(path: Path, scene_starts: list[float],
-                       out_dir: Path, prefix: str) -> list[dict]:
-    """One JPG per scene start, downscaled to 640w."""
-    out_dir.mkdir(parents=True, exist_ok=True)
-    cap = cv2.VideoCapture(str(path))
-    out: list[dict] = []
-    for i, t in enumerate(scene_starts):
-        cap.set(cv2.CAP_PROP_POS_MSEC, t * 1000)
-        ret, frame = cap.read()
-        if not ret:
-            continue
-        h, w = frame.shape[:2]
-        new_w = 640
-        new_h = max(1, int(h * (new_w / w)))
-        small = cv2.resize(frame, (new_w, new_h))
-        out_path = out_dir / f"{prefix}_s{i:02d}_t{int(t):04d}.jpg"
-        cv2.imwrite(str(out_path), small, [cv2.IMWRITE_JPEG_QUALITY, 85])
-        out.append({"idx": i, "t": t, "path": str(out_path)})
-    cap.release()
-    return out
-
-
-# --------------------------------------------------------------------------- #
-# Whisper: transcription
-# --------------------------------------------------------------------------- #
-
-def load_whisper(model_size: str, device: str, compute_type: str):
-    """Returns a faster-whisper WhisperModel. Falls back to CPU/int8 on CUDA failure."""
-    from faster_whisper import WhisperModel
-    try:
-        return WhisperModel(model_size, device=device, compute_type=compute_type)
-    except Exception as e:
-        print(f"  [whisper] {device}/{compute_type} failed ({e}); falling back to cpu/int8")
-        return WhisperModel(model_size, device="cpu", compute_type="int8")
-
-
-def transcribe(path: Path, model) -> dict:
-    segments_iter, info = model.transcribe(
-        str(path), beam_size=1, vad_filter=True,
-        vad_parameters=dict(min_silence_duration_ms=500),
-    )
-    segments = []
-    parts = []
-    for seg in segments_iter:
-        text = seg.text.strip()
-        segments.append({"start": round(seg.start, 3), "end": round(seg.end, 3), "text": text})
-        if text:
-            parts.append(text)
-    return {
-        "language": info.language,
-        "language_probability": round(info.language_probability, 3),
-        "duration_s": info.duration,
-        "text": " ".join(parts).strip(),
-        "segments": segments,
-    }
-
-
-# --------------------------------------------------------------------------- #
-# Tag derivation (heuristic — Phase 3 will layer LLM tagging on top)
-# --------------------------------------------------------------------------- #
-
-def derive_tags(meta: dict, transcript: dict, timeline: list[dict]) -> list[str]:
-    tags: set[str] = set()
-    text = transcript.get("text", "")
-
-    for tag, patterns in TAG_PATTERNS.items():
-        if any(re.search(p, text, re.IGNORECASE) for p in patterns):
-            tags.add(tag)
-
-    if timeline:
-        motions = [e["motion"] for e in timeline]
-        avg_m = sum(motions) / len(motions)
-        max_m = max(motions)
-        if avg_m < 3.0:
-            tags.add("static")
-        elif avg_m > 14.0:
-            tags.add("high_motion")
-        if max_m > 30.0:
-            tags.add("camera_shake")
-
-    text_strip = text.strip()
-    if not text_strip:
-        tags.add("silent")
-    elif len(text_strip) > 200:
-        tags.add("dialogue")
-    else:
-        tags.add("ambient")
-
-    if meta["duration_s"] < 8:
-        tags.add("short")
-    elif meta["duration_s"] > 60:
-        tags.add("long")
-
-    if meta.get("height", 0) > meta.get("width", 0):
-        tags.add("vertical")
-    else:
-        tags.add("horizontal")
-
-    return sorted(tags)
 
 
 # --------------------------------------------------------------------------- #
@@ -263,6 +69,7 @@ def init_db(db_path: Path) -> sqlite3.Connection:
         scanned_at TEXT,
         transcript TEXT,
         language TEXT,
+        whisper_model TEXT,
         avg_motion REAL,
         max_motion REAL
     );
@@ -296,8 +103,14 @@ def init_db(db_path: Path) -> sqlite3.Connection:
     return conn
 
 
-def write_db(conn: sqlite3.Connection, meta: dict, scenes: list[dict],
-             tags: list[str], transcript: dict, timeline: list[dict]) -> None:
+def write_db(conn: sqlite3.Connection, record: dict) -> None:
+    """Persist one scanner.scan_clip record to the SQLite index."""
+    meta = record["meta"]
+    timeline = record["motion_timeline"]
+    scenes = record["scenes"]
+    tags = record["tags"]
+    transcript = record["transcript"]
+
     motions = [e["motion"] for e in timeline] if timeline else [0.0]
     avg_m = round(sum(motions) / len(motions), 3)
     max_m = round(max(motions), 3) if motions else 0.0
@@ -306,18 +119,20 @@ def write_db(conn: sqlite3.Connection, meta: dict, scenes: list[dict],
     c.execute("""
         INSERT OR REPLACE INTO clips
         (filename, path, duration_s, fps, width, height, size_bytes, codec,
-         scanned_at, transcript, language, avg_motion, max_motion)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         scanned_at, transcript, language, whisper_model,
+         avg_motion, max_motion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (meta["filename"], meta["path"], meta["duration_s"], meta["fps"],
           meta["width"], meta["height"], meta["size_bytes"], meta["codec"],
           datetime.utcnow().isoformat(timespec="seconds") + "Z",
           transcript.get("text", ""), transcript.get("language", "unknown"),
+          transcript.get("model", "unknown"),
           avg_m, max_m))
 
     for s in scenes:
         c.execute("""INSERT INTO scenes (filename, idx, start_t, thumbnail_path)
                      VALUES (?, ?, ?, ?)""",
-                  (meta["filename"], s["idx"], s["t"], s["path"]))
+                  (meta["filename"], s["idx"], s["t"], s.get("path", "")))
     for tag in tags:
         c.execute("INSERT INTO tags (filename, tag) VALUES (?, ?)",
                   (meta["filename"], tag))
@@ -335,49 +150,41 @@ def write_db(conn: sqlite3.Connection, meta: dict, scenes: list[dict],
 # Per-clip orchestration + report
 # --------------------------------------------------------------------------- #
 
-def scan_one(path: Path, model, conn: sqlite3.Connection) -> dict:
+def scan_one(path: Path, model, conn: sqlite3.Connection,
+             vad: bool, initial_prompt: str | None) -> dict:
     print(f"\n=== {path.name} ===")
-    meta = probe_video(path)
-    print(f"  meta: {meta['duration_s']:.1f}s  "
-          f"{meta['width']}x{meta['height']}  @{meta['fps']:.1f}fps  "
+    record = scanner.scan_clip(
+        path, model,
+        thumbnails_dir=THUMB_DIR,
+        initial_prompt=initial_prompt,
+        vad=vad,
+        verbose=True,
+    )
+    meta = record["meta"]
+    text = record["transcript"]["text"]
+    print(f"  meta: {meta['duration_s']:.1f}s "
+          f"{meta['width']}x{meta['height']} @{meta['fps']:.1f}fps "
           f"{meta['size_bytes']/1e6:.1f}MB")
-
-    print(f"  motion timeline (2 Hz)...")
-    timeline = motion_timeline(path)
-
-    cuts = detect_scenes(timeline)
-    print(f"  scenes: {len(cuts)} (cuts at: {', '.join(f'{t:.1f}' for t in cuts)})")
-
-    thumbs = extract_thumbnails(path, cuts, THUMB_DIR, path.stem)
-
-    print(f"  whisper transcribe...")
-    transcript = transcribe(path, model)
-    if transcript["text"]:
-        preview = transcript["text"][:90].replace("\n", " ")
-        print(f"  text: {preview!r}{' …' if len(transcript['text']) > 90 else ''}")
+    if text:
+        preview = text[:90].replace("\n", " ")
+        print(f"  text: {preview!r}{' …' if len(text) > 90 else ''}")
     else:
         print(f"  text: (no speech)")
-
-    tags = derive_tags(meta, transcript, timeline)
-    print(f"  tags: {', '.join(tags)}")
+    print(f"  tags: {', '.join(record['tags'])}")
 
     out_json = CLIPS_DIR / f"{path.stem}.json"
-    out_json.write_text(json.dumps({
-        "meta": meta,
-        "motion_timeline": timeline,
-        "scenes": thumbs,
-        "transcript": transcript,
-        "tags": tags,
-    }, indent=2), encoding="utf-8")
+    out_json.write_text(json.dumps(record, indent=2), encoding="utf-8")
 
-    write_db(conn, meta, thumbs, tags, transcript, timeline)
+    write_db(conn, record)
 
+    timeline = record["motion_timeline"]
     return {
         "meta": meta,
-        "tags": tags,
-        "scene_count": len(thumbs),
-        "transcript_text": transcript["text"],
-        "avg_motion": (sum(e["motion"] for e in timeline) / len(timeline)) if timeline else 0.0,
+        "tags": record["tags"],
+        "scene_count": len(record["scenes"]),
+        "transcript_text": text,
+        "avg_motion": (sum(e["motion"] for e in timeline) / len(timeline))
+                       if timeline else 0.0,
     }
 
 
@@ -388,7 +195,6 @@ def write_report(results: list[dict], out_path: Path) -> None:
     lines.append(f"**{len(results)} clips** scanned · "
                  f"**{total:.0f}s ({total/60:.1f} min)** total\n")
 
-    # Tag rollup
     tag_counts: dict[str, int] = {}
     for r in results:
         for t in r["tags"]:
@@ -423,11 +229,17 @@ def write_report(results: list[dict], out_path: Path) -> None:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=str(DEFAULT_ROOT))
-    ap.add_argument("--whisper-model", default="small",
-                    help="tiny | base | small | medium | large-v3")
+    ap.add_argument("--whisper-model", default="large-v3",
+                    help="tiny | base | small | medium | large-v3 (default: large-v3)")
     ap.add_argument("--device", default="cuda", help="cuda | cpu")
     ap.add_argument("--compute-type", default="float16",
                     help="float16 | int8_float16 | int8 (use int8 on cpu)")
+    ap.add_argument("--vad", action="store_true",
+                    help="Enable VAD filter (default off — VAD drops sung content)")
+    ap.add_argument("--prompt",
+                    help="Explicit initial_prompt override. If absent, "
+                         "auto-resolved per-clip from "
+                         "mpc/scanner_prompts.json by source folder.")
     args = ap.parse_args()
 
     root = Path(args.root)
@@ -441,13 +253,14 @@ def main():
     CLIPS_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Loading whisper '{args.whisper_model}' on {args.device}/{args.compute_type}...")
-    model = load_whisper(args.whisper_model, args.device, args.compute_type)
+    model = scanner.load_whisper(args.whisper_model, args.device, args.compute_type)
 
     conn = init_db(DB_PATH)
     results: list[dict] = []
     for v in videos:
         try:
-            results.append(scan_one(v, model, conn))
+            results.append(scan_one(v, model, conn,
+                                    vad=args.vad, initial_prompt=args.prompt))
         except Exception as e:
             print(f"  ERROR scanning {v.name}: {type(e).__name__}: {e}")
     conn.close()

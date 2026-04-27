@@ -1,0 +1,1160 @@
+[
+  {
+    "stem": "170137",
+    "label": "chant V1 (Abolish ICE right now)",
+    "baseline": {
+      "model": "small",
+      "prompt": null,
+      "beam": 1,
+      "elapsed_s": 0.46,
+      "text": "and protect a polished ice right now a polished ice a polished ice a polished ice a polished ice",
+      "segments": [
+        {
+          "start": 3.38,
+          "end": 6.55,
+          "text": "and protect"
+        },
+        {
+          "start": 6.55,
+          "end": 7.55,
+          "text": "a polished ice"
+        },
+        {
+          "start": 7.55,
+          "end": 8.55,
+          "text": "right now"
+        },
+        {
+          "start": 8.55,
+          "end": 12.59,
+          "text": "a polished ice"
+        },
+        {
+          "start": 12.59,
+          "end": 13.59,
+          "text": "a polished ice"
+        },
+        {
+          "start": 13.59,
+          "end": 15.65,
+          "text": "a polished ice"
+        },
+        {
+          "start": 15.65,
+          "end": 16.65,
+          "text": "a polished ice"
+        }
+      ]
+    },
+    "candidate": {
+      "model": "large-v3",
+      "prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally.",
+      "beam": 5,
+      "word_timestamps": true,
+      "vad": false,
+      "elapsed_s": 7.76,
+      "text": "Now we're going to love and protect our neighbors. abolish ice right now, right now. abolish ice. abolish ice. abolish ice. abolish ice. abolish ice. Right now, right now. We're going to love and protect our neighbors. Apologize right now, right now",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 5.4,
+          "text": "Now we're going to love and protect our neighbors.",
+          "words": [
+            {
+              "start": 0.0,
+              "end": 0.56,
+              "word": "Now"
+            },
+            {
+              "start": 0.56,
+              "end": 1.7,
+              "word": "we're"
+            },
+            {
+              "start": 1.7,
+              "end": 1.88,
+              "word": "going"
+            },
+            {
+              "start": 1.88,
+              "end": 2.3,
+              "word": "to"
+            },
+            {
+              "start": 2.3,
+              "end": 2.68,
+              "word": "love"
+            },
+            {
+              "start": 2.68,
+              "end": 3.26,
+              "word": "and"
+            },
+            {
+              "start": 3.26,
+              "end": 3.74,
+              "word": "protect"
+            },
+            {
+              "start": 3.74,
+              "end": 4.54,
+              "word": "our"
+            },
+            {
+              "start": 4.54,
+              "end": 5.4,
+              "word": "neighbors."
+            }
+          ]
+        },
+        {
+          "start": 6.44,
+          "end": 10.22,
+          "text": "abolish ice right now, right now.",
+          "words": [
+            {
+              "start": 6.44,
+              "end": 7.44,
+              "word": "abolish"
+            },
+            {
+              "start": 7.44,
+              "end": 7.8,
+              "word": "ice"
+            },
+            {
+              "start": 7.8,
+              "end": 8.3,
+              "word": "right"
+            },
+            {
+              "start": 8.3,
+              "end": 8.94,
+              "word": "now,"
+            },
+            {
+              "start": 9.26,
+              "end": 9.6,
+              "word": "right"
+            },
+            {
+              "start": 9.6,
+              "end": 10.22,
+              "word": "now."
+            }
+          ]
+        },
+        {
+          "start": 11.3,
+          "end": 12.7,
+          "text": "abolish ice.",
+          "words": [
+            {
+              "start": 11.3,
+              "end": 12.3,
+              "word": "abolish"
+            },
+            {
+              "start": 12.3,
+              "end": 12.7,
+              "word": "ice."
+            }
+          ]
+        },
+        {
+          "start": 12.74,
+          "end": 13.96,
+          "text": "abolish ice.",
+          "words": [
+            {
+              "start": 12.74,
+              "end": 13.52,
+              "word": "abolish"
+            },
+            {
+              "start": 13.52,
+              "end": 13.96,
+              "word": "ice."
+            }
+          ]
+        },
+        {
+          "start": 13.96,
+          "end": 15.02,
+          "text": "abolish ice.",
+          "words": [
+            {
+              "start": 13.96,
+              "end": 14.72,
+              "word": "abolish"
+            },
+            {
+              "start": 14.72,
+              "end": 15.02,
+              "word": "ice."
+            }
+          ]
+        },
+        {
+          "start": 15.12,
+          "end": 16.22,
+          "text": "abolish ice.",
+          "words": [
+            {
+              "start": 15.12,
+              "end": 15.92,
+              "word": "abolish"
+            },
+            {
+              "start": 15.92,
+              "end": 16.22,
+              "word": "ice."
+            }
+          ]
+        },
+        {
+          "start": 16.28,
+          "end": 17.42,
+          "text": "abolish ice.",
+          "words": [
+            {
+              "start": 16.28,
+              "end": 17.14,
+              "word": "abolish"
+            },
+            {
+              "start": 17.14,
+              "end": 17.42,
+              "word": "ice."
+            }
+          ]
+        },
+        {
+          "start": 17.88,
+          "end": 19.92,
+          "text": "Right now, right now.",
+          "words": [
+            {
+              "start": 17.88,
+              "end": 17.96,
+              "word": "Right"
+            },
+            {
+              "start": 17.96,
+              "end": 18.68,
+              "word": "now,"
+            },
+            {
+              "start": 18.9,
+              "end": 19.38,
+              "word": "right"
+            },
+            {
+              "start": 19.38,
+              "end": 19.92,
+              "word": "now."
+            }
+          ]
+        },
+        {
+          "start": 21.12,
+          "end": 25.22,
+          "text": "We're going to love and protect our neighbors.",
+          "words": [
+            {
+              "start": 21.0,
+              "end": 21.5,
+              "word": "We're"
+            },
+            {
+              "start": 21.5,
+              "end": 21.64,
+              "word": "going"
+            },
+            {
+              "start": 21.64,
+              "end": 22.08,
+              "word": "to"
+            },
+            {
+              "start": 22.08,
+              "end": 22.54,
+              "word": "love"
+            },
+            {
+              "start": 22.54,
+              "end": 23.12,
+              "word": "and"
+            },
+            {
+              "start": 23.12,
+              "end": 23.62,
+              "word": "protect"
+            },
+            {
+              "start": 23.62,
+              "end": 24.4,
+              "word": "our"
+            },
+            {
+              "start": 24.4,
+              "end": 25.22,
+              "word": "neighbors."
+            }
+          ]
+        },
+        {
+          "start": 25.22,
+          "end": 30.06,
+          "text": "Apologize right now, right now",
+          "words": [
+            {
+              "start": 25.22,
+              "end": 27.48,
+              "word": "Apologize"
+            },
+            {
+              "start": 27.48,
+              "end": 28.12,
+              "word": "right"
+            },
+            {
+              "start": 28.12,
+              "end": 28.82,
+              "word": "now,"
+            },
+            {
+              "start": 28.98,
+              "end": 29.4,
+              "word": "right"
+            },
+            {
+              "start": 29.4,
+              "end": 30.06,
+              "word": "now"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "stem": "170245",
+    "label": "chant V2 (We are locked inside)",
+    "baseline": {
+      "model": "small",
+      "prompt": null,
+      "beam": 1,
+      "elapsed_s": 0.24,
+      "text": "We are locked inside, together we'll abolish ice. This is for our neighbors who are locked inside. Together we'll abolish ice.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.02,
+          "text": "We are locked inside, together we'll abolish ice."
+        },
+        {
+          "start": 8.02,
+          "end": 13.02,
+          "text": "This is for our neighbors who are locked inside."
+        },
+        {
+          "start": 13.02,
+          "end": 18.7,
+          "text": "Together we'll abolish ice."
+        }
+      ]
+    },
+    "candidate": {
+      "model": "large-v3",
+      "prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally.",
+      "beam": 5,
+      "word_timestamps": true,
+      "vad": false,
+      "elapsed_s": 0.5,
+      "text": "are locked inside. Together we will abolish ICE. This is for our neighbors who are locked inside. Together we will abolish ICE.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 17.46,
+          "text": "are locked inside. Together we will abolish ICE. This is for our neighbors who are locked inside. Together we will abolish ICE.",
+          "words": [
+            {
+              "start": 0.0,
+              "end": 0.14,
+              "word": "are"
+            },
+            {
+              "start": 0.14,
+              "end": 0.6,
+              "word": "locked"
+            },
+            {
+              "start": 0.6,
+              "end": 1.32,
+              "word": "inside."
+            },
+            {
+              "start": 1.7,
+              "end": 2.88,
+              "word": "Together"
+            },
+            {
+              "start": 2.88,
+              "end": 4.3,
+              "word": "we"
+            },
+            {
+              "start": 4.3,
+              "end": 4.84,
+              "word": "will"
+            },
+            {
+              "start": 4.84,
+              "end": 6.44,
+              "word": "abolish"
+            },
+            {
+              "start": 6.44,
+              "end": 6.76,
+              "word": "ICE."
+            },
+            {
+              "start": 7.64,
+              "end": 8.36,
+              "word": "This"
+            },
+            {
+              "start": 8.36,
+              "end": 8.6,
+              "word": "is"
+            },
+            {
+              "start": 8.6,
+              "end": 8.98,
+              "word": "for"
+            },
+            {
+              "start": 8.98,
+              "end": 9.3,
+              "word": "our"
+            },
+            {
+              "start": 9.3,
+              "end": 9.88,
+              "word": "neighbors"
+            },
+            {
+              "start": 9.88,
+              "end": 10.26,
+              "word": "who"
+            },
+            {
+              "start": 10.26,
+              "end": 10.54,
+              "word": "are"
+            },
+            {
+              "start": 10.54,
+              "end": 10.98,
+              "word": "locked"
+            },
+            {
+              "start": 10.98,
+              "end": 11.74,
+              "word": "inside."
+            },
+            {
+              "start": 12.46,
+              "end": 13.34,
+              "word": "Together"
+            },
+            {
+              "start": 13.34,
+              "end": 14.8,
+              "word": "we"
+            },
+            {
+              "start": 14.8,
+              "end": 15.28,
+              "word": "will"
+            },
+            {
+              "start": 15.28,
+              "end": 16.86,
+              "word": "abolish"
+            },
+            {
+              "start": 16.86,
+              "end": 17.46,
+              "word": "ICE."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "stem": "165207",
+    "label": "Hassan speech (democracy is at test)",
+    "baseline": {
+      "model": "small",
+      "prompt": null,
+      "beam": 1,
+      "elapsed_s": 0.31,
+      "text": "For right and justice, we will. My friend, my name is Dr. Naz Hasan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is a test. Right now.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 3.52,
+          "text": "For right and justice, we will."
+        },
+        {
+          "start": 3.52,
+          "end": 6.12,
+          "text": "My friend, my name is Dr. Naz Hasan."
+        },
+        {
+          "start": 6.12,
+          "end": 8.63,
+          "text": "I'm not going to take much time."
+        },
+        {
+          "start": 8.63,
+          "end": 11.79,
+          "text": "I am very fearful of what's going around."
+        },
+        {
+          "start": 11.79,
+          "end": 14.34,
+          "text": "Our democracy is a test."
+        },
+        {
+          "start": 14.34,
+          "end": 16.18,
+          "text": "Right now."
+        }
+      ]
+    },
+    "candidate": {
+      "model": "large-v3",
+      "prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally.",
+      "beam": 5,
+      "word_timestamps": true,
+      "vad": false,
+      "elapsed_s": 0.7,
+      "text": "For right and justice, we win. My friend, my name is Dr. Naz Hassan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is attested. Right now.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 14.74,
+          "text": "For right and justice, we win. My friend, my name is Dr. Naz Hassan. I'm not going to take much time. I am very fearful of what's going around. Our democracy is attested. Right now.",
+          "words": [
+            {
+              "start": 0.0,
+              "end": 0.1,
+              "word": "For"
+            },
+            {
+              "start": 0.1,
+              "end": 0.42,
+              "word": "right"
+            },
+            {
+              "start": 0.42,
+              "end": 0.68,
+              "word": "and"
+            },
+            {
+              "start": 0.68,
+              "end": 1.34,
+              "word": "justice,"
+            },
+            {
+              "start": 1.66,
+              "end": 2.48,
+              "word": "we"
+            },
+            {
+              "start": 2.48,
+              "end": 2.82,
+              "word": "win."
+            },
+            {
+              "start": 3.04,
+              "end": 3.6,
+              "word": "My"
+            },
+            {
+              "start": 3.6,
+              "end": 3.92,
+              "word": "friend,"
+            },
+            {
+              "start": 4.06,
+              "end": 4.52,
+              "word": "my"
+            },
+            {
+              "start": 4.52,
+              "end": 4.72,
+              "word": "name"
+            },
+            {
+              "start": 4.72,
+              "end": 4.86,
+              "word": "is"
+            },
+            {
+              "start": 4.86,
+              "end": 4.96,
+              "word": "Dr."
+            },
+            {
+              "start": 5.08,
+              "end": 5.24,
+              "word": "Naz"
+            },
+            {
+              "start": 5.24,
+              "end": 5.64,
+              "word": "Hassan."
+            },
+            {
+              "start": 5.8,
+              "end": 6.24,
+              "word": "I'm"
+            },
+            {
+              "start": 6.24,
+              "end": 6.34,
+              "word": "not"
+            },
+            {
+              "start": 6.34,
+              "end": 6.46,
+              "word": "going"
+            },
+            {
+              "start": 6.46,
+              "end": 6.58,
+              "word": "to"
+            },
+            {
+              "start": 6.58,
+              "end": 6.74,
+              "word": "take"
+            },
+            {
+              "start": 6.74,
+              "end": 6.88,
+              "word": "much"
+            },
+            {
+              "start": 6.88,
+              "end": 7.24,
+              "word": "time."
+            },
+            {
+              "start": 8.16,
+              "end": 8.72,
+              "word": "I"
+            },
+            {
+              "start": 8.72,
+              "end": 8.9,
+              "word": "am"
+            },
+            {
+              "start": 8.9,
+              "end": 9.44,
+              "word": "very"
+            },
+            {
+              "start": 9.44,
+              "end": 9.8,
+              "word": "fearful"
+            },
+            {
+              "start": 9.8,
+              "end": 10.08,
+              "word": "of"
+            },
+            {
+              "start": 10.08,
+              "end": 10.18,
+              "word": "what's"
+            },
+            {
+              "start": 10.18,
+              "end": 10.34,
+              "word": "going"
+            },
+            {
+              "start": 10.34,
+              "end": 10.72,
+              "word": "around."
+            },
+            {
+              "start": 11.34,
+              "end": 11.9,
+              "word": "Our"
+            },
+            {
+              "start": 11.9,
+              "end": 12.36,
+              "word": "democracy"
+            },
+            {
+              "start": 12.36,
+              "end": 12.68,
+              "word": "is"
+            },
+            {
+              "start": 12.68,
+              "end": 13.14,
+              "word": "attested."
+            },
+            {
+              "start": 13.9,
+              "end": 14.46,
+              "word": "Right"
+            },
+            {
+              "start": 14.46,
+              "end": 14.74,
+              "word": "now."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "stem": "154736",
+    "label": "NDCM organizer (tenth week protesting)",
+    "baseline": {
+      "model": "small",
+      "prompt": null,
+      "beam": 1,
+      "elapsed_s": 0.29,
+      "text": "of Romulus and Gates. We have to build the power that the elected officials cannot go on. So we've been out here for our 10th of a week for the 10th of a week.",
+      "segments": [
+        {
+          "start": 0.34,
+          "end": 2.34,
+          "text": "of Romulus and Gates."
+        },
+        {
+          "start": 2.34,
+          "end": 10.34,
+          "text": "We have to build the power that the elected officials cannot go on."
+        },
+        {
+          "start": 12.34,
+          "end": 17.34,
+          "text": "So we've been out here for our 10th of a week for the 10th of a week."
+        }
+      ]
+    },
+    "candidate": {
+      "model": "large-v3",
+      "prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally.",
+      "beam": 5,
+      "word_timestamps": true,
+      "vad": false,
+      "elapsed_s": 0.74,
+      "text": "The community of Romulus is engaged, and we have to build the power that elected officials, local officials, cannot ignore. So, we've been out here for, this is our tenth of a week, protesting.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 9.52,
+          "text": "The community of Romulus is engaged, and we have to build the power that elected officials, local officials, cannot ignore.",
+          "words": [
+            {
+              "start": 0.0,
+              "end": 0.06,
+              "word": "The"
+            },
+            {
+              "start": 0.06,
+              "end": 0.34,
+              "word": "community"
+            },
+            {
+              "start": 0.34,
+              "end": 0.64,
+              "word": "of"
+            },
+            {
+              "start": 0.64,
+              "end": 1.1,
+              "word": "Romulus"
+            },
+            {
+              "start": 1.1,
+              "end": 1.24,
+              "word": "is"
+            },
+            {
+              "start": 1.24,
+              "end": 1.6,
+              "word": "engaged,"
+            },
+            {
+              "start": 1.86,
+              "end": 2.88,
+              "word": "and"
+            },
+            {
+              "start": 2.88,
+              "end": 4.0,
+              "word": "we"
+            },
+            {
+              "start": 4.0,
+              "end": 4.2,
+              "word": "have"
+            },
+            {
+              "start": 4.2,
+              "end": 4.42,
+              "word": "to"
+            },
+            {
+              "start": 4.42,
+              "end": 4.58,
+              "word": "build"
+            },
+            {
+              "start": 4.58,
+              "end": 4.72,
+              "word": "the"
+            },
+            {
+              "start": 4.72,
+              "end": 5.08,
+              "word": "power"
+            },
+            {
+              "start": 5.08,
+              "end": 5.94,
+              "word": "that"
+            },
+            {
+              "start": 5.94,
+              "end": 7.1,
+              "word": "elected"
+            },
+            {
+              "start": 7.1,
+              "end": 7.54,
+              "word": "officials,"
+            },
+            {
+              "start": 7.84,
+              "end": 8.06,
+              "word": "local"
+            },
+            {
+              "start": 8.06,
+              "end": 8.54,
+              "word": "officials,"
+            },
+            {
+              "start": 8.62,
+              "end": 9.0,
+              "word": "cannot"
+            },
+            {
+              "start": 9.0,
+              "end": 9.52,
+              "word": "ignore."
+            }
+          ]
+        },
+        {
+          "start": 12.24,
+          "end": 16.68,
+          "text": "So, we've been out here for, this is our tenth of a week, protesting.",
+          "words": [
+            {
+              "start": 12.24,
+              "end": 12.76,
+              "word": "So,"
+            },
+            {
+              "start": 12.76,
+              "end": 13.28,
+              "word": "we've"
+            },
+            {
+              "start": 13.28,
+              "end": 13.44,
+              "word": "been"
+            },
+            {
+              "start": 13.44,
+              "end": 13.54,
+              "word": "out"
+            },
+            {
+              "start": 13.54,
+              "end": 13.8,
+              "word": "here"
+            },
+            {
+              "start": 13.8,
+              "end": 14.28,
+              "word": "for,"
+            },
+            {
+              "start": 14.44,
+              "end": 14.94,
+              "word": "this"
+            },
+            {
+              "start": 14.94,
+              "end": 15.08,
+              "word": "is"
+            },
+            {
+              "start": 15.08,
+              "end": 15.3,
+              "word": "our"
+            },
+            {
+              "start": 15.3,
+              "end": 15.54,
+              "word": "tenth"
+            },
+            {
+              "start": 15.54,
+              "end": 15.68,
+              "word": "of"
+            },
+            {
+              "start": 15.68,
+              "end": 15.76,
+              "word": "a"
+            },
+            {
+              "start": 15.76,
+              "end": 16.0,
+              "word": "week,"
+            },
+            {
+              "start": 16.1,
+              "end": 16.68,
+              "word": "protesting."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "stem": "170030",
+    "label": "pure ABOLISH ICE chant",
+    "baseline": {
+      "model": "small",
+      "prompt": null,
+      "beam": 1,
+      "elapsed_s": 0.36,
+      "text": "Abolish ice, abolish ice, abolish ice, abolish ice right now, right now! We're gonna love you girls, abolish ice right now! Abolish ice, abolish ice, abolish ice!",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.22,
+          "text": "Abolish ice, abolish ice, abolish ice, abolish ice right now, right now!"
+        },
+        {
+          "start": 8.22,
+          "end": 15.98,
+          "text": "We're gonna love you girls, abolish ice right now!"
+        },
+        {
+          "start": 15.98,
+          "end": 23.77,
+          "text": "Abolish ice, abolish ice, abolish ice!"
+        }
+      ]
+    },
+    "candidate": {
+      "model": "large-v3",
+      "prompt": "Detroit. Romulus. Michigan. ICE. Rashida Tlaib. Shri Thanedar. Naz Hassan. abolish. neighbors. coup. protest. rally.",
+      "beam": 5,
+      "word_timestamps": true,
+      "vad": false,
+      "elapsed_s": 4.43,
+      "text": "abolish ICE abolish ICE right now right now! we're gonna love and protect all our neighbors abolish ICE right now right now! abolish ICE! Abolish ICE!",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 6.96,
+          "text": "abolish ICE abolish ICE right now right now!",
+          "words": [
+            {
+              "start": 0.0,
+              "end": 0.3,
+              "word": "abolish"
+            },
+            {
+              "start": 0.3,
+              "end": 0.56,
+              "word": "ICE"
+            },
+            {
+              "start": 0.56,
+              "end": 4.14,
+              "word": "abolish"
+            },
+            {
+              "start": 4.14,
+              "end": 4.3,
+              "word": "ICE"
+            },
+            {
+              "start": 4.3,
+              "end": 4.9,
+              "word": "right"
+            },
+            {
+              "start": 4.9,
+              "end": 5.68,
+              "word": "now"
+            },
+            {
+              "start": 5.68,
+              "end": 6.28,
+              "word": "right"
+            },
+            {
+              "start": 6.28,
+              "end": 6.96,
+              "word": "now!"
+            }
+          ]
+        },
+        {
+          "start": 7.42,
+          "end": 12.24,
+          "text": "we're gonna love and protect all our neighbors",
+          "words": [
+            {
+              "start": 7.42,
+              "end": 8.48,
+              "word": "we're"
+            },
+            {
+              "start": 8.48,
+              "end": 8.88,
+              "word": "gonna"
+            },
+            {
+              "start": 8.88,
+              "end": 9.56,
+              "word": "love"
+            },
+            {
+              "start": 9.56,
+              "end": 10.04,
+              "word": "and"
+            },
+            {
+              "start": 10.04,
+              "end": 10.56,
+              "word": "protect"
+            },
+            {
+              "start": 10.56,
+              "end": 11.26,
+              "word": "all"
+            },
+            {
+              "start": 11.26,
+              "end": 11.62,
+              "word": "our"
+            },
+            {
+              "start": 11.62,
+              "end": 12.24,
+              "word": "neighbors"
+            }
+          ]
+        },
+        {
+          "start": 13.5,
+          "end": 16.94,
+          "text": "abolish ICE right now right now!",
+          "words": [
+            {
+              "start": 13.5,
+              "end": 14.24,
+              "word": "abolish"
+            },
+            {
+              "start": 14.24,
+              "end": 14.56,
+              "word": "ICE"
+            },
+            {
+              "start": 14.56,
+              "end": 15.16,
+              "word": "right"
+            },
+            {
+              "start": 15.16,
+              "end": 15.68,
+              "word": "now"
+            },
+            {
+              "start": 15.68,
+              "end": 16.32,
+              "word": "right"
+            },
+            {
+              "start": 16.32,
+              "end": 16.94,
+              "word": "now!"
+            }
+          ]
+        },
+        {
+          "start": 18.6,
+          "end": 19.4,
+          "text": "abolish ICE!",
+          "words": [
+            {
+              "start": 18.44,
+              "end": 19.04,
+              "word": "abolish"
+            },
+            {
+              "start": 19.04,
+              "end": 19.4,
+              "word": "ICE!"
+            }
+          ]
+        },
+        {
+          "start": 19.4,
+          "end": 20.6,
+          "text": "Abolish ICE!",
+          "words": [
+            {
+              "start": 19.4,
+              "end": 20.18,
+              "word": "Abolish"
+            },
+            {
+              "start": 20.18,
+              "end": 20.6,
+              "word": "ICE!"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

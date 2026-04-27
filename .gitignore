@@ -31,6 +31,10 @@ mpc/index/thumbnails/
 # Regenerate via tests/cvs_lib/capture_baselines.py.
 tests/cvs_lib/fixtures/baselines/
 
+# Claude Code — machine-local config / runtime locks (agents/ is tracked)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
 # Misc
 *.log
 *.tmp
