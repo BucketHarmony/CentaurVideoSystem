@@ -1,5 +1,5 @@
 """
-MPC "Ten Weeks" — 30s vertical reel, the endurance angle.
+MPC "Ten Weeks" — 40s vertical reel, the endurance angle.
 
 Different lever from the other reels in the suite: neither rapid response
 (Romulus / We Don't Back Down) nor receipts (Follow the Money) nor
@@ -7,15 +7,18 @@ identity (Detroit Knows) nor authority (Abolish ICE Congress) nor raw
 energy (People Power). This one names *why we keep showing up*: ten
 weeks of organized protest as proof of staying power.
 
-Beats (30s):
-  0:00-0:07  HOOK     — Am — "this is our tenth week protesting"  ........
-                        (154736 12.0-19.0)
-  0:07-0:16  STAKES   — Dm — "Our democracy is at test right now"  ......
-                        (165207 6.0-15.0)
-  0:16-0:25  ANSWER   — C  — "build power elected officials can't ignore"
-                        (154736 0.0-9.0)
-  0:25-0:30  CTA      — A  — chrome + chant b-roll + synth VO ..........
-                        "Ten weeks. Still here. Chip in. Link in bio."
+Beats (40s, four 10s scenes = 16 beats each at 96 BPM):
+  0:00-0:10  HOOK     — Am — "this is our tenth week protesting"  ........
+                        (154736 11.0-21.0; phrase 12.34-18.34)
+  0:10-0:20  STAKES   — Dm — "Our democracy is at test right now"  ......
+                        (165207 5.5-15.5; three Hassan phrases)
+  0:20-0:30  ANSWER   — C  — "build power elected officials can't ignore"
+                        (154736 0.5-10.5; full sentence ends 10.34)
+  0:30-0:40  CTA      — A  — chrome + chant b-roll ......................
+                        "Ten weeks. Still here." (no AI VO)
+
+Audio uses `cvs_lib.audio.song_bed` (chord pad + sub + kick on downbeats),
+so each scene is a complete 16-beat 4/4 phrase rather than a chord drone.
 
 Output: E:/AI/CVS/ComfyUI/output/mpc/ten_weeks.mp4
 
@@ -57,7 +60,10 @@ from cvs_lib.preview import render_beat_stills as _render_beat_stills
 # --------------------------------------------------------------------------- #
 
 FPS = 30
-DURATION = 30.0
+DURATION = 40.0
+BPM = 96.0
+BEATS_PER_SCENE = 16
+SCENE_DUR = (60.0 / BPM) * BEATS_PER_SCENE  # = 10.0s at 96 BPM
 LAYOUT = Layout(
     BANNER_H=140, WELL_TOP=140, WELL_H=1750 - 140,
     CAPTION_BOTTOM=1620, CHIP_Y=168,
@@ -107,44 +113,48 @@ HASSAN = RAW_DIR / "20260425_165207.mp4"
 CHANT = RAW_DIR / "20260425_170030.mp4"
 
 BEATS = [
-    # HOOK opens with the duration claim — "tenth week" is the strongest
-    # piece of evidence we have for staying power. Ends ~18.34s in source;
-    # holding through 19.0 gives 0.7s post-roll for the line to land.
-    ("hook", 7.0, "minor", "WEEK 10  •  STILL SHOWING UP",
-     {"path": NDCM, "in_t": 12.0, "out_t": 19.0,
+    # HOOK — "tenth week" is the strongest evidence we have for staying
+    # power. Transcript phrase: 12.34-18.34. Window 11.0-21.0 gives the
+    # phrase 1.34s of pre-roll crowd and 2.66s of tail so the cut lands
+    # inside ambient rally noise on both sides.
+    ("hook", SCENE_DUR, "minor", "WEEK 10  •  STILL SHOWING UP",
+     {"path": NDCM, "in_t": 11.0, "out_t": 21.0,
       "audio_gain": 1.2,
       "caption_lines": [
-          (0.0, 6.7,
+          (1.34, 7.34,
            "We've been out here for — this is our tenth week protesting the coup out of town."),
       ]}),
-    # STAKES: Hassan names what's at risk. Source begins 6.0s to catch the
-    # lead-in so the "democracy at test" line reads as a conclusion, not
-    # a cold open. Speech ends 14.94 + tail.
-    ("stakes", 9.0, "grief", "WHY WE STAY",
-     {"path": HASSAN, "in_t": 6.0, "out_t": 15.0,
+    # STAKES — three Hassan phrases. Transcript: 6.10-7.32, 8.67-10.95,
+    # 11.77-14.94. Window 5.5-15.5 keeps the speech intact through
+    # "Our democracy is at test right now" with 0.56s breathing tail.
+    ("stakes", SCENE_DUR, "grief", "WHY WE STAY",
+     {"path": HASSAN, "in_t": 5.5, "out_t": 15.5,
       "audio_gain": 1.2,
       "caption_lines": [
-          (0.5, 1.5, "I'm not going to take much time."),
-          (2.5, 5.0, "I am very fearful of what's going around."),
-          (5.5, 8.8, "Our democracy is at test right now."),
+          (0.60, 1.82, "I'm not going to take much time."),
+          (3.17, 5.45, "I am very fearful of what's going around."),
+          (6.27, 9.44, "Our democracy is at test right now."),
       ]}),
-    # ANSWER: NDCM's strategic claim — endurance has a purpose. Source
-    # 0.0-9.0 captures the full clause "build the power that elected
-    # officials cannot ignore" with handles.
-    ("answer", 9.0, "build", "BUILD THE POWER",
-     {"path": NDCM, "in_t": 0.0, "out_t": 9.0,
+    # ANSWER — full sentence: "...we have to build the power that elected
+    # officials, local officials cannot ignore." Transcript 0.34-10.34.
+    # Window 0.5-10.5 keeps the entire clause; only "of Romulus engaged,"
+    # at the very head is trimmed (already established by HOOK chip).
+    ("answer", SCENE_DUR, "build", "BUILD THE POWER",
+     {"path": NDCM, "in_t": 0.5, "out_t": 10.5,
       "audio_gain": 1.2,
       "caption_lines": [
-          (0.5, 8.8,
-           "We have to build the power that elected officials cannot ignore."),
+          (0.0, 9.84,
+           "We have to build the power that elected officials — local officials — cannot ignore."),
       ]}),
-    # CTA: brand chrome top + chant b-roll bottom. Synth VO closes.
-    ("cta", 5.0, "resolve", "STILL HERE",
-     {"path": CHANT, "in_t": 8.0, "out_t": 13.0,
-      "audio_gain": 0.5,
+    # CTA — brand chrome top + chant b-roll bottom. AI VO disabled; the
+    # chant carries the close. Window 8.0-18.0 = 10s of "Abolish ICE!"
+    # so the song bed resolves on a full measure.
+    ("cta", SCENE_DUR, "resolve", "STILL HERE",
+     {"path": CHANT, "in_t": 8.0, "out_t": 18.0,
+      "audio_gain": 0.6,
       "well_top": CTA_WELL_TOP, "well_h": CTA_WELL_H}),
 ]
-# Sanity: 7+9+9+5 = 30 ✓
+# Sanity: 4 × 10.0 = 40.0 ✓
 
 def _build_scenes():
     out, t = [], 0.0
@@ -162,16 +172,57 @@ SCENES = _build_scenes()
 SR = 44100
 N = int(SR * DURATION)
 
+# Voice-led chord voicings. Each chord shares ≥1 pitch with the next
+# so transitions feel like one continuous breath rather than four
+# separate beds. Notes:
+#   minor (Am open, hook):   A2  E3  A3        — stoic root + perfect 5th
+#   grief (Dm + min7, stakes): D2  A2  D3  F3   — keeps A from minor;
+#                                                  F3 = minor 3rd weight
+#   build (C major, answer):   C3  G3  C4  E4   — A→G drop, F→E drop
+#                                                  (gentle voice leading)
+#   resolve (Asus2, cta):    A2  E3  B3  C#4   — C→B half-step down,
+#                                                  E→C# resolves into
+#                                                  major-feel without
+#                                                  fully landing
 SCENE_CHORDS = {
     "minor":   [110.00, 164.81, 220.00],
     "grief":   [73.42,  110.00, 146.83, 174.61],
-    "build":   [130.81, 196.00, 261.63],
-    "resolve": [110.00, 164.81, 220.00, 277.18],
+    "build":   [130.81, 196.00, 261.63, 329.63],
+    "resolve": [110.00, 164.81, 246.94, 277.18],
 }
 
-NARRATION_LINES = [
-    {"slug": "cta", "start_in_beat": 0.4,
-     "text": "Ten weeks. Still here. Chip in. Link in bio."},
+# Sub-audible binaural-beat carrier per emotional beat. Headphones
+# strongly recommended on playback — these signals only fuse into a
+# perceived pulse inside the head when L/R reach the ears separately.
+#   minor/hook   → 220Hz + 10Hz alpha       (focused, present-tense)
+#   grief/stakes → 200Hz + 6Hz theta        (emotional access)
+#   build/answer → 250Hz + 12Hz alpha-beta  (alert, ready to act)
+#   resolve/cta  → 220Hz + 14Hz low beta    (settled determination)
+BINAURAL_CARRIERS = {
+    "minor":   (220.0, 10.0),
+    "grief":   (200.0,  6.0),
+    "build":   (250.0, 12.0),
+    "resolve": (220.0, 14.0),
+}
+
+# AI VO disabled 2026-04-26 — chrome headline + chant carry the close, so
+# no on-screen narration caption either. Kept as empty list so the captions
+# module's narration_lines pathway has nothing to emit.
+NARRATION_LINES = []
+
+# Stylized callouts during the chant. Stencil font + magenta-outlined
+# white fill leans into the protest-graffiti aesthetic. Three beats
+# spaced across the chant cycle:
+#   0.4-2.2s : ABOLISH ICE  (call)
+#   2.6-4.4s : RIGHT NOW    (response)
+#   4.8-6.6s : RIGHT NOW    (escalation)
+# Last 3.4s of the CTA scene clears for the brand chrome to land alone.
+_CTA_T0 = 30.0  # scene start (3 × 10.0s scenes before CTA)
+CALLOUT_FONT = "C:/Windows/Fonts/STENCIL.TTF"
+CALLOUTS = [
+    {"start": _CTA_T0 + 0.4, "end": _CTA_T0 + 2.2, "text": "ABOLISH ICE"},
+    {"start": _CTA_T0 + 2.6, "end": _CTA_T0 + 4.4, "text": "RIGHT NOW"},
+    {"start": _CTA_T0 + 4.8, "end": _CTA_T0 + 6.6, "text": "RIGHT NOW"},
 ]
 
 CTA_RALLY = "ice_out_romulus"
@@ -234,19 +285,27 @@ def load_env(path=ENV_PATH):
     return _lib_load_env(path)
 
 
-def harmonic_hum():
-    return cvs_audio.harmonic_hum(
+def spatial_bed():
+    """Stereo bed with binaural width + sub-audible per-scene carrier.
+    Returns (L, R) float32 mono arrays at length N. Gains tuned down
+    from library defaults — speech is the only foreground element; the
+    bed should be "presence" not "music."
+    """
+    return cvs_audio.spatial_bed(
         SCENES, BEATS, SCENE_CHORDS,
         duration=DURATION, sr=SR,
+        bpm=BPM, beats_per_scene=BEATS_PER_SCENE,
+        pad_gain=0.16,        # was 0.30 default
+        sub_gain=0.10,        # was 0.18 default
+        kick_gain=0.08,       # was 0.20 default — kick was loudest
+        binaural_gain=0.025,  # was 0.04 default — carrier in deep background
+        binaural_carriers=BINAURAL_CARRIERS,
     )
 
 
 def synthesize_narration(env):
-    return _lib_synthesize_narration(
-        env, NARRATION_LINES,
-        cache_dir=TTS_CACHE, cache_prefix=TTS_PREFIX,
-        duration=DURATION, scene_start=_scene_start, sr=SR,
-    )
+    # AI VO disabled 2026-04-26 per editorial call. Source audio + bed only.
+    return None
 
 
 def measure_tts_duration(slug):
@@ -342,30 +401,38 @@ def build_source_audio_track():
 
 
 def build_audio():
-    print("[audio] harmonic hum...")
-    bed = harmonic_hum()
-    print("[audio] synth VO (CTA only)...")
+    print("[audio] spatial bed (binaural width + sub-audible carrier)...")
+    bed_l, bed_r = spatial_bed()
+    print("[audio] synth VO (disabled — chant carries close)...")
     voice = synthesize_narration(load_env())
     if voice is None:
         voice = np.zeros(N, dtype=np.float32)
-    print("[audio] source-audio track...")
+    print("[audio] source-audio track (mono center)...")
     source = build_source_audio_track()
 
     source = source * vo_duck_envelope(voice, low_gain=0.45)
 
     speech = voice + source
     if float(np.max(np.abs(speech))) > 1e-4:
-        bed = sidechain_duck(bed, speech)
+        bed_l = sidechain_duck(bed_l, speech)
+        bed_r = sidechain_duck(bed_r, speech)
 
-    mix = bed * 0.5 + voice * 1.0 + source * 1.0
-    peak = float(np.max(np.abs(mix)))
+    # Voice + source are mono (speaker is on-camera, central). Bed is
+    # stereo, kept deep underneath — speech is the only foreground.
+    mix_l = bed_l * 0.35 + voice * 1.0 + source * 1.0
+    mix_r = bed_r * 0.35 + voice * 1.0 + source * 1.0
+
+    peak = max(float(np.max(np.abs(mix_l))), float(np.max(np.abs(mix_r))))
     if peak > 0:
-        mix = mix / peak * 0.9
-    return mix
+        mix_l = mix_l / peak * 0.9
+        mix_r = mix_r / peak * 0.9
+    return mix_l, mix_r
 
 
-def write_wav(mono, path=AUDIO_PATH):
-    cvs_audio.write_wav(mono, path, sr=SR)
+def write_wav(stereo, path=AUDIO_PATH):
+    """`stereo` is a (L, R) tuple of float32 mono arrays."""
+    L, R = stereo
+    cvs_audio.write_wav_stereo(L, R, path, sr=SR)
     print(f"[audio] wrote {path}")
 
 
@@ -388,6 +455,18 @@ def make_caption_clips(events):
     return _lib_make_caption_clips(
         events, width=W, caption_bottom=CAPTION_BOTTOM,
         font_path=FONT_HEADLINE,
+    )
+
+
+def make_callout_clips():
+    from cvs_lib.captions import make_callout_clips as _lib_make_callout_clips
+    return _lib_make_callout_clips(
+        CALLOUTS, width=W, font_path=CALLOUT_FONT,
+        y_anchor=1320,                       # over chant footage, mid-low
+        size=165,                            # fits 1080w with 10px stroke
+        fill=(255, 255, 255, 255),           # white fill
+        stroke_fill=tuple(C["deep_magenta"]) + (255,),  # brand magenta outline
+        stroke_w=10,
     )
 
 
@@ -417,7 +496,8 @@ def main():
         )
         return
 
-    _preflight(BEATS, DURATION, rotation_cache_dir=_ROT_CACHE_DIR)
+    _preflight(BEATS, DURATION, rotation_cache_dir=_ROT_CACHE_DIR,
+               reel_slug="ten_weeks")
 
     print("\n[pre-warm] generating any missing TTS...")
     synthesize_narration(load_env())
@@ -442,6 +522,13 @@ def main():
     cc = make_caption_clips(events)
     if cc:
         video = CompositeVideoClip([video, *cc], size=(W, H)).set_duration(DURATION)
+
+    print("\n[callouts] building chant overlays...")
+    co = make_callout_clips()
+    for c in CALLOUTS:
+        print(f"  {c['start']:5.2f}-{c['end']:5.2f}  {c['text']}")
+    if co:
+        video = CompositeVideoClip([video, *co], size=(W, H)).set_duration(DURATION)
 
     mix = build_audio()
     write_wav(mix)
