@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+FROZEN reference for audio overhaul Phase 5e verification. DO NOT MODIFY.
+
 CVS -- Hookshot: "Midnight Run" v2
 First frame is the fall. Audio uses Kombucha's own R2 tones from audio.py.
 
@@ -31,7 +33,6 @@ from cvs_lib.image_filters import (
     hookshot_soft_bloom as _hk_bloom,
     hookshot_vignette as _hk_vignette,
 )
-from cvs_lib.audio import chime_layer
 
 load_dotenv()
 
@@ -276,15 +277,12 @@ def generate_audio(duration, flip_time=0.25):
     post_env = np.clip((t - post_start) / 3.0, 0, 1) * np.clip((duration - t) / 3.0, 0, 1)
     drone *= post_env
 
-    schedule = [
-        (ct_c, cf) for ct_c, cf in
-        [(8.0, 587.33), (16.0, 698.46), (24.0, 880.0), (32.0, 587.33), (40.0, 698.46)]
-        if ct_c < duration - 1
-    ]
-    chimes = chime_layer(
-        duration, schedule, mood="hookshot_grief",
-        gain_override=0.015, octave_gain_override=0.0, sr=SR,
-    )
+    # ── Sparse lonely chimes ──
+    chimes = np.zeros(n)
+    for ct_c, freq in [(8, 587.33), (16, 698.46), (24, 880.0), (32, 587.33), (40, 698.46)]:
+        if ct_c >= duration - 1: continue
+        ec = np.where(t-ct_c >= 0, np.exp(-(t-ct_c)*3.0) * np.clip((t-ct_c)*20, 0, 1), 0)
+        chimes += np.sin(2*np.pi*freq*t) * 0.015 * ec
 
     # ── Mix ──
     mix = r2_track + crash + drone + chimes
