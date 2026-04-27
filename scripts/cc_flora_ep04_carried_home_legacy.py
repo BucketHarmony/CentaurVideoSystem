@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# FROZEN — pre-audio-overhaul Phase 4 snapshot. Rollback target through
+# Phase 7. Do not edit. Delete when audio overhaul ships.
 """
 cc_flora -- Episode 04: Carried Home (30-second cut, FAST mode)
 
@@ -30,6 +32,7 @@ from pathlib import Path
 
 import numpy as np
 import requests
+import scipy.signal
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
 
 import sys
@@ -39,13 +42,6 @@ from cvs_lib.image_filters import (
     cottagecore_grade as _cc_grade,
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    pad_envelope,
-    tension_partial,
-    lowpass_normalize,
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -376,46 +372,60 @@ def add_text_overlays(img, t, narration_times):
 
 def generate_ambient_pad(duration, sr=44100):
     """A-minor ambient pad with blackout silence and wake-up harmonic."""
-    pad = ambient_pad(duration, mood="cottagecore_warm", sr=sr, apply_envelope=False)
+    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
+    pad = np.sin(2 * np.pi * 110 * t) * 0.05       # A2
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.035   # E3
+    pad += np.sin(2 * np.pi * 220 * t) * 0.025       # A3
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.12 * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * t + 1.0)
+    pad += np.sin(2 * np.pi * 440 * t) * 0.010 * lfo1
+    pad += np.sin(2 * np.pi * 554.37 * t) * 0.007 * lfo2
+    pad += np.sin(2 * np.pi * 659.25 * t) * 0.005 * lfo1
 
-    # Act 3 hopeful E4 + wake-up E4 (post-resurrection bloom)
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.012,
-                           fade_in_t=20.0, fade_in_dur=2.0,
-                           fade_out_t=duration, fade_out_dur=2.0)
-    pad += tension_partial(duration, sr=sr, freq_hz=329.63, gain=0.018,
-                           fade_in_t=13.0, fade_in_dur=1.0,
-                           fade_out_t=15.0, fade_out_dur=2.0)
+    # Act 3: hopeful E4 shimmer (post-resurrection)
+    act3 = np.clip((t - 20) / 2.0, 0, 1) * np.clip((duration - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.012 * act3
+
+    # Wake-up harmonic: hopeful E4 blooming in at t=13-15
+    wake = np.clip((t - 13.0) / 1.0, 0, 1) * np.clip((15.0 - t) / 2.0, 0, 1)
+    pad += np.sin(2 * np.pi * 329.63 * t) * 0.018 * wake
 
     # Chimes — last chime before blackout at t=8.5, first after at t=13.5
-    pad += chime_layer(duration, [
+    chimes = [
         (0.1, 880), (2.5, 1108.73), (5.0, 880),
         (8.5, 880),       # last sound before death (rings into silence)
         (13.5, 880),      # first sound after silence (warm A5)
         (16.0, 1318.51), (19.0, 880),
         (22.0, 1108.73), (25.0, 880), (28.0, 1318.51),
-    ], mood="cottagecore_warm", sr=sr)
+    ]
+    for ct, cf in chimes:
+        env_t = t - ct
+        env = np.where(env_t >= 0, np.exp(-env_t * 2.0) * np.clip(env_t * 10, 0, 1), 0)
+        pad += np.sin(2 * np.pi * cf * t) * 0.022 * env
 
-    pad *= pad_envelope(duration, mood="cottagecore_warm", sr=sr)
+    # Master envelope: fade in, fade out
+    pad *= np.clip(0.3 + 0.7 * (t / 2.0), 0, 1) * np.clip((duration - t) / 2.5, 0, 1)
 
-    # ── Editorial events: battery death / silence gap / wake-up bloom ──
-    t = np.linspace(0, duration, int(duration * sr), dtype=np.float64)
-
-    # BATTERY DEATH t=9.5-10.5: ease-out gain to zero
+    # ── BATTERY DEATH: low-pass sweep down t=9.5-10.5 ──
+    # We apply this as a time-varying gain + muffling
     death_env = np.ones_like(t)
     death_mask = (t >= 9.5) & (t <= 10.5)
     death_env[death_mask] = 1.0 - ease_out_np((t[death_mask] - 9.5) / 1.0)
     pad *= death_env
 
-    # SILENCE t=10.5-13.0 (the memory gap)
+    # ── SILENCE: t=10.5-13.0 (the memory gap) ──
     silence_mask = (t >= 10.5) & (t <= 13.0)
     pad[silence_mask] = 0.0
 
-    # WAKE-UP t=13.0-15.0: linear fade pad back in
+    # ── WAKE-UP: fade pad back in t=13.0-15.0 ──
     wake_mask = (t >= 13.0) & (t <= 15.0)
     wake_env = np.clip((t[wake_mask] - 13.0) / 2.0, 0, 1)
     pad[wake_mask] *= wake_env
 
-    pad = lowpass_normalize(pad, mood="cottagecore_warm", sr=sr)
+    # Low-pass filter
+    sos = scipy.signal.butter(4, 3000, 'low', fs=sr, output='sos')
+    pad = scipy.signal.sosfilt(sos, pad)
+    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.22
 
     out = OUTPUT_DIR / "cc_flora_ep04_pad.wav"
     with wave.open(str(out), 'w') as wf:
