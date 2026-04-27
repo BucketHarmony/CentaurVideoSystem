@@ -721,6 +721,7 @@ def pad_envelope(
     fade_out_s: float = 2.5,
     floor: float = 0.3,
     variant: Optional[str] = None,
+    mood: Optional[str] = None,
 ) -> np.ndarray:
     """Master pad envelope as 1-D float64 gain curve.
 
@@ -728,12 +729,21 @@ def pad_envelope(
     `floor` ramping to 1.0 over `fade_in_s`, then sustain, then
     clipped-line fade-out over the last `fade_out_s`.
 
-    Variants:
+    `mood=` overrides fade_in_s / fade_out_s / floor with the values
+    from MOODS[mood], so callers don't have to repeat the triplet.
+
+    Variants (override mood):
       "hookshot_linspace"     — silence 0–1s, linspace ramp 1→4s,
                                 sustain, linspace 3s tail (cc_hookshot).
       "masterpiece_zerofloor" — floor=0, fade_out_s=2.0.
       "hookshot_short_in"     — floor=0, fade_in=1s, fade_out=3s.
     """
+    if mood is not None:
+        m = MOODS[mood]
+        fade_in_s = m.envelope_fade_in_s
+        fade_out_s = m.envelope_fade_out_s
+        floor = m.envelope_floor
+
     n = int(duration * sr)
     t = np.linspace(0, duration, n, dtype=np.float64)
 
@@ -836,12 +846,16 @@ def chime_layer(
     for ct, cf in schedule:
         env_t = t - ct
         if m.chime_attack_curve == "masterpiece":
+            # masterpiece: clip(exp(-decay) * env_t * attack, 0, 1).
+            # Peak shifts later vs the canonical curve (~0.21s vs 0.13s
+            # for decay=2.5/attack=8) and reaches 1.0 instead of ~0.73.
             env = np.where(
                 env_t >= 0,
-                np.clip(env_t * m.chime_attack, 0, 1) * np.exp(-env_t * m.chime_decay),
+                np.clip(np.exp(-env_t * m.chime_decay) * env_t * m.chime_attack, 0, 1),
                 0,
             )
         else:
+            # cc_flora / hookshot canonical: exp(-decay) * clip(attack, 0, 1).
             env = np.where(
                 env_t >= 0,
                 np.exp(-env_t * m.chime_decay) * np.clip(env_t * m.chime_attack, 0, 1),

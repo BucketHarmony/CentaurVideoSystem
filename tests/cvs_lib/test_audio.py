@@ -219,6 +219,28 @@ def test_chime_layer_masterpiece_curve_uses_different_attack():
     assert not np.allclose(cc, mp)
 
 
+def test_chime_layer_masterpiece_envelope_peak_amplitude():
+    """masterpiece formula `clip(exp(-decay)*env_t*attack, 0, 1)` peaks
+    at 1.0 (clipped). Canonical formula peaks at exp(-attack/decay·…)
+    and never reaches 1.0. This test guards the formula choice."""
+    # Use a single chime to isolate envelope behavior.
+    out = chime_layer(2.0, [(0.0, 440.0)],
+                      mood="cottagecore_masterpiece", sr=SR,
+                      gain_override=1.0)  # gain=1 so envelope ≡ amplitude
+    # Inspect the |output| / sin amplitude. Since sin(2π·440·t) varies in
+    # [-1, 1], the absolute peak of `out` ≈ envelope peak. Masterpiece's
+    # clipped-product envelope reaches 1.0.
+    assert np.max(np.abs(out)) == pytest.approx(1.0, abs=0.05)
+
+
+def test_pad_envelope_mood_kwarg_pulls_from_registry():
+    """pad_envelope(mood="cottagecore_masterpiece") should match the
+    explicit (floor=0, fade_out_s=2.0) form."""
+    a = pad_envelope(10.0, sr=SR, mood="cottagecore_masterpiece")
+    b = pad_envelope(10.0, sr=SR, fade_in_s=2.0, fade_out_s=2.0, floor=0.0)
+    np.testing.assert_array_equal(a, b)
+
+
 # --------------------------------------------------------------------------- #
 # tension_partial
 # --------------------------------------------------------------------------- #

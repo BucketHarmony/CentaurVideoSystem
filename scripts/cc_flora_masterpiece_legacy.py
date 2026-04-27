@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# FROZEN — pre-audio-overhaul Phase 3 snapshot. Rollback target through
+# Phase 7. Do not edit. Delete when audio overhaul ships.
 """
 cc_flora — Episode 01: First Light (Masterpiece Edit)
 
@@ -25,6 +27,7 @@ from pathlib import Path
 
 import numpy as np
 import requests
+import scipy.signal
 import torch
 import torchaudio
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
@@ -36,12 +39,6 @@ from cvs_lib.image_filters import (
     cottagecore_grade as _cc_grade,
     soft_bloom as _soft_bloom,
     creamy_vignette as _creamy_vignette,
-)
-from cvs_lib.audio import (
-    ambient_pad,
-    chime_layer,
-    pad_envelope,
-    lowpass_normalize,
 )
 from moviepy import (
     ImageSequenceClip,
@@ -384,23 +381,44 @@ def ease_out(x):
 # ═══════════════════════════════════════════════════════════════════════════
 
 def generate_ambient_pad(duration: float, sample_rate: int = 44100) -> Path:
-    """Soft ambient pad: drone + shimmer + sparse music-box chimes,
-    warm cottagecore. Uses the masterpiece mood (1.20x drone gains,
-    0.15/0.22 LFOs, music-box chime curve, 0.25 pad target)."""
-    pad = ambient_pad(duration, mood="cottagecore_masterpiece",
-                      sr=sample_rate, apply_envelope=False)
+    """Generate a soft ambient pad using layered sine waves with filtering.
+    Warm, cottagecore, like a music box dissolving into air."""
+    t = np.linspace(0, duration, int(duration * sample_rate), dtype=np.float64)
 
-    # Music box: sparse A5 / C#6 / A5 / E6 / A5 hits.
-    pad += chime_layer(duration, [
-        (0.5, 880), (2.0, 1108.73), (4.0, 880),
-        (6.5, 1318.51), (8.0, 880),
-    ], mood="cottagecore_masterpiece", sr=sample_rate)
+    # Base drone: very low, warm
+    pad = np.sin(2 * np.pi * 110 * t) * 0.06        # A2
+    pad += np.sin(2 * np.pi * 164.81 * t) * 0.04    # E3
+    pad += np.sin(2 * np.pi * 220 * t) * 0.03       # A3
 
-    pad *= pad_envelope(duration, sr=sample_rate,
-                        mood="cottagecore_masterpiece")
-    pad = lowpass_normalize(pad, mood="cottagecore_masterpiece",
-                            sr=sample_rate)
+    # Shimmer: high harmonics with slow LFO
+    lfo1 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.15 * t)
+    lfo2 = 0.5 + 0.5 * np.sin(2 * np.pi * 0.22 * t + 1.0)
+    pad += np.sin(2 * np.pi * 440 * t) * 0.012 * lfo1    # A4
+    pad += np.sin(2 * np.pi * 554.37 * t) * 0.008 * lfo2  # C#5
+    pad += np.sin(2 * np.pi * 659.25 * t) * 0.006 * lfo1  # E5
 
+    # Music box notes: sparse chime hits
+    chime_times = [0.5, 2.0, 4.0, 6.5, 8.0]
+    chime_freqs = [880, 1108.73, 880, 1318.51, 880]  # A5, C#6, A5, E6, A5
+    for ct, cf in zip(chime_times, chime_freqs):
+        env_t = t - ct
+        env = np.where(env_t >= 0, np.exp(-env_t * 2.5) * env_t * 8, 0)
+        env = np.clip(env, 0, 1)
+        pad += np.sin(2 * np.pi * cf * t) * 0.025 * env
+
+    # Fade in/out
+    fade_in = np.clip(t / 2.0, 0, 1)
+    fade_out = np.clip((duration - t) / 2.0, 0, 1)
+    pad *= fade_in * fade_out
+
+    # Low-pass filter for warmth
+    sos = scipy.signal.butter(4, 3000, 'low', fs=sample_rate, output='sos')
+    pad = scipy.signal.sosfilt(sos, pad)
+
+    # Normalize
+    pad = pad / (np.max(np.abs(pad)) + 1e-8) * 0.25
+
+    # Save as WAV
     out_path = OUTPUT_DIR / "cc_flora_ambient_pad.wav"
     pad_int16 = (pad * 32767).astype(np.int16)
     with wave.open(str(out_path), 'w') as wf:
