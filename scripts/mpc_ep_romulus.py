@@ -26,8 +26,10 @@ Run:    python E:/AI/CVS/scripts/mpc_ep_romulus.py
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
+import subprocess
 import sys
 from pathlib import Path
 
@@ -106,6 +108,53 @@ FOOTAGE = {
                "audio_gain": 0.7,
                "well_top": CTA_WELL_TOP, "well_h": CTA_WELL_H},
 }
+
+# --------------------------------------------------------------------------- #
+# Color grade (rainy-day footage + pastel chrome was reading washed-out and
+# low-energy). Recipe: punchier S-curve, +40% saturation, +0.08 gamma lift,
+# warm shadows/highlights, slightly cool blacks. Applied once per source via
+# ffmpeg, cached by mtime + recipe hash. Only the well content is graded —
+# brand chrome (logos, gradients, text) is untouched.
+# --------------------------------------------------------------------------- #
+
+GRADE_VF = (
+    "curves=preset=medium_contrast,"
+    "eq=saturation=1.20:gamma=0.96:contrast=1.03,"
+    "colorbalance=rh=0.04:gh=0.01:bh=-0.03"
+)
+_GRADE_CACHE_DIR = OUTPUT_DIR / "_grade_cache"
+
+
+def grade_baked_path(path: Path, *, vf: str = GRADE_VF,
+                     cache_dir: Path = _GRADE_CACHE_DIR) -> Path:
+    """Return a graded copy of `path` in `cache_dir`, baking once via ffmpeg.
+    Cache key = recipe hash + source mtime."""
+    path = Path(path)
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    key = hashlib.sha1(vf.encode("utf-8")).hexdigest()[:8]
+    out = cache_dir / f"{path.stem}_g{key}.mp4"
+    if out.exists() and out.stat().st_mtime >= path.stat().st_mtime:
+        return out
+    print(f"[grade] baking {path.name} -> {out.name}")
+    cmd = ["ffmpeg", "-y", "-loglevel", "error",
+           "-i", str(path),
+           "-vf", vf,
+           "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+           "-c:a", "copy",
+           str(out)]
+    subprocess.run(cmd, check=True)
+    return out
+
+
+def _apply_grade_to_footage():
+    """Remap every FOOTAGE spec's `path` to its graded copy."""
+    for slug, spec in FOOTAGE.items():
+        shots = spec if isinstance(spec, list) else [spec]
+        for s in shots:
+            s["path"] = grade_baked_path(s["path"])
+
+
+_apply_grade_to_footage()
 
 # --------------------------------------------------------------------------- #
 # Audio config
