@@ -503,6 +503,88 @@ After `cvs_lib/` lands and migration is done:
   `cc_hookshot_midnight_v2.py` vs `cc_hookshot_midnight.py`,
   `cc_midnight_final.py` — pick winners, archive losers
 
+## Tier 5 — clip-locator follow-ups (2026-04-29)
+
+`cvs_lib/clip_locator.py` + `cvs_lib/clip_snap.py` + SNR gate shipped
+this week — phrase-in, cleanly-cut-clip-out with on-mic verification.
+Demonstrated end-to-end via `scripts/mpc_demo_clips.py` (5 hand-picked
+phrases across 5 stems; SNR gate matched the ear's grading exactly).
+The toolset works. These items put it to work.
+
+### Status (2026-04-29 lift)
+- **SHIPPED**: HDR→SDR cutter promotion → `cvs_lib/clip_cut.py` with
+  ffprobe auto-detect (HLG, PQ, bt2020, 10-bit pix_fmt). 10 tests in
+  `tests/cvs_lib/test_clip_cut.py`. `mpc_demo_clips.py` now imports.
+- **SHIPPED**: cross-rally search CLI → `scripts/find_phrase.py`. Auto
+  pipeline-aware (mpc / cc_flora / cc_hookshot), `--audition` ffmpeg-
+  cuts via `clip_cut`, output goes to
+  `output/<pipeline>/_audition/<phrase_slug>/`. Exit 1 on no matches.
+- **SHIPPED**: smoke test → `tests/cvs_lib/test_locator_smoke.py`
+  pinning the 5 demo phrases' duration + SNR + off-mic flag against
+  the 2026-04-29 baseline. Includes the geogroup VAD-interval
+  extension regression pin (`in_t < 21.0`).
+- Remaining: phrase-driven beats in MPC reels (#1) and SNR override +
+  off-mic rescue chain (#4).
+
+### Phrase-driven beats in MPC reels
+Today MPC scripts hand-code `(stem, in_t, out_t)` per beat from the
+transcript index. Editorial picks live in code as magic numbers; if
+whisper re-runs and timestamps shift, every reel breaks silently.
+Rewrite the BEATS list as `phrase=` per beat and resolve with
+`locate_phrase_clip(stem, phrase)` at render time. Cuts become
+self-healing against re-transcription, edits read like editorial
+("the 254 million line") not arithmetic ("21.28 to 22.18"), and the
+SNR gate flags off-mic beats before render instead of after upload.
+Touches all 8 MPC reels; `cvs_lib.preflight` already runs before TTS
+so the resolution failures surface in the existing fail-fast path.
+
+### Cross-rally phrase search CLI — SHIPPED (2026-04-29)
+`scripts/find_phrase.py "<phrase>" [--pipeline mpc|cc_flora|cc_hookshot]
+[--exact] [--audition] [--top N] [--json]`. Walks all `<pipeline>/index/
+clips/*.json`, calls `locate_phrase_across_stems`, prints SNR-sorted
+table with `OFF-MIC` / `VOICE-EDGE` flags. `--audition` ffmpeg-cuts
+each match via `cvs_lib.clip_cut` into
+`output/<pipeline>/_audition/<phrase_slug>/NN_<stem>.mp4` plus a
+manifest. Verified 2026-04-29: 19 stems × "abolish ICE" → top-5 in
+~7s; `$254 million` → exactly one match at SNR +23.5 dB.
+
+### Promote HDR→SDR cutter to `cvs_lib/clip_cut.py` — SHIPPED (2026-04-29)
+`cvs_lib/clip_cut.py` provides `cut_clip(src, in_t, out_t, dst, *,
+tonemap="auto"|"hdr"|"sdr")`. Auto mode runs ffprobe on the source and
+tonemaps iff any of: `color_transfer ∈ {arib-std-b67, smpte2084}`,
+`color_primaries == bt2020`, or 10-bit pix_fmt. HDR path is the same
+zscale-linear → hable → bt709 → yuv420p chain that worked in
+`mpc_demo_clips.py`; SDR fast-path skips the chain entirely. Pure
+`build_cmd()` is exposed for tests. `cut_clip` rejects inverted ranges
+and missing sources before reaching ffmpeg.
+**Files**: `cvs_lib/clip_cut.py`, `tests/cvs_lib/test_clip_cut.py`
+(10 tests). `scripts/mpc_demo_clips.py` migrated.
+
+### SNR threshold override + off-mic rescue chain
+The +10 dB floor matched 5 hand-graded MPC clips, but cc_flora's
+ambient-bed audio philosophy will need a different threshold; field
+recordings on a different mic could too. Add `mpc/snr.json`
+(per-rally optional override) read by preflight. Separately:
+clips currently rejected at +5 dB ("to oppose the construction") may
+be salvageable with HP filter + de-ess + RMS normalization + light
+denoise (RNNoise / spectral gate). Add `cvs_lib.audio.rescue_voice()`
+that takes a `(audio, in_t, out_t)` candidate and returns a
+processed mono buffer suitable for re-injection at mix time. Pairs
+with the existing `is_off_mic` flag: instead of hard-rejecting,
+preflight could mark the beat as "needs rescue" and route it through
+the chain.
+
+### Smoke test for clip_locator against demo phrases — SHIPPED (2026-04-29)
+`tests/cvs_lib/test_locator_smoke.py` parametrizes the 5 canonical
+demos (north_lake_testimony / nbcm_origin / community_engaged /
+naz_fearful / geogroup_254m) and asserts each: `match_score == 1.0`,
+duration within ±0.25s of baseline, SNR within ±2 dB, off-mic flag
+exact. Plus a regression-pin specifically for the 2026-04-29 VAD-
+interval extension fix (`geogroup_254m.in_t < 21.0` so "two" stays
+captured). 6 tests total, ~3.8s wall clock with shared silero load.
+Total clip-suite tests: 45 across `test_clip_snap.py`,
+`test_clip_locator.py`, `test_clip_cut.py`, `test_locator_smoke.py`.
+
 ## Anti-backlog (intentionally not doing)
 
 - **Web UI for editorial decisions.** The CLI + still-preview loop is
