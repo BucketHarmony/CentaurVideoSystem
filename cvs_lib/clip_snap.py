@@ -47,10 +47,30 @@ _NO_SILENCE_DB = -25.0      # If best valley is louder than this, the search
                             # window has no real silence (chant/dense crowd
                             # audio). Trust the candidate as-is.
 
-# Reasonable defaults for the asymmetric pads.
-DEFAULT_LEAD_PAD_MS = 20.0
-DEFAULT_TRAIL_PAD_MS = 80.0
+# 250 ms of pad on both sides — enough that whisper's tight word
+# boundaries (which routinely lop unvoiced fricative tails and
+# pre-burst plosive closures) don't audibly clip the cut. The
+# word-boundary clamp (`prev_word_end_t` / `next_word_start_t`)
+# protects against bleeding into adjacent words when whisper reports
+# a real gap; the rms-floor / rms-ceiling cap protects against
+# bleeding when whisper says the words are adjacent.
+DEFAULT_LEAD_PAD_MS = 250.0
+DEFAULT_TRAIL_PAD_MS = 250.0
 DEFAULT_SEARCH_MS = 300.0
+# Whisper-reported word gap is "real" above this, "an artifact of
+# whisper's labelling" below.
+#  - Above: trust whisper's gap, apply word-boundary clamp, and skip
+#    the rms-floor / rms-ceiling cap (no prior word to protect).
+#  - Below: ignore whisper's gap (likely bundled phonemes), trust the
+#    audio, apply the rms-floor / rms-ceiling cap as the safety net.
+_WORD_GAP_CLAMP_THRESHOLD_MS = 50.0
+
+# Quality gate defaults. SNR < this means the speech is too close to the
+# room noise floor — off-mic, faint speaker, or covered by crowd. Verified
+# against five hand-graded clips where +10 dB read as "clean", +2 dB as
+# "off-mic", -7 dB as "unusable".
+DEFAULT_MIN_SNR_DB = 10.0
+_QUALITY_HOP_MS = 10.0
 
 
 @dataclass
@@ -66,6 +86,24 @@ class BoundarySnap:
 
 
 @dataclass
+class QualityReport:
+    """Speech-vs-noise analysis for a candidate cut.
+
+    `speech_rms_db` is the median RMS during voiced frames inside the
+    cut (proxy for "how loud is the speaker"). `noise_rms_db` is the
+    median RMS of non-voiced frames in the entire source (the room's
+    noise floor). `snr_db` = speech − noise; below ~+10 dB the cut
+    reads as off-mic / faint regardless of how clean the boundaries are.
+    """
+    speech_rms_db: float
+    speech_p90_db: float       # 90th percentile during cut — peak speech
+    noise_rms_db: float
+    snr_db: float              # speech_rms_db − noise_rms_db
+    voice_pct: float           # % of cut frames flagged as voice by VAD
+    is_off_mic: bool           # True if snr_db < min_snr_db
+
+
+@dataclass
 class SnapResult:
     """Composite result for both ends of a clip."""
     audio_path: str
@@ -76,6 +114,7 @@ class SnapResult:
     duration: float         # out_t - in_t
     in_snap: BoundarySnap
     out_snap: BoundarySnap
+    quality: QualityReport
 
     def quality_summary(self) -> str:
         """One-line human report: cleaner cuts have lower RMS at edges."""
@@ -85,7 +124,9 @@ class SnapResult:
             f"{', VOICE' if self.in_snap.in_voice else ''}) "
             f"out={self.out_t:.3f} ({self.out_snap.rms_db:.1f} dB, "
             f"d{self.out_snap.delta_ms:+.0f} ms"
-            f"{', VOICE' if self.out_snap.in_voice else ''})"
+            f"{', VOICE' if self.out_snap.in_voice else ''}) "
+            f"SNR={self.quality.snr_db:+.1f} dB"
+            f"{' [OFF-MIC]' if self.quality.is_off_mic else ''}"
         )
 
 
@@ -166,6 +207,22 @@ def _last_voice_end_before(t: float, voice: List[Tuple[float, float]]) -> Option
         else:
             break
     return last
+
+
+def _voice_interval_containing(
+    t: float, voice: List[Tuple[float, float]],
+) -> Optional[Tuple[float, float]]:
+    """The (start, end) of the VAD voice interval that contains `t`, or
+    None. Used to recover whisper-truncated word starts/ends: when whisper
+    reports a real prev/next-word gap but the candidate sits inside a VAD
+    voice region whose actual onset/offset is meaningfully earlier/later,
+    snap to that VAD edge rather than whisper's edge."""
+    for s, e in voice:
+        if s <= t < e:
+            return (s, e)
+        if s > t:
+            return None
+    return None
 
 
 # --------------------------------------------------------------------------- #
@@ -257,17 +314,27 @@ def _next_rms_rise(
     max_advance_ms: float,
     threshold_db: float = _PAD_RMS_RISE_DB,
 ) -> float:
-    """Walk forward from `t_start` looking for the first frame with RMS
-    above `threshold_db`. Used to clamp trail-pad — silero's ~100ms frame
-    size misses sub-VAD inter-word gaps, but RMS sees them clearly.
+    """Walk forward from `t_start` looking for the next RMS rise above
+    `threshold_db`. Used to clamp trail-pad so it never reaches into the
+    next word's onset.
 
-    Returns the first violating time, or `t_start + max_advance_ms` if no
-    rise is found within the budget.
+    If `t_start` itself is already above threshold (we're sitting in
+    continuous audio rather than silence), skip past that initial loud
+    region first, then look for the rise. Without this, the function
+    returns `t_start` immediately and the clamp degenerates the trail
+    pad to zero.
+
+    Returns the first violating time, or `t_start + max_advance_ms` if
+    no rise is found within the budget.
     """
     audio_dur = len(audio) / sr
     end_s = min(audio_dur, t_start + max_advance_ms * 1e-3)
     hop_s = _RMS_HOP_MS * 1e-3
     t = t_start
+    # Skip past initial above-threshold region.
+    while t < end_s and _rms_frame_db(audio, t, sr) > threshold_db:
+        t += hop_s
+    # Now in a below-threshold (or past-budget) region; find next rise.
     while t < end_s:
         if _rms_frame_db(audio, t, sr) > threshold_db:
             return t
@@ -283,13 +350,18 @@ def _last_rms_rise(
     max_advance_ms: float,
     threshold_db: float = _PAD_RMS_RISE_DB,
 ) -> float:
-    """Walk backward from `t_end` looking for the last frame with RMS
-    above `threshold_db`. Used to clamp lead-pad — never reach back into
-    the prior word's tail.
+    """Walk backward from `t_end` looking for the previous RMS rise
+    above `threshold_db`. Used to clamp lead-pad so it never reaches
+    back into the prior word's tail.
+
+    Mirror of `_next_rms_rise`: if `t_end` itself is in audio, walk past
+    the initial loud region first.
     """
     start_s = max(0.0, t_end - max_advance_ms * 1e-3)
     hop_s = _RMS_HOP_MS * 1e-3
     t = t_end
+    while t > start_s and _rms_frame_db(audio, t, sr) > threshold_db:
+        t -= hop_s
     while t > start_s:
         if _rms_frame_db(audio, t, sr) > threshold_db:
             return t
@@ -320,6 +392,73 @@ def _snap_to_zero_crossing(audio: np.ndarray, sr: int, t: float) -> float:
     return best / sr
 
 
+def _analyze_speech_quality(
+    audio: np.ndarray,
+    sr: int,
+    in_t: float,
+    out_t: float,
+    voice: List[Tuple[float, float]],
+    *,
+    min_snr_db: float,
+) -> QualityReport:
+    """Speech-vs-noise analysis. Speech RMS = median over voiced frames
+    inside (in_t, out_t); falls back to all frames in the cut if VAD
+    flags none.
+
+    Noise floor: the QUIETER of (a) p25 of non-voiced frames in the
+    source — but with reverb-tail bleed in dense audio (chants, crowds,
+    canned applause) the median over-estimates the floor — and
+    (b) p10 of ALL frames in the source (the absolute quietest moments).
+    The min of those two is the most defensible "room floor" estimate
+    across both clean-speech sources and noisy chant sources.
+    """
+    hop_s = _QUALITY_HOP_MS * 1e-3
+    cut_times = np.arange(in_t, out_t, hop_s)
+    if len(cut_times) == 0:
+        cut_times = np.array([0.5 * (in_t + out_t)])
+
+    voiced_db: List[float] = []
+    all_cut_db: List[float] = []
+    for t in cut_times:
+        db = _rms_frame_db(audio, float(t), sr)
+        all_cut_db.append(db)
+        if _is_in_voice(float(t), voice):
+            voiced_db.append(db)
+
+    speech_pool = voiced_db if voiced_db else all_cut_db
+    speech_rms = float(np.median(speech_pool))
+    speech_p90 = float(np.percentile(all_cut_db, 90)) if all_cut_db else speech_rms
+
+    # Noise floor: dual estimate, pick the lower (truer floor).
+    audio_dur = len(audio) / sr
+    sample_t = np.arange(0.0, audio_dur, 0.05)
+    all_db = np.array(
+        [_rms_frame_db(audio, float(t), sr) for t in sample_t],
+    )
+    nv_db = np.array(
+        [d for d, t in zip(all_db, sample_t)
+         if not _is_in_voice(float(t), voice)],
+    )
+    candidates = []
+    if nv_db.size >= 5:
+        candidates.append(float(np.percentile(nv_db, 25)))
+    if all_db.size >= 10:
+        candidates.append(float(np.percentile(all_db, 10)))
+    noise_rms = min(candidates) if candidates else -60.0
+    snr = speech_rms - noise_rms
+
+    voice_pct = 100.0 * len(voiced_db) / max(1, len(all_cut_db))
+
+    return QualityReport(
+        speech_rms_db=speech_rms,
+        speech_p90_db=speech_p90,
+        noise_rms_db=noise_rms,
+        snr_db=snr,
+        voice_pct=voice_pct,
+        is_off_mic=snr < min_snr_db,
+    )
+
+
 # --------------------------------------------------------------------------- #
 # Public API
 # --------------------------------------------------------------------------- #
@@ -332,6 +471,9 @@ def snap_boundaries(
     lead_pad_ms: float = DEFAULT_LEAD_PAD_MS,
     trail_pad_ms: float = DEFAULT_TRAIL_PAD_MS,
     search_ms: float = DEFAULT_SEARCH_MS,
+    min_snr_db: float = DEFAULT_MIN_SNR_DB,
+    prev_word_end_t: Optional[float] = None,
+    next_word_start_t: Optional[float] = None,
 ) -> SnapResult:
     """Refine `(in_t, out_t)` by snapping to the nearest silence + zero
     crossing, then apply asymmetric pad.
@@ -354,41 +496,84 @@ def snap_boundaries(
     # Buffer so the clamped boundary lands just outside voice, not on its edge.
     _BUF_S = 0.005
 
-    # IN side: snap to silence valley, zero-cross, then back-pad — but never
-    # back past the prior word's tail (RMS rise detection, sub-VAD).
-    # Asymmetric search: mostly look backward (silence before first word).
+    # IN side: snap to silence valley behind candidate, zero-cross, then
+    # back-pad — but never back past the prior word's tail. Hard floor:
+    # snapped_in <= in_t (the candidate boundary is a strict ceiling, so
+    # the snap never trims the start of the matched phrase).
     valley_t_in, valley_db_in = _find_silence_valley(
         audio, _VAD_SR, in_t, voice,
         search_back_ms=search_ms,
-        search_fwd_ms=search_ms * 0.2,
+        search_fwd_ms=0.0,
     )
-    snapped_in_pre_pad = _snap_to_zero_crossing(audio, _VAD_SR, valley_t_in)
-    rms_floor_in = _last_rms_rise(
-        audio, _VAD_SR, snapped_in_pre_pad, max_advance_ms=lead_pad_ms,
+    snapped_in_pre_pad = min(
+        in_t, _snap_to_zero_crossing(audio, _VAD_SR, valley_t_in),
     )
-    target_in = max(
-        snapped_in_pre_pad - lead_pad_ms * 1e-3,
-        rms_floor_in + _BUF_S,
+    prev_gap_real = (
+        prev_word_end_t is not None
+        and (in_t - prev_word_end_t) * 1000.0
+            > _WORD_GAP_CLAMP_THRESHOLD_MS
     )
-    snapped_in = max(0.0, target_in)
+    if prev_gap_real:
+        # Whisper says there's a real gap; the word-boundary clamp is
+        # authoritative and the rms-floor cap is unnecessary (no prior
+        # word in the lead-pad window).
+        target_in = snapped_in_pre_pad - lead_pad_ms * 1e-3
+        # Whisper sometimes places the word boundary partway through a
+        # multi-syllable word (e.g. "$254" labelled at "fifty-four",
+        # missing the spoken "two" earlier in the same VAD interval).
+        # If the candidate sits inside a VAD voice interval whose onset
+        # is earlier than the lead-pad reach, snap back to that onset.
+        in_interval = _voice_interval_containing(snapped_in_pre_pad, voice)
+        if in_interval is not None and in_interval[0] < target_in:
+            target_in = in_interval[0]
+        target_in = max(target_in, prev_word_end_t + _BUF_S)
+    else:
+        # Whisper says the prior word is adjacent (or unknown); rely on
+        # the rms-floor cap so the pad doesn't bleed into its tail.
+        rms_floor_in = _last_rms_rise(
+            audio, _VAD_SR, snapped_in_pre_pad, max_advance_ms=lead_pad_ms,
+        )
+        target_in = max(
+            snapped_in_pre_pad - lead_pad_ms * 1e-3,
+            rms_floor_in + _BUF_S,
+        )
+    snapped_in = min(in_t, max(0.0, target_in))
 
-    # OUT side: snap to silence valley, zero-cross, then forward-pad — but
-    # never forward past the next word's onset (RMS rise detection).
-    # Asymmetric search: mostly look forward (silence after last word).
+    # OUT side: snap to silence valley after candidate, zero-cross, then
+    # forward-pad — but never past the next word's onset. Hard floor:
+    # snapped_out >= out_t (so the matched phrase's end is preserved
+    # even if the deepest valley sits inside the word).
     valley_t_out, valley_db_out = _find_silence_valley(
         audio, _VAD_SR, out_t, voice,
-        search_back_ms=search_ms * 0.2,
+        search_back_ms=0.0,
         search_fwd_ms=search_ms,
     )
-    snapped_out_pre_pad = _snap_to_zero_crossing(audio, _VAD_SR, valley_t_out)
-    rms_ceiling_out = _next_rms_rise(
-        audio, _VAD_SR, snapped_out_pre_pad, max_advance_ms=trail_pad_ms,
+    snapped_out_pre_pad = max(
+        out_t, _snap_to_zero_crossing(audio, _VAD_SR, valley_t_out),
     )
-    target_out = min(
-        snapped_out_pre_pad + trail_pad_ms * 1e-3,
-        rms_ceiling_out - _BUF_S,
+    next_gap_real = (
+        next_word_start_t is not None
+        and (next_word_start_t - out_t) * 1000.0
+            > _WORD_GAP_CLAMP_THRESHOLD_MS
     )
-    snapped_out = min(audio_dur, target_out)
+    if next_gap_real:
+        target_out = snapped_out_pre_pad + trail_pad_ms * 1e-3
+        # Mirror of the IN-side fix: if whisper truncated the end of a
+        # multi-syllable word, the VAD interval's actual offset will be
+        # later than whisper's word end. Reach forward to capture it.
+        out_interval = _voice_interval_containing(snapped_out_pre_pad, voice)
+        if out_interval is not None and out_interval[1] > target_out:
+            target_out = out_interval[1]
+        target_out = min(target_out, next_word_start_t - _BUF_S)
+    else:
+        rms_ceiling_out = _next_rms_rise(
+            audio, _VAD_SR, snapped_out_pre_pad, max_advance_ms=trail_pad_ms,
+        )
+        target_out = min(
+            snapped_out_pre_pad + trail_pad_ms * 1e-3,
+            rms_ceiling_out - _BUF_S,
+        )
+    snapped_out = max(out_t, min(audio_dur, target_out))
 
     in_snap = BoundarySnap(
         side="in",
@@ -421,6 +606,11 @@ def snap_boundaries(
             # Still bad — bail back to the inputs; caller can decide.
             snapped_in, snapped_out = in_t, out_t
 
+    quality = _analyze_speech_quality(
+        audio, _VAD_SR, snapped_in, snapped_out, voice,
+        min_snr_db=min_snr_db,
+    )
+
     return SnapResult(
         audio_path=audio_path,
         in_t=snapped_in,
@@ -430,6 +620,7 @@ def snap_boundaries(
         duration=snapped_out - snapped_in,
         in_snap=in_snap,
         out_snap=out_snap,
+        quality=quality,
     )
 
 
@@ -446,6 +637,7 @@ def _cli() -> int:
     ap.add_argument("--lead-pad-ms", type=float, default=DEFAULT_LEAD_PAD_MS)
     ap.add_argument("--trail-pad-ms", type=float, default=DEFAULT_TRAIL_PAD_MS)
     ap.add_argument("--search-ms", type=float, default=DEFAULT_SEARCH_MS)
+    ap.add_argument("--min-snr-db", type=float, default=DEFAULT_MIN_SNR_DB)
     args = ap.parse_args()
 
     res = snap_boundaries(
@@ -453,6 +645,7 @@ def _cli() -> int:
         lead_pad_ms=args.lead_pad_ms,
         trail_pad_ms=args.trail_pad_ms,
         search_ms=args.search_ms,
+        min_snr_db=args.min_snr_db,
     )
     print(f"  candidate: in={args.in_t:.3f}  out={args.out_t:.3f}  "
           f"dur={args.out_t - args.in_t:.3f}")

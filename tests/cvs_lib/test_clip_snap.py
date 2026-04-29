@@ -107,8 +107,10 @@ def speech_snap():
 
 @pytest.fixture(scope="module")
 def chant_snap():
-    """A continuous-chant cut: first 'abolish ICE' repetition."""
-    return snap_boundaries(CHANT_PATH, 0.0, 0.580)
+    """A continuous-chant cut: first 'abolish ICE' repetition.
+    The next chant starts at 0.700 — pass it as next_word_start_t so
+    the trail pad doesn't bleed into the next "abolish"."""
+    return snap_boundaries(CHANT_PATH, 0.0, 0.580, next_word_start_t=0.700)
 
 
 def test_snap_returns_clean_silences_on_clean_speech(speech_snap):
@@ -133,11 +135,8 @@ def test_snap_out_side_searches_forward_not_backward(speech_snap):
 
 
 def test_snap_respects_chant_word_boundary(chant_snap):
-    # No real silence in continuous chant — out edge must NOT drift past
-    # the next word's onset.
-    # First "abolish ICE" ends ~0.58; second starts ~0.70. Out must stay
-    # comfortably below 0.70.
-    assert chant_snap.out_t < 0.70
+    # next_word_start_t=0.700 was passed in; cut must land before it.
+    assert chant_snap.out_t < 0.700
 
 
 def test_snap_flags_in_voice_when_no_silence_available(chant_snap):

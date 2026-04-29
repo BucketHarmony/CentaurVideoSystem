@@ -24,6 +24,7 @@ from typing import Dict, List, Optional, Sequence, Union
 
 from cvs_lib.clip_snap import (
     DEFAULT_LEAD_PAD_MS,
+    DEFAULT_MIN_SNR_DB,
     DEFAULT_SEARCH_MS,
     DEFAULT_TRAIL_PAD_MS,
     SnapResult,
@@ -56,6 +57,11 @@ class ClipResolution:
     out_voice: bool
     in_delta_ms: float           # snap motion: snapped - candidate
     out_delta_ms: float
+    speech_rms_db: float         # median RMS during voiced cut frames
+    noise_rms_db: float          # median RMS of non-voiced source frames
+    snr_db: float                # speech_rms_db - noise_rms_db
+    voice_pct: float             # % of cut frames flagged voice by VAD
+    is_off_mic: bool             # snr_db < min_snr_db threshold
 
     def to_beat_dict(self) -> Dict:
         """Reduce to the keys a reel BEATS entry typically uses."""
@@ -72,11 +78,18 @@ class ClipResolution:
                 "out_voice": self.out_voice,
                 "delta_in_ms": round(self.in_delta_ms),
                 "delta_out_ms": round(self.out_delta_ms),
+                "speech_rms_db": round(self.speech_rms_db, 1),
+                "noise_rms_db": round(self.noise_rms_db, 1),
+                "snr_db": round(self.snr_db, 1),
+                "voice_pct": round(self.voice_pct, 1),
+                "is_off_mic": self.is_off_mic,
             },
         }
 
     def quality_summary(self) -> str:
         flags = []
+        if self.is_off_mic:
+            flags.append(f"OFF-MIC({self.snr_db:+.1f}dB)")
         if self.in_voice:
             flags.append("IN_VOICE")
         if self.out_voice:
@@ -87,6 +100,7 @@ class ClipResolution:
         return (
             f"{self.stem}  {self.in_t:.3f}-{self.out_t:.3f} "
             f"({self.duration:.3f}s)  "
+            f"SNR{self.snr_db:+.1f}  "
             f"{self.in_rms_db:+.1f}/{self.out_rms_db:+.1f} dB  "
             f"d{self.in_delta_ms:+.0f}/{self.out_delta_ms:+.0f}ms"
             f"{flag_str}"
@@ -127,26 +141,40 @@ def locate_phrase_clip(
     trail_pad_ms: float = DEFAULT_TRAIL_PAD_MS,
     search_ms: float = DEFAULT_SEARCH_MS,
     min_score: float = 0.6,
+    min_snr_db: float = DEFAULT_MIN_SNR_DB,
+    skip_off_mic: bool = True,
 ) -> Optional[ClipResolution]:
     """Locate `phrase` in `stem`'s word index, snap the cut, return one
     `ClipResolution` (the highest-scoring match) or None if no match.
 
-    For multi-match handling (a phrase that recurs in the audio), see
-    `locate_phrase_clip_all` and `locate_phrase_across_stems`.
+    `min_snr_db` defines the speech-vs-noise floor; matches below it are
+    flagged `is_off_mic=True`. With `skip_off_mic=True` (default), the
+    function walks matches in score order and returns the first that
+    passes; if all fail, returns None. With `skip_off_mic=False`, returns
+    the best match regardless and the caller can read `is_off_mic`.
     """
     wi = WordIndex.load(stem, index_dir)
     matches = wi.find_phrase(phrase, fuzzy=fuzzy, min_score=min_score)
     if not matches:
         return None
-    # Best = highest score, tie-break earliest.
-    best = max(matches, key=lambda m: (m.score, -m.start_t))
     audio_path = _resolve_audio_path(stem, raw_dir, index_dir)
-    return _resolve_match(
-        best, audio_path,
-        lead_pad_ms=lead_pad_ms,
-        trail_pad_ms=trail_pad_ms,
-        search_ms=search_ms,
-    )
+    # Walk in score order, earliest tie-break.
+    ordered = sorted(matches, key=lambda m: (-m.score, m.start_t))
+    first: Optional[ClipResolution] = None
+    for m in ordered:
+        res = _resolve_match(
+            m, audio_path,
+            lead_pad_ms=lead_pad_ms,
+            trail_pad_ms=trail_pad_ms,
+            search_ms=search_ms,
+            min_snr_db=min_snr_db,
+            word_index=wi,
+        )
+        if first is None:
+            first = res
+        if not res.is_off_mic:
+            return res
+    return None if skip_off_mic else first
 
 
 def locate_phrase_clip_all(
@@ -160,23 +188,33 @@ def locate_phrase_clip_all(
     trail_pad_ms: float = DEFAULT_TRAIL_PAD_MS,
     search_ms: float = DEFAULT_SEARCH_MS,
     min_score: float = 0.6,
+    min_snr_db: float = DEFAULT_MIN_SNR_DB,
+    skip_off_mic: bool = False,
 ) -> List[ClipResolution]:
     """Resolve every match of `phrase` in `stem`. Useful when the same
-    line is repeated (chants) and you want to pick one to use."""
+    line is repeated (chants) and you want to pick one to use.
+
+    `skip_off_mic` defaults False here — callers asking for "all" usually
+    want to see the off-mic matches too (and decide for themselves)."""
     wi = WordIndex.load(stem, index_dir)
     matches = wi.find_phrase(phrase, fuzzy=fuzzy, min_score=min_score)
     if not matches:
         return []
     audio_path = _resolve_audio_path(stem, raw_dir, index_dir)
-    return [
+    out = [
         _resolve_match(
             m, audio_path,
             lead_pad_ms=lead_pad_ms,
             trail_pad_ms=trail_pad_ms,
             search_ms=search_ms,
+            min_snr_db=min_snr_db,
+            word_index=wi,
         )
         for m in matches
     ]
+    if skip_off_mic:
+        out = [r for r in out if not r.is_off_mic]
+    return out
 
 
 def locate_phrase_across_stems(
@@ -190,10 +228,14 @@ def locate_phrase_across_stems(
     trail_pad_ms: float = DEFAULT_TRAIL_PAD_MS,
     search_ms: float = DEFAULT_SEARCH_MS,
     min_score: float = 0.6,
+    min_snr_db: float = DEFAULT_MIN_SNR_DB,
+    skip_off_mic: bool = False,
 ) -> List[ClipResolution]:
     """Search a phrase across many stems; return all matches (any
-    confidence ≥ min_score) snap-refined and sorted by quality (lowest
-    cut RMS first, then highest match score, then earliest stem/start).
+    confidence ≥ min_score) snap-refined and sorted by quality.
+
+    Sort key: highest SNR first (off-mic clips sink), then lowest mean
+    edge RMS, then highest match score, then earliest stem/start.
     """
     matches = find_phrase_across_stems(
         phrase, stems,
@@ -202,26 +244,60 @@ def locate_phrase_across_stems(
         min_score=min_score,
     )
     out: List[ClipResolution] = []
+    wi_cache: Dict[str, WordIndex] = {}
     for m in matches:
         try:
             audio_path = _resolve_audio_path(m.stem, raw_dir, index_dir)
         except FileNotFoundError:
             continue
+        wi = wi_cache.get(m.stem)
+        if wi is None:
+            try:
+                wi = WordIndex.load(m.stem, index_dir)
+                wi_cache[m.stem] = wi
+            except FileNotFoundError:
+                pass
         out.append(_resolve_match(
             m, audio_path,
             lead_pad_ms=lead_pad_ms,
             trail_pad_ms=trail_pad_ms,
             search_ms=search_ms,
+            min_snr_db=min_snr_db,
+            word_index=wi,
         ))
-    # Quality sort: prefer cleanest cuts (lowest mean RMS at edges),
-    # then highest match score, then earliest stem+time.
+    if skip_off_mic:
+        out = [r for r in out if not r.is_off_mic]
+    # Quality sort: best SNR first (so off-mic sinks even if RMS is low),
+    # then cleanest edges, then highest match score, then earliest.
     out.sort(key=lambda r: (
+        -r.snr_db,
         0.5 * (r.in_rms_db + r.out_rms_db),
         -r.match_score,
         r.stem,
         r.in_t,
     ))
     return out
+
+
+def _adjacent_word_bounds(
+    wi: WordIndex, in_t: float, out_t: float,
+) -> tuple:
+    """Return `(prev_word_end_t, next_word_start_t)` — the boundaries
+    of the words immediately before/after the matched phrase in the
+    index. Either may be None if the phrase sits at a file edge.
+
+    Used to clamp lead/trail extension when whisper reports a real
+    inter-word gap (e.g., a 1.3-second pause before "$254 million").
+    """
+    prev_end = None
+    next_start = None
+    for w in wi.words:
+        if w.end <= in_t:
+            prev_end = w.end
+        elif w.start >= out_t and next_start is None:
+            next_start = w.start
+            break
+    return prev_end, next_start
 
 
 def _resolve_match(
@@ -231,7 +307,14 @@ def _resolve_match(
     lead_pad_ms: float,
     trail_pad_ms: float,
     search_ms: float,
+    min_snr_db: float,
+    word_index: Optional[WordIndex] = None,
 ) -> ClipResolution:
+    prev_end_t = next_start_t = None
+    if word_index is not None:
+        prev_end_t, next_start_t = _adjacent_word_bounds(
+            word_index, match.start_t, match.end_t,
+        )
     snap = snap_boundaries(
         audio_path,
         match.start_t,
@@ -239,7 +322,11 @@ def _resolve_match(
         lead_pad_ms=lead_pad_ms,
         trail_pad_ms=trail_pad_ms,
         search_ms=search_ms,
+        min_snr_db=min_snr_db,
+        prev_word_end_t=prev_end_t,
+        next_word_start_t=next_start_t,
     )
+    q = snap.quality
     return ClipResolution(
         stem=match.stem,
         phrase=match.matched_text,  # original text, not the input
@@ -257,6 +344,11 @@ def _resolve_match(
         out_voice=snap.out_snap.in_voice,
         in_delta_ms=snap.in_snap.delta_ms,
         out_delta_ms=snap.out_snap.delta_ms,
+        speech_rms_db=q.speech_rms_db,
+        noise_rms_db=q.noise_rms_db,
+        snr_db=q.snr_db,
+        voice_pct=q.voice_pct,
+        is_off_mic=q.is_off_mic,
     )
 
 
@@ -282,6 +374,11 @@ def _cli() -> int:
     ap.add_argument("--lead-pad-ms", type=float, default=DEFAULT_LEAD_PAD_MS)
     ap.add_argument("--trail-pad-ms", type=float, default=DEFAULT_TRAIL_PAD_MS)
     ap.add_argument("--search-ms", type=float, default=DEFAULT_SEARCH_MS)
+    ap.add_argument("--min-snr-db", type=float, default=DEFAULT_MIN_SNR_DB,
+                    help="Reject cuts where speech RMS minus noise RMS "
+                         "is below this. Default 10 dB.")
+    ap.add_argument("--keep-off-mic", action="store_true",
+                    help="Don't filter off-mic matches; flag them instead.")
     ap.add_argument("--json", action="store_true",
                     help="Emit beat-ready dicts as JSON instead of "
                          "human-readable summary.")
@@ -303,6 +400,8 @@ def _cli() -> int:
         lead_pad_ms=args.lead_pad_ms,
         trail_pad_ms=args.trail_pad_ms,
         search_ms=args.search_ms,
+        min_snr_db=args.min_snr_db,
+        skip_off_mic=not args.keep_off_mic,
     )
 
     if args.all:
