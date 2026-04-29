@@ -422,11 +422,16 @@ BEATS list with timestamps suggested from the index, default chrome
 + chord progression, ready for hand-edit. New reels start at 80%
 done instead of 0%.
 
-### `render_all.py`
-Iterate every reel script for a rally, render in sequence, emit
-`output/<pipeline>/<rally>/manifest.json` listing each reel's
-duration, size, beat structure, source clips. Useful for batch posts
-and re-renders after brand changes.
+### `render_all.py` — SHIPPED (MPC, 2026-04-29)
+`scripts/mpc_render_all.py` discovers every `scripts/mpc_ep_*.py`,
+renders each whose output is missing or older than the script
+(`--force` to re-render all, `--manifest-only` to skip render),
+and emits `output/mpc/manifest.json` with per-reel duration, size,
+codec, dimensions, source script, and matching cover.
+Output-path inference: regex on `OUTPUT_PATH = OUT_DIR / "..."`,
+docstring `Output:` line, then stem-match fallback. Verified
+2026-04-29: 10 reels discovered, 10/10 rendered, 10/10 covers
+matched. cc_flora / cc_hookshot equivalents not yet shipped.
 
 ### Per-rally / per-season output namespacing
 Today: `output/mpc/north_lake.mp4` flat. At rally 2: collisions or
@@ -475,10 +480,18 @@ Empty list `[]` suppresses captions; key absent pulls from index.
 This convention lives in memory, not in code. After Tier 2,
 document in `cvs_lib/captions.py` docstring with examples.
 
-### Cover thumbnails
-Auto-generate a 1080×1920 cover frame per reel (mid-CTA + headline
-overlay, or first beat + chip) for posting workflow. The
-comfyui-output-janitor agent could pick these up.
+### Cover thumbnails — SHIPPED (MPC, 2026-04-29)
+`cvs_lib/cover.py` provides `extract_frame()` (fast input-seek
+ffmpeg single-frame extract) and `make_cover()` (extract +
+optional stencil headline overlay with magenta stroke, gradient
+scrim, autosized via `_fit_font`). Per-reel config lives in
+`scripts/mpc_make_covers.py` (`COVERS` list with `t`, `headline`,
+`sub` per reel). Covers land in `output/mpc/covers/<reel>.png` at
+1080×1920 PNG. 11 covers shipped; `mpc_render_all.py` matches them
+into the manifest. Headline timestamps tuned to avoid scene fades
+(`abolish_ice_congress` t=24→14) and chrome competition
+(`romulus_rapid_response` t=18→2 with no overlay since in-video
+HOOK chrome already lands).
 
 ### Dead code removal
 After `cvs_lib/` lands and migration is done:
