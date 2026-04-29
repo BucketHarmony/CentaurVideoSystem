@@ -405,15 +405,16 @@ python ingest.py --pipeline mpc --rally "Ice Out Romulus" \
 Copies, runs scan, verifies index, prints "ready" with N clips
 indexed and M minutes transcribed.
 
-### Rally scout dashboard
-HTML or markdown per rally generated from the index. Every clip,
-every transcript segment, side-by-side, filterable by speaker /
-keyword / motion-level. Click-to-jump to source video at timestamp.
-Makes new-reel ideation a 5-min browse.
-
-The infrastructure (faster-whisper segments, motion timeline, scene
-thumbs) already exists in `mpc/index/clips/<stem>.json`. Just needs
-a render step.
+### Rally scout dashboard — SHIPPED (2026-04-29)
+`scripts/scout_dashboard.py` walks `<pipeline>/index/clips/*.json`
+and emits a markdown page per stem (meta, tags, transcript with
+mm:ss timestamps, top-N motion peaks, scene thumbnail gallery)
+plus a top-level `_index.md` table linking each. Output:
+`output/<pipeline>/_scout/<rally_slug>/`. Pure renderers in
+`cvs_lib/scout.py` so the markdown is testable without disk I/O.
+Verified 2026-04-29: 19 stems × Ice Out Romulus rendered in <1s,
+21 tests in `tests/cvs_lib/test_scout.py`. Pairs with
+`scripts/find_phrase.py` (search vs. browse).
 
 ### Reel scaffolder (`cvs_lib/scaffold.py`)
 Given a rally + a high-level pitch ("3-beat receipts angle on the
@@ -445,6 +446,21 @@ captions. Speeds the actual post step (which today is hand-typed in
 each platform).
 
 ## Tier 4 — quality-of-life & maintenance
+
+### Caption auto-fill test drift (2026-04-29)
+`tests/cvs_lib/test_captions.py` has 4 failing tests
+(`test_autofill_pulls_segments_when_caption_lines_absent`,
+`test_autofill_offsets_relative_to_beat_start`,
+`test_autofill_respects_scene_t0`,
+`test_caption_overrides_substitute_text_by_segment_start`).
+Tests expect fine-grained transcript segments
+(e.g. 12.16-15.52, 15.52-19.36); current
+`mpc/index/clips/20260425_155313.json` has only 2 coarse segments
+(0.0-29.64, 30.0-44.96). Either whisper was re-run with different
+chunking params, or the tests were authored against a never-shipped
+index version. Fix: re-tune test expectations to match current
+segmentation, OR re-run scanner with finer granularity. Pre-existing
+— not caused by recent lifts.
 
 ### Smoke tests
 Zero tests on the audio mix or caption positioning today. After
