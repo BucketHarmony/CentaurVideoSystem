@@ -439,11 +439,19 @@ Today: `output/mpc/north_lake.mp4` flat. At rally 2: collisions or
 mental overload. Move to `output/mpc/<rally>/<reel>.mp4`. Same
 pattern for cc_flora seasons. Easy after Tier 2 extraction.
 
-### Posting metadata helper
-For each rendered reel, emit a sidecar `<reel>.posting.md` with
-suggested caption text, hashtags, alt-text from chip labels +
-captions. Speeds the actual post step (which today is hand-typed in
-each platform).
+### Posting metadata helper — SHIPPED (2026-04-29)
+`cvs_lib/posting.py` AST-parses each reel script (no module imports
+— side-effect free) for docstring + `CTA_HEADLINE` / `CTA_SUBHEAD` /
+`CTA_RALLY` constants, merges with the manifest entry from
+`mpc_render_all.py`, and renders a `.posting.md` sidecar. Sections:
+file/cover paths + sizes, synopsis (docstring body up to
+`Beats:`/`Output:`/`Run:`), suggested caption, brand+reel hashtags
+(MichiganProgressive / ImmigrantRights / AbolishICE / IceOutRomulus +
+headline-derived tag), accessibility alt-text, per-platform posting
+checklist (TikTok / Instagram / Bluesky / Facebook with char-count
+guidance). Driver: `scripts/mpc_make_posting.py`. Verified 2026-04-29:
+10 sidecars written next to the rendered reels. 24 tests in
+`tests/cvs_lib/test_posting.py`.
 
 ## Tier 4 — quality-of-life & maintenance
 
