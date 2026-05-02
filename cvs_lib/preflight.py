@@ -141,6 +141,28 @@ def assert_rotation_cache_writable(
     return []
 
 
+def assert_phrases_were_resolved(beats: Sequence[Beat]) -> List[Issue]:
+    """Catch reels that use `phrase=` specs but forgot to call
+    `cvs_lib.beat_resolver.resolve_or_exit(...)` before render.
+
+    A spec with `phrase` set but missing `in_t` or `out_t` at preflight
+    time means the script is about to feed a half-baked BEATS to the
+    render pipeline — fail fast with a pointed error message.
+    """
+    issues: List[Issue] = []
+    for slug, spec in _iter_specs(beats):
+        if "phrase" not in spec:
+            continue
+        if "in_t" not in spec or "out_t" not in spec:
+            issues.append(Issue(
+                ERROR, "phrase_unresolved",
+                f"beat '{slug}' has phrase={spec['phrase']!r} but no "
+                f"in_t/out_t. Call cvs_lib.beat_resolver.resolve_or_exit("
+                f"BEATS, raw_dir=...) before preflight.run()."
+            ))
+    return issues
+
+
 def assert_caption_windows_in_beat(beats: Sequence[Beat]) -> List[Issue]:
     """Caption start/end times must fall within the beat duration."""
     issues: List[Issue] = []
@@ -183,6 +205,7 @@ def run(
     `factcheck_require_claims=False` to validate names only.
     """
     issues: List[Issue] = []
+    issues += assert_phrases_were_resolved(beats)
     issues += assert_sources_exist(beats)
     issues += assert_beats_sum_to_duration(beats, target_duration)
     issues += assert_in_out_ordering(beats)

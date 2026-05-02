@@ -550,17 +550,54 @@ The toolset works. These items put it to work.
 - Remaining: phrase-driven beats in MPC reels (#1) and SNR override +
   off-mic rescue chain (#4).
 
-### Phrase-driven beats in MPC reels
+### Phrase-driven beats in MPC reels — MECHANISM SHIPPED (2026-05-01)
 Today MPC scripts hand-code `(stem, in_t, out_t)` per beat from the
 transcript index. Editorial picks live in code as magic numbers; if
 whisper re-runs and timestamps shift, every reel breaks silently.
-Rewrite the BEATS list as `phrase=` per beat and resolve with
-`locate_phrase_clip(stem, phrase)` at render time. Cuts become
-self-healing against re-transcription, edits read like editorial
-("the 254 million line") not arithmetic ("21.28 to 22.18"), and the
-SNR gate flags off-mic beats before render instead of after upload.
-Touches all 8 MPC reels; `cvs_lib.preflight` already runs before TTS
-so the resolution failures surface in the existing fail-fast path.
+
+**Mechanism shipped:** `cvs_lib/beat_resolver.py` resolves `phrase=`
+specs into `in_t`/`out_t` via `locate_phrase_clip`. Three modes:
+
+- **Phrase-driven** — `{path, phrase}` only → resolver fills both edges
+  from the snap-refined cut.
+- **In-anchor** — `{path, phrase, out_t}` → fills `in_t`; static `out_t`
+  wins (or vice versa).
+- **Documentation + drift sentinel** — `{path, phrase, in_t, out_t}` →
+  both static; resolver re-runs at preflight time and emits a WARN if
+  the phrase resolution disagrees by > 100 ms (catches index drift on
+  re-transcription).
+
+`resolve_or_exit(BEATS, raw_dir=...)` is the ergonomic reel-script
+wrapper: prints issues, exits 1 on ERROR, optional `strict=` promotes
+WARN to fatal. Pass-through fast-path when no spec uses `phrase=`,
+so legacy reels stay unchanged.
+
+`cvs_lib.preflight` gained `assert_phrases_were_resolved()` which fires
+a pointed ERROR if any spec still has `phrase=` without `in_t`/`out_t`
+at preflight time — catches reels that forgot to call `resolve_or_exit`
+before render.
+
+**Files**: `cvs_lib/beat_resolver.py` (~280 LOC),
+`tests/cvs_lib/test_beat_resolver.py` (21 tests; live + pure mix),
+`cvs_lib/preflight.py` (added `assert_phrases_were_resolved`).
+
+**Per-reel canary deferred (editorial work).** Migration of any reel
+beat is an editorial decision: phrase-resolved durations rarely match
+the existing editorial `dur` exactly, so each beat needs `dur` retuned
+and the BEATS sum rebalanced. The mechanism + tests are in place; per-
+reel migration ships separately, with audition cuts via `find_phrase
+--audition` to confirm the phrase boundaries land cleanly before
+swapping out the magic numbers.
+
+Migration playbook (per beat):
+1. Run `python scripts/find_phrase.py "<phrase>" --pipeline mpc --audition`
+   to verify the phrase resolves cleanly + SNR is acceptable.
+2. In the reel: replace `{path, in_t, out_t}` with `{path, phrase}`.
+3. Note the resolver's reported `resolved_dur`; retune the beat tuple's
+   `dur=` to match (or accept dur_drift WARN).
+4. Rebalance other beats to keep `sum(beat durs) == DURATION`.
+5. Add `BEATS = resolve_or_exit(BEATS, raw_dir=RAW_DIR)` near the top.
+6. Render; the existing preflight catches mismatches.
 
 ### Cross-rally phrase search CLI — SHIPPED (2026-04-29)
 `scripts/find_phrase.py "<phrase>" [--pipeline mpc|cc_flora|cc_hookshot]
