@@ -646,6 +646,131 @@ captured). 6 tests total, ~3.8s wall clock with shared silero load.
 Total clip-suite tests: 45 across `test_clip_snap.py`,
 `test_clip_locator.py`, `test_clip_cut.py`, `test_locator_smoke.py`.
 
+## Tier 6 — post-mechanism follow-ups (2026-05-01)
+
+Suite of items added after the beat-resolver lift (commit `73240ee`).
+The mechanism work for the past three weeks (clip locator → snap →
+SNR gate → cut → resolver) is in place; these are the items that put
+it to work *and* close the gaps that became visible once it shipped.
+
+### Migrate north_lake.py to phrase-driven beats (canary)
+First per-reel canary for the deferred beat_resolver migration. Pick
+`mpc_ep_north_lake.py` because its 3 testimony beats are purely
+phrase-content (the 4th is chant b-roll, leave legacy). Resolve full-
+thought phrases, retune `dur` per beat, rebalance reel sum to 30s,
+audition cuts via `find_phrase --audition` before swap. Acceptance:
+reel renders, audio is coherent, output is 30s ± 0.05s, posting
+markdown still generates from manifest.
+
+### Phrase resolution cache (`mpc/phrase_cache.json`)
+The resolver re-runs whisper-word-index lookup + silero-VAD snap on
+every render. ~200ms × 8 beats × 8 reels = ~13s per `mpc_render_all`
+run, all wasted after the first resolution. Add a JSON cache keyed
+by `(stem, phrase, snap-params-fingerprint, index-mtime)` returning
+`(in_t, out_t, snap_quality)`. Invalidate on index re-scan. Belongs
+in `cvs_lib/beat_resolver.py` behind a `cache_path=` kwarg.
+
+### SNR threshold per-rally override + rescue chain (Tier 5 #4 split)
+Existing Tier 5 #4 conflates two items. Split: (a) `mpc/snr.json`
+per-rally floor override read by `clip_locator` via preflight wiring,
+(b) `cvs_lib.audio.rescue_voice(audio, in_t, out_t)` that returns a
+HP-filtered + de-essed + RMS-normalized + RNNoise-denoised buffer for
+re-injection at mix time. (a) is ~30 LOC; (b) is the real work.
+
+### cc_flora scout dashboard parity
+`cvs_lib/scout.py` and `scripts/scout_dashboard.py` read MPC's index
+shape. cc_flora has its own index but no scout output; editorial
+flies blind on which clip has which line. Extend `PIPELINE_DEFAULTS`
+to include cc_flora and verify renderers don't assume MPC-specific
+fields. ~50 LOC plus a smoke test. Same for `cc_hookshot` since both
+already share `cvs_lib/scanner`.
+
+### cc_flora posting metadata parity
+`cvs_lib/posting.py` is MPC-specific (parses `CTA_HEADLINE`/`CTA_SUBHEAD`
+constants from reel docstrings; reads `mpc/cta.json`). cc_flora reels
+don't carry CTA constants — they have a TTS narration script + an
+ambient mood. Define what the cc_flora sidecar should look like (probably
+pulls the narration text + the brand cottagecore hashtags) and add
+a sibling renderer.
+
+### Re-transcribe MPC index for fine-grained segments
+4 caption-autofill tests in `test_captions.py` fail because the index
+has only 2 coarse segments (0-29.64, 30-44.96) where the tests expect
+~12-16s and 16-19s slices. Either re-run `mpc_scan_sources.py` with
+finer chunking params and refresh the index, OR rewrite tests to match
+current segmentation. Pre-existing — surfaces every full-suite run as
+noise. Pick one and ship it.
+
+### Soundbite extractor CLI
+The opposite of `find_phrase`: given a stem (or all stems), list every
+contiguous voiced span ≥ N seconds with SNR ≥ M dB, sorted by quality.
+Output: a manifest of "ready-to-cut" soundbites the editor can browse.
+Especially useful when starting a new reel — "show me everything
+quotable in this rally." Reuses `cvs_lib.word_index` + `clip_snap` +
+SNR analysis already in place. ~120 LOC under `scripts/find_bites.py`.
+
+### Render timing telemetry
+Each MPC reel takes ~60-90s end-to-end; cc_flora reels ~3-5min with
+upscale. Today there's no way to know which phase (TTS / video build /
+audio mix / mux) is the slow one. Add a context manager
+`cvs_lib.timing.phase("name")` that logs to `output/<pipeline>/
+_render_log.jsonl`. Aggregator script reads the log and surfaces the
+slow phases. Concrete optimization targets follow.
+
+### Loudness normalization to per-platform LUFS targets
+TikTok normalizes to -14 LUFS, IG Reels -14, YouTube -14, Bluesky no
+target. Today `cvs_audio.lowpass_normalize` peak-normalizes to ~0.9 —
+not loudness-normalized. Add a final `pyloudnorm`-based pass before
+mux, with platform target as a kwarg. One LUFS measurement at render
+time + linear gain to target. Catches the "this reel sounds quieter
+than the others" failure mode.
+
+### EDL export from BEATS
+Editor handoff: `python scripts/mpc_export_edl.py <reel>` writes a
+CMX 3600 EDL (or a Resolve `.fcpxml`) describing source→cut→sequence
+mappings. Useful when a reel needs human polish in Resolve before
+publish. ~80 LOC; standard EDL format is well-documented. Optional
+phrase= comment per cut for editorial provenance.
+
+### Beat-builder phrase-aware
+`python -m cvs_lib.beat_builder` currently builds a one-beat preview
+from explicit `(stem, in_t, out_t)`. Add `--phrase "..."` that calls
+the resolver internally, so editorial can preview a phrase cut without
+hand-typing timestamps. Composes existing modules; ~30 LOC.
+
+### Audio mix regression test
+Today there's zero coverage on the final mix. Render a small fixture
+beat (1s of synth bed + 1s of TTS) and pin its WAV checksum. Catches
+silent regressions from numpy / pyloudnorm / scipy version drift,
+which has historically broken renders without a Python-level error.
+Belongs in `tests/cvs_lib/test_audio_mix.py`.
+
+### Stale-derivative auto-detect
+Today the rotation cache (and any future derivative — phrase cache,
+tonemapped sources) trusts its own existence: if the file is there,
+use it. When the source video is re-encoded or the rotation flag
+changes, derivatives go stale silently and the next render quietly
+ships the old footage. Add an mtime-based staleness check in
+`cvs_lib/moviepy_helpers.py` (and the upcoming phrase cache): if
+`source.mtime > derivative.mtime`, rebuild. ~20 LOC per derivative,
+catches a surprisingly nasty silent-staleness class.
+
+### Background render queue
+`mpc_render_all.py` renders reels sequentially (~10 min for 10 reels).
+RTX 4090 has plenty of GPU headroom for 2-3 parallel renders. Add a
+`--workers N` flag using `multiprocessing` (process-per-reel — moviepy
+isn't thread-safe). Shave the batch by 60-70%. Manifest writes need
+a lock.
+
+### cc_ep migration disposition (6 untracked scripts)
+The 6 `scripts/cc_ep_*.py` files (beetle, catdoor, ghost, sommelier,
+toast15, underworld) are uncommitted and their relationship to
+existing cc_ep needs clarification. Either commit (with provenance
+note in the BACKLOG), discard, or move to `scratch/`. Don't leave them
+untracked — the working tree has been "dirty by default" for two
+weeks and that's a cognitive tax on every `git status`. Decision is
+trivial; the open question is whether any of them are partial work.
+
 ## Anti-backlog (intentionally not doing)
 
 - **Web UI for editorial decisions.** The CLI + still-preview loop is
