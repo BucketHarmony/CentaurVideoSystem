@@ -20,8 +20,12 @@ For each beat spec dict:
   treated as documentation only; resolver still runs the locator and
   warns if the static cut and the phrase resolution disagree by > 100ms
   (signals: index drift after re-transcription).
-- `phrase` set, `in_t` and/or `out_t` missing → those keys are filled
-  in from the locator. Off-mic / fuzzy-match → WARN.
+- `phrase` set, `lock_dur=True` → phrase locks `in_t` (snap-refined);
+  `out_t = in_t + beat_dur` (editorial breathing room past the phrase).
+  Use this when the beat is sized for the phrase + tail, not the phrase
+  alone. The most common migration shape for existing reels.
+- `phrase` set, `in_t` and/or `out_t` missing (no `lock_dur`) → those
+  keys are filled in from the locator. Off-mic / fuzzy-match → WARN.
 - `phrase` set, no `path` → ERROR (resolver requires an explicit stem
   anchor; cross-stem search lives in `find_phrase.py`, not here).
 
@@ -161,6 +165,40 @@ def resolve_spec(
 
     has_in = "in_t" in spec
     has_out = "out_t" in spec
+    lock_dur = bool(spec.get("lock_dur", False))
+
+    if lock_dur:
+        if beat_dur is None:
+            issues.append(ResolutionIssue(
+                ERROR, "lock_dur_no_beat_dur", slug,
+                f"phrase={phrase!r} has lock_dur=True but no beat dur "
+                f"(was the multi-shot list path taken?). Drop lock_dur."
+            ))
+            return new, issues
+        if has_in or has_out:
+            issues.append(ResolutionIssue(
+                WARN, "lock_dur_with_static", slug,
+                f"phrase={phrase!r} has lock_dur=True but spec also pins "
+                f"in_t/out_t. Static pins are kept; lock_dur ignored."
+            ))
+        else:
+            new["in_t"] = round(res.in_t, 3)
+            new["out_t"] = round(res.in_t + float(beat_dur), 3)
+            new["_phrase_resolution"] = _forensics(res, used="lock_dur")
+            if res.is_off_mic:
+                issues.append(ResolutionIssue(
+                    WARN, "off_mic", slug,
+                    f"phrase={phrase!r} resolved at "
+                    f"SNR{res.snr_db:+.1f}dB (< floor {min_snr_db:+.1f}dB) — "
+                    f"clip will sound off-mic."
+                ))
+            if res.match_score < 1.0:
+                issues.append(ResolutionIssue(
+                    INFO, "fuzzy_match", slug,
+                    f"phrase={phrase!r} fuzzy-matched "
+                    f"(score={res.match_score:.2f})."
+                ))
+            return new, issues
 
     if has_in and has_out:
         # Static cut wins; phrase is documentation. Still flag if the

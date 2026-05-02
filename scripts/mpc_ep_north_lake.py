@@ -53,6 +53,7 @@ from cvs_lib.env import load_env as _lib_load_env
 from cvs_lib.mpc_chrome import ChromeRenderer, Layout, load_palette
 from cvs_lib.moviepy_helpers import build_beat_clip as _lib_build_beat_clip
 from cvs_lib.moviepy_helpers import spec_well as _lib_spec_well
+from cvs_lib.beat_resolver import resolve_or_exit as _resolve_phrases
 from cvs_lib.preflight import run_or_exit as _preflight
 from cvs_lib.preview import render_beat_stills as _render_beat_stills
 
@@ -109,45 +110,71 @@ CTA_WELL_H = LAYOUT.CTA_WELL_H
 JUAN = RAW_DIR / "20260425_155313.mp4"
 CHANT = RAW_DIR / "20260425_170030.mp4"
 
+# Phrase-driven beats (canary for cvs_lib.beat_resolver, 2026-05-02).
+# Each testimony beat carries `phrase=` + `lock_dur=True` instead of
+# magic-number in_t/out_t. The resolver snaps in_t to the phrase's
+# voice onset; out_t = in_t + beat dur preserves editorial breathing
+# room. CTA stays legacy (chant b-roll, no testimony content).
+#
+# Beat durs retuned from legacy 7/8/10/5 → 6.2/8/8.8/7.0 to fit
+# the resolved phrase spans without source-time overlap between
+# adjacent beats (hook and inside share JUAN; with hook=6.2 the
+# hook ends at source 18.725 just before inside starts at 18.785).
+# Original line 150 sanity stays: sum is still 30s.
 BEATS = [
     # HOOK: who Juan is, when he got out. The date specificity ("Friday,
     # April 24") matters — it makes him a real person, not a case study.
-    # Source 13.0-20.0 catches "So this is from Juan, good morning. I was
-    # released Friday the 24th of April. I was detained for three months
-    # at North Lake, 90 days." — the establishing line + setup.
-    ("hook", 7.0, "grief", "RELEASED  •  APRIL 24",
-     {"path": JUAN, "in_t": 13.0, "out_t": 20.0,
+    ("hook", 6.2, "grief", "RELEASED  •  APRIL 24",
+     {"path": JUAN,
+      "phrase": ("I was released Friday the 24th of April. "
+                 "I was detained for three months at North Lake. 90 days."),
+      "lock_dur": True,
       "audio_gain": 1.25,
       "caption_lines": [
-          (0.0, 2.5, "So this is from Juan."),
-          (2.7, 6.7, "I was released Friday — April 24."),
+          (0.0, 2.4, "So this is from Juan."),
+          (2.6, 6.2, "I was released Friday — April 24."),
       ]}),
-    # INSIDE: the conditions. Source 20.0-28.0 captures the conditions line
-    # cleanly. Speech ends ~27.5; 0.5s post-roll for the line to land.
+    # INSIDE: the conditions. Phrase-anchored to "The conditions right now
+    # are very upsetting…" so the cut starts on the line, not before it.
     ("inside", 8.0, "minor", "90 DAYS AT NORTH LAKE",
-     {"path": JUAN, "in_t": 20.0, "out_t": 28.0,
+     {"path": JUAN,
+      "phrase": ("The conditions right now are very upsetting because ICE "
+                 "is not following regulations or complying with the law."),
+      "lock_dur": True,
       "audio_gain": 1.25,
       "caption_lines": [
           (0.0, 7.7,
            "The conditions right now are very upsetting — ICE is not following the law."),
       ]}),
     # THE LAW: the structural claim — judges denying bond, gaming asylum
-    # cases. Source 30.4-40.4 captures the full federal-judges sequence.
-    ("law", 10.0, "grief", "JUDGES IGNORING THE LAW",
-     {"path": JUAN, "in_t": 30.4, "out_t": 40.4,
+    # cases. Phrase-anchored to "The federal judges want to make decisions…".
+    ("law", 8.8, "grief", "JUDGES IGNORING THE LAW",
+     {"path": JUAN,
+      "phrase": ("The federal judges want to make decisions on their own "
+                 "terms. They are issuing very high bond awards as well as "
+                 "denials of bond in asylum cases"),
+      "lock_dur": True,
       "audio_gain": 1.25,
       "caption_lines": [
           (0.0, 3.0, "Federal judges decide on their own terms."),
-          (3.2, 9.5,
+          (3.2, 8.5,
            "Very high bond awards — denials of bond in asylum cases."),
       ]}),
     # CTA: brand chrome top + chant b-roll bottom. Synth VO closes.
-    ("cta", 5.0, "resolve", "FREE THEM ALL",
-     {"path": CHANT, "in_t": 8.0, "out_t": 13.0,
+    # Bumped to 7.0s to absorb the dur reductions on the testimony beats.
+    ("cta", 7.0, "resolve", "FREE THEM ALL",
+     {"path": CHANT, "in_t": 8.0, "out_t": 15.0,
       "audio_gain": 0.5,
       "well_top": CTA_WELL_TOP, "well_h": CTA_WELL_H}),
 ]
-# Sanity: 7+8+10+5 = 30 ✓
+# Sanity: 6.2+8+8.8+7.0 = 30 ✓
+# Phrase resolution happens once at import time so preflight + render
+# both see the resolved (in_t, out_t) consistently.
+BEATS = _resolve_phrases(
+    BEATS,
+    raw_dir=RAW_DIR,
+    index_dir=Path("E:/AI/CVS/mpc/index/clips"),
+)
 
 def _build_scenes():
     out, t = [], 0.0

@@ -304,3 +304,48 @@ def test_preflight_silent_when_phrase_already_resolved():
          {"path": "/x.mp4", "phrase": "abolish ICE", "in_t": 1.0, "out_t": 8.0}),
     ]
     assert preflight.assert_phrases_were_resolved(beats) == []
+
+
+# ----------------------- lock_dur mode (canary) ----------------------- #
+
+@live_only
+def test_lock_dur_anchors_in_t_and_uses_beat_dur_for_out_t():
+    """phrase=, lock_dur=True, no in_t/out_t → in_t from snap, out_t = in_t + beat_dur."""
+    beats = [
+        ("hook", 7.0, "grief", "L",
+         {"path": str(JUAN_SRC),
+          "phrase": "I was released Friday",
+          "lock_dur": True}),
+    ]
+    out, issues = resolve_beats(beats, index_dir=INDEX_DIR)
+    spec = out[0][4]
+    assert "in_t" in spec and "out_t" in spec
+    # Phrase opens at ~12.5s in the Juan transcript.
+    assert 12.0 < spec["in_t"] < 14.0
+    # out_t locked to in_t + 7.0 beat dur (within rounding).
+    assert abs((spec["out_t"] - spec["in_t"]) - 7.0) < 0.01
+    fr = spec["_phrase_resolution"]
+    assert fr["used"] == "lock_dur"
+    # No dur_drift WARN — by construction, dur is satisfied.
+    assert not any(i.code == "dur_drift" for i in issues)
+    assert not any(i.severity == ERROR for i in issues)
+
+
+@live_only
+def test_lock_dur_with_static_pins_warns_and_keeps_static():
+    """If user sets both lock_dur=True AND static in_t/out_t, static
+    wins (matches existing static-wins doc) and a WARN explains why."""
+    beats = [
+        ("hook", 7.0, "grief", "L",
+         {"path": str(JUAN_SRC),
+          "phrase": "I was released Friday",
+          "lock_dur": True,
+          "in_t": 13.0, "out_t": 20.0}),
+    ]
+    out, issues = resolve_beats(beats, index_dir=INDEX_DIR)
+    spec = out[0][4]
+    assert spec["in_t"] == 13.0 and spec["out_t"] == 20.0
+    assert any(
+        i.severity == WARN and i.code == "lock_dur_with_static"
+        for i in issues
+    )

@@ -653,14 +653,30 @@ The mechanism work for the past three weeks (clip locator → snap →
 SNR gate → cut → resolver) is in place; these are the items that put
 it to work *and* close the gaps that became visible once it shipped.
 
-### Migrate north_lake.py to phrase-driven beats (canary)
-First per-reel canary for the deferred beat_resolver migration. Pick
-`mpc_ep_north_lake.py` because its 3 testimony beats are purely
-phrase-content (the 4th is chant b-roll, leave legacy). Resolve full-
-thought phrases, retune `dur` per beat, rebalance reel sum to 30s,
-audition cuts via `find_phrase --audition` before swap. Acceptance:
-reel renders, audio is coherent, output is 30s ± 0.05s, posting
-markdown still generates from manifest.
+### Migrate north_lake.py to phrase-driven beats (canary) — SHIPPED (2026-05-02)
+First per-reel canary for the beat_resolver migration. `mpc_ep_north_lake.py`
+chosen because its 3 testimony beats are purely phrase-content (4th
+is chant b-roll, kept legacy).
+
+Implementation: each testimony beat carries `phrase=<full thought>` +
+`lock_dur=True`. Resolver snaps `in_t` to the phrase's voice onset;
+`out_t = in_t + beat_dur` preserves editorial breathing room past the
+phrase. Beat durs retuned 7/8/10/5 → 6.2/8/8.8/7 to fit phrase spans
+without source-time overlap between adjacent JUAN-source beats (hook
+ends at src 18.725 just before inside starts at 18.785). Reel sum
+unchanged at 30s.
+
+`lock_dur` was added to the resolver during this migration — it covers
+the most common reel shape (phrase-anchored cut + editorial duration)
+that the original three modes didn't address. 2 new tests in
+`test_beat_resolver.py` (now 23 total).
+
+**Files**: `scripts/mpc_ep_north_lake.py` (BEATS rewritten + resolver
+import), `cvs_lib/beat_resolver.py` (lock_dur mode),
+`tests/cvs_lib/test_beat_resolver.py` (+2 tests).
+
+**Verified**: 30.0s output, 27.8 MB, no resolver warnings during render.
+Audio + caption events render clean against the new cut windows.
 
 ### Phrase resolution cache (`mpc/phrase_cache.json`)
 The resolver re-runs whisper-word-index lookup + silero-VAD snap on
